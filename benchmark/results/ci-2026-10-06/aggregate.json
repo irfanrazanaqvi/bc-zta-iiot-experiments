@@ -1,0 +1,110 @@
+{
+  "runs": 3,
+  "dates": [
+    "2026-10-06T16:50:32.812Z",
+    "2026-10-06T17:00:24.425Z",
+    "2026-10-06T17:10:34.196Z"
+  ],
+  "workers": 8,
+  "duration_s": 20,
+  "S1_write_confirmation_phase_locked": {
+    "AuditLog.logEvent": {
+      "mean_ms": 1979.964688326664,
+      "p95_ms": 2079.846395666653
+    },
+    "AuditLog.anchorBatch": {
+      "mean_ms": 2001.5424592133347,
+      "p95_ms": 2070.556938000062
+    }
+  },
+  "S2_read_latency": {
+    "mean_ms": 5.356394800666526,
+    "mean_sd": 0.2934216679099942,
+    "p95_ms": 10.870151333336253
+  },
+  "S3_per_event_logging": [
+    {
+      "offered_tps": 10,
+      "committed_tps": 9.471252444544485,
+      "committed_tps_sd": 0.060166324364435246,
+      "mean_ms": 1521.7738905600029,
+      "mean_ms_sd": 73.45978025465608,
+      "p95_ms": 2438.7553583333306,
+      "confirmed_fraction": 1.0,
+      "failed_per_run": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "offered_tps": 25,
+      "committed_tps": 23.281104506606358,
+      "committed_tps_sd": 0.2947581586802717,
+      "mean_ms": 1706.3852482373416,
+      "mean_ms_sd": 116.8100166026771,
+      "p95_ms": 2658.93131600006,
+      "confirmed_fraction": 1.0,
+      "failed_per_run": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "offered_tps": 50,
+      "committed_tps": 46.527831836913926,
+      "committed_tps_sd": 0.9106957407776417,
+      "mean_ms": 2329.6724780446675,
+      "mean_ms_sd": 193.8789140317865,
+      "p95_ms": 3625.888857666636,
+      "confirmed_fraction": 1.0,
+      "failed_per_run": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "offered_tps": 100,
+      "committed_tps": 62.70765230585203,
+      "committed_tps_sd": 6.027510764822838,
+      "mean_ms": 11600.652174101662,
+      "mean_ms_sd": 2121.277947160941,
+      "p95_ms": 19752.912100999965,
+      "confirmed_fraction": 0.9958333333333332,
+      "failed_per_run": [
+        25,
+        0,
+        0
+      ]
+    },
+    {
+      "offered_tps": 200,
+      "committed_tps": 59.085204082168865,
+      "committed_tps_sd": 1.099844095254233,
+      "mean_ms": 16424.424060951795,
+      "mean_ms_sd": 2143.603194074004,
+      "p95_ms": 27044.168842999945,
+      "confirmed_fraction": 0.566,
+      "failed_per_run": [
+        1851,
+        1099,
+        1318
+      ]
+    }
+  ],
+  "S4_batch_anchoring": {
+    "mean_ms": 941.0085592500012,
+    "p95_ms": 1525.7502383333242,
+    "confirmed": [
+      20,
+      20,
+      20
+    ]
+  },
+  "S5_revocation_visibility_phase_locked": {
+    "mean_ms": 1849.8058742666578,
+    "p95_ms": 1924.7891513332725
+  }
+}

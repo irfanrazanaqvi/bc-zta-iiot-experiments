@@ -11,21 +11,134 @@
     "ldap_lookup_ms": 15.0,
     "local_lookup_ms": 1.0,
     "local_policy_eval_ms": 1.0,
-    "chain_read_ms": 8.0,
+    "chain_read_ms": 5.4,
     "cache_hit_ms": 0.2,
     "cache_hit_ratio": 0.9,
     "block_period_ms": 2000.0,
-    "ibft_message_rounds": 3,
+    "finality_mean_ms": 1520.0,
+    "finality_sigma": 0.31,
     "cache_ttl_s": 30.0,
     "trust_update_interval_s": 30.0,
     "quorum": 2,
     "audit_batch_interval_s": 1.0,
-    "chain_capacity_tps": 300.0,
+    "chain_capacity_tps": 60.0,
     "request_rate_per_device": 1.0,
     "cpu_sigma": 0.15,
     "net_sigma": 0.3
   },
-  "latency_100_devices": {
+  "measured_source": "../benchmark/results/ci-2026-10-06/aggregate.json",
+  "measured": {
+    "runs": 3,
+    "dates": [
+      "2026-10-06T16:50:32.812Z",
+      "2026-10-06T17:00:24.425Z",
+      "2026-10-06T17:10:34.196Z"
+    ],
+    "workers": 8,
+    "duration_s": 20,
+    "S1_write_confirmation_phase_locked": {
+      "AuditLog.logEvent": {
+        "mean_ms": 1979.964688326664,
+        "p95_ms": 2079.846395666653
+      },
+      "AuditLog.anchorBatch": {
+        "mean_ms": 2001.5424592133347,
+        "p95_ms": 2070.556938000062
+      }
+    },
+    "S2_read_latency": {
+      "mean_ms": 5.356394800666526,
+      "mean_sd": 0.2934216679099942,
+      "p95_ms": 10.870151333336253
+    },
+    "S3_per_event_logging": [
+      {
+        "offered_tps": 10,
+        "committed_tps": 9.471252444544485,
+        "committed_tps_sd": 0.060166324364435246,
+        "mean_ms": 1521.7738905600029,
+        "mean_ms_sd": 73.45978025465608,
+        "p95_ms": 2438.7553583333306,
+        "confirmed_fraction": 1.0,
+        "failed_per_run": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "offered_tps": 25,
+        "committed_tps": 23.281104506606358,
+        "committed_tps_sd": 0.2947581586802717,
+        "mean_ms": 1706.3852482373416,
+        "mean_ms_sd": 116.8100166026771,
+        "p95_ms": 2658.93131600006,
+        "confirmed_fraction": 1.0,
+        "failed_per_run": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "offered_tps": 50,
+        "committed_tps": 46.527831836913926,
+        "committed_tps_sd": 0.9106957407776417,
+        "mean_ms": 2329.6724780446675,
+        "mean_ms_sd": 193.8789140317865,
+        "p95_ms": 3625.888857666636,
+        "confirmed_fraction": 1.0,
+        "failed_per_run": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "offered_tps": 100,
+        "committed_tps": 62.70765230585203,
+        "committed_tps_sd": 6.027510764822838,
+        "mean_ms": 11600.652174101662,
+        "mean_ms_sd": 2121.277947160941,
+        "p95_ms": 19752.912100999965,
+        "confirmed_fraction": 0.9958333333333332,
+        "failed_per_run": [
+          25,
+          0,
+          0
+        ]
+      },
+      {
+        "offered_tps": 200,
+        "committed_tps": 59.085204082168865,
+        "committed_tps_sd": 1.099844095254233,
+        "mean_ms": 16424.424060951795,
+        "mean_ms_sd": 2143.603194074004,
+        "p95_ms": 27044.168842999945,
+        "confirmed_fraction": 0.566,
+        "failed_per_run": [
+          1851,
+          1099,
+          1318
+        ]
+      }
+    ],
+    "S4_batch_anchoring": {
+      "mean_ms": 941.0085592500012,
+      "p95_ms": 1525.7502383333242,
+      "confirmed": [
+        20,
+        20,
+        20
+      ]
+    },
+    "S5_revocation_visibility_phase_locked": {
+      "mean_ms": 1849.8058742666578,
+      "p95_ms": 1924.7891513332725
+    }
+  },
+  "ref_devices": 50,
+  "latency_ref_devices": {
     "Centralized PKI-IAM": {
       "auth_mean_ms": 62.04001758691464,
       "auth_p95_ms": 85.07742962412549,
@@ -39,16 +152,17 @@
       "authz_p95_ms": 2.368643791420419
     },
     "Blockchain-only (sync)": {
-      "auth_mean_ms": 1020.4323811588214,
-      "auth_p95_ms": 1922.2573574561313,
-      "authz_mean_ms": 1015.9483793239511,
-      "authz_p95_ms": 1915.5781944148043
+      "auth_mean_ms": 2336.6724780446675,
+      "auth_p95_ms": 3632.888857666636,
+      "authz_mean_ms": 2329.6724780446675,
+      "authz_p95_ms": 3625.888857666636,
+      "measured": true
     },
     "Proposed BC-ZTA": {
-      "auth_mean_ms": 8.469066800794174,
-      "auth_p95_ms": 15.36767645760591,
-      "authz_mean_ms": 1.9837025501936214,
-      "authz_p95_ms": 8.951861204109896
+      "auth_mean_ms": 8.216879891107169,
+      "auth_p95_ms": 12.81320764877151,
+      "authz_mean_ms": 1.7167853096399415,
+      "authz_p95_ms": 6.346928365137738
     }
   },
   "scalability": {
@@ -76,13 +190,13 @@
         400.0
       ],
       "authz_mean_ms": [
-        1011.2375793403756,
-        1009.5582224698693,
-        1011.5453195169962,
-        1015.4253086416746,
-        1021.0259757198186,
-        1017.6722561508819,
-        1029.476704490615,
+        1521.7738905600029,
+        1706.3852482373416,
+        2329.6724780446675,
+        11600.652174101662,
+        null,
+        16424.424060951795,
+        null,
         null,
         null
       ],
@@ -90,10 +204,10 @@
         false,
         false,
         false,
-        false,
-        false,
-        false,
-        false,
+        true,
+        true,
+        true,
+        true,
         true,
         true
       ]
@@ -111,15 +225,15 @@
         27.67
       ],
       "authz_mean_ms": [
-        1.9870307986327203,
-        1.9527447870836514,
-        2.010357219335918,
-        1.990308963427141,
-        1.9761800793309574,
-        1.9535484950145572,
-        1.9802606349854666,
-        1.9796861550932412,
-        1.9811594788303875
+        1.7174747642959396,
+        1.7291378674404594,
+        1.747257674137195,
+        1.7198892461404054,
+        1.7396890035050674,
+        1.7202199896148993,
+        1.729028643320795,
+        1.7233295386156104,
+        1.7046618628328265
       ],
       "saturated": [
         false,
@@ -134,9 +248,9 @@
       ]
     }
   },
-  "ledger_capacity_tps": 300.0,
-  "blockchain_only_saturation_devices": 300,
-  "blockchain_only_saturation_analytic": 300.0,
+  "ledger_capacity_tps": 60.0,
+  "blockchain_only_saturation_devices": 100,
+  "blockchain_only_saturation_analytic": 60.0,
   "revocation_delay": {
     "Centralized PKI-IAM": {
       "mean_s": 0.0,
@@ -149,19 +263,23 @@
       "note": "local store updated directly"
     },
     "Blockchain-only (sync)": {
-      "mean_s": 1.016668457075323,
-      "worst_s": 2.1,
+      "mean_s": 1.5195149584582268,
+      "worst_s": 2.44,
       "note": "next block"
     },
     "Proposed BC-ZTA (TTL expiry)": {
-      "mean_s": 16.02054410508,
-      "worst_s": 32.1,
+      "mean_s": 16.537430650898383,
+      "worst_s": 32.44,
       "note": "block finality + remaining cache TTL"
     },
     "Proposed BC-ZTA (event-driven)": {
-      "mean_s": 1.024668457075323,
-      "worst_s": 2.108,
+      "mean_s": 1.5249149584582269,
+      "worst_s": 2.4454,
       "note": "gateway subscribes to DIDRevoked events"
+    },
+    "measured_phase_locked_visibility_s": {
+      "mean_s": 1.8498058742666579,
+      "p95_s": 1.9247891513332724
     }
   },
   "storage": {
@@ -178,76 +296,76 @@
     "cache_hit_ratio": [
       {
         "hit": 0.5,
-        "authz_mean_ms": 5.116528370073363,
-        "authz_p95_ms": 10.591046399381229
+        "authz_mean_ms": 3.8169105716766936,
+        "authz_p95_ms": 7.496398386380804
       },
       {
         "hit": 0.7,
-        "authz_mean_ms": 3.525077488172401,
-        "authz_p95_ms": 10.117842124098132
+        "authz_mean_ms": 2.7605256084838143,
+        "authz_p95_ms": 7.181766668333519
       },
       {
         "hit": 0.8,
-        "authz_mean_ms": 2.7735907022016035,
-        "authz_p95_ms": 9.745499157367197
+        "authz_mean_ms": 2.2349071863544863,
+        "authz_p95_ms": 6.920165103823427
       },
       {
         "hit": 0.9,
-        "authz_mean_ms": 1.975765881527548,
-        "authz_p95_ms": 8.883513140597511
+        "authz_mean_ms": 1.7225143064943371,
+        "authz_p95_ms": 6.3536023102107055
       },
       {
         "hit": 0.95,
-        "authz_mean_ms": 1.5829742388345547,
-        "authz_p95_ms": 1.8020167605428168
+        "authz_mean_ms": 1.4591264733012204,
+        "authz_p95_ms": 4.588497903680533
       },
       {
         "hit": 0.99,
-        "authz_mean_ms": 1.2799712740502645,
-        "authz_p95_ms": 1.4885221487893183
+        "authz_mean_ms": 1.255353509841746,
+        "authz_p95_ms": 1.4917670110208279
       }
     ],
     "cache_ttl_s": [
       {
         "ttl": 5,
-        "ttl_mean_s": 3.5150857714892663,
-        "ttl_worst_s": 7.1,
-        "event_mean_s": 1.0226351024375293,
+        "ttl_mean_s": 4.022541871574695,
+        "ttl_worst_s": 7.4399999999999995,
+        "event_mean_s": 1.5266780428781084,
         "reads_per_s_400dev": 80.0
       },
       {
         "ttl": 10,
-        "ttl_mean_s": 6.009971425179966,
-        "ttl_worst_s": 12.1,
-        "event_mean_s": 1.0247951491539549,
+        "ttl_mean_s": 6.518473139694714,
+        "ttl_worst_s": 12.44,
+        "event_mean_s": 1.526318694439725,
         "reads_per_s_400dev": 40.0
       },
       {
         "ttl": 30,
-        "ttl_mean_s": 15.982817483135982,
-        "ttl_worst_s": 32.1,
-        "event_mean_s": 1.0166618439853987,
+        "ttl_mean_s": 16.527942834418912,
+        "ttl_worst_s": 32.44,
+        "event_mean_s": 1.5264841737497774,
         "reads_per_s_400dev": 13.333333333333334
       },
       {
         "ttl": 60,
-        "ttl_mean_s": 31.05141147599431,
-        "ttl_worst_s": 62.1,
-        "event_mean_s": 1.0251943297817705,
+        "ttl_mean_s": 31.522742141184942,
+        "ttl_worst_s": 62.44,
+        "event_mean_s": 1.5254036887528326,
         "reads_per_s_400dev": 6.666666666666667
       },
       {
         "ttl": 120,
-        "ttl_mean_s": 60.973430513325894,
-        "ttl_worst_s": 122.1,
-        "event_mean_s": 1.025259627118106,
+        "ttl_mean_s": 61.53720072363647,
+        "ttl_worst_s": 122.44,
+        "event_mean_s": 1.5242471807324347,
         "reads_per_s_400dev": 3.3333333333333335
       },
       {
         "ttl": 300,
-        "ttl_mean_s": 151.04196836112177,
-        "ttl_worst_s": 302.1,
-        "event_mean_s": 1.021671298232635,
+        "ttl_mean_s": 151.24485284259185,
+        "ttl_worst_s": 302.44,
+        "event_mean_s": 1.5247096536158846,
         "reads_per_s_400dev": 1.3333333333333333
       }
     ]

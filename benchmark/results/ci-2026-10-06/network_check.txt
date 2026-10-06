@@ -1,0 +1,13 @@
+--- node on :8545
+{"jsonrpc":"2.0","id":1,"result":"0x3"}
+{"jsonrpc":"2.0","id":1,"result":"0x3"}
+--- node on :8546
+{"jsonrpc":"2.0","id":1,"result":"0x3"}
+{"jsonrpc":"2.0","id":1,"result":"0x1"}
+--- node on :8547
+{"jsonrpc":"2.0","id":1,"result":"0x3"}
+{"jsonrpc":"2.0","id":1,"result":"0x1"}
+--- node on :8548
+{"jsonrpc":"2.0","id":1,"result":"0x4"}
+{"jsonrpc":"2.0","id":1,"result":"0x1"}
+{"jsonrpc":"2.0","id":1,"result":["0x79a70efc765f05b8ea7174128bdf2bd320b05402","0x9fd85d0ba749c1def5690152053c2ab54df2389f","0xa7b9f8ace7a8353cfc040e794fc285cb47397f65","0xb4547dc829bb058031c2b7aca28c90a414c723a4"]}

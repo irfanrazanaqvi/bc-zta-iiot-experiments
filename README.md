@@ -51,3 +51,9 @@ npx hardhat run scripts/deploy.js --network besu
 All parameters (RTTs, ECDSA cost, cache hit ratio 0.90, ledger capacity 300 tx/s, block period 2 s, ...)
 are listed in `simulation/output/table3_model_parameters.csv` and in `PARAMS`; changing them regenerates every result.
 The seed (42) makes the run reproducible.
+
+## Measured results (GitHub Actions, 2026-10-06)
+
+`benchmark/results/ci-2026-10-06/` holds three fresh-network Besu v26.9.0 IBFT 2.0 runs (4 validators on one shared 2-vCPU runner).
+`python3 benchmark/aggregate_results.py` produces `aggregate.json`, which `simulation/simulate_experiment.py` uses for the ledger-side inputs.
+Headline: ~1.5 s confirmation at 10 tx/s, 5.4 ms reads, ledger saturation near 60 tx/s. The shared host makes these lower bounds for a multi-server deployment; the edge-cache path and PKI/ABAC baselines remain modelled.

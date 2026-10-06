@@ -18,8 +18,16 @@ WHAT THIS IS (and is not)
     measured component latencies, or replace the sampling functions with real
     timings (e.g., Hyperledger Caliper).
 
-    The only *measured* quantities are on-chain gas costs, produced by
-    scripts/measure_gas.js (output/gas_measurements.json).
+    MEASURED INPUTS (not assumptions): on-chain gas (scripts/measure_gas.js ->
+    output/gas_measurements.json) and, from three repetitions of
+    benchmark/run_benchmark.js on a 4-validator Hyperledger Besu IBFT 2.0
+    network (GitHub-hosted 2-vCPU runner, results in
+    benchmark/results/ci-2026-10-06/): eth_call read latency (chain_read_ms),
+    the confirmation-latency distribution (finality_mean_ms / finality_sigma),
+    the sustained ledger throughput (chain_capacity_tps), and the whole
+    Blockchain-only latency-vs-load curve, which is taken directly from the
+    measurements. Everything else (LAN/WAN RTTs, ECDSA and directory costs,
+    cache-hit ratio) is still an assumption.
 
 Configurations
     B1  Centralized PKI-IAM    : every request is verified against a central
@@ -34,7 +42,7 @@ Configurations
 Usage
     python3 simulate_experiment.py [--seed 42] [--trials 100000]
 Outputs (./output/)
-    table3_model_parameters.csv, table4_comlondonon.csv, raw_results.json,
+    table3_model_parameters.csv, table4_comparison.csv, raw_results.json,
     fig3_latency.png, fig4_scalability.png
 """
 import argparse
@@ -63,16 +71,17 @@ PARAMS = {
     "ldap_lookup_ms": 15.0,       # central directory lookup incl. processing
     "local_lookup_ms": 1.0,       # local identity-store lookup
     "local_policy_eval_ms": 1.0,  # in-memory ABAC evaluation
-    "chain_read_ms": 8.0,         # eth_call to a co-located validator/full node
+    "chain_read_ms": 5.4,         # MEASURED: mean eth_call latency to a Besu node (3 runs: 5.2/5.2/5.7 ms)
     "cache_hit_ms": 0.2,          # in-memory cache lookup at the gateway
     "cache_hit_ratio": 0.90,      # fraction of decisions served from cache
     "block_period_ms": 2000.0,    # IBFT 2.0 blockperiodseconds = 2
-    "ibft_message_rounds": 3,     # pre-prepare / prepare / commit
+    "finality_mean_ms": 1520.0,   # MEASURED: mean write confirmation latency at low load (10 tx/s)
+    "finality_sigma": 0.31,       # lognormal fit to the measured P95 (about 2.4 s)
     "cache_ttl_s": 30.0,          # cached identity/trust state validity
     "trust_update_interval_s": 30.0,
     "quorum": 2,                  # validator votes needed per trust update
     "audit_batch_interval_s": 1.0,  # one Merkle-root anchor per second
-    "chain_capacity_tps": 300.0,  # assumed sustainable write capacity (to be measured)
+    "chain_capacity_tps": 60.0,   # MEASURED: sustained committed tx/s on a shared 2-vCPU host (about 55-67)
     "request_rate_per_device": 1.0,  # access requests per device per second
     "cpu_sigma": 0.15,            # lognormal sigma, compute costs
     "net_sigma": 0.30,            # lognormal sigma, network costs
@@ -80,6 +89,8 @@ PARAMS = {
 
 SCHEMES = ["Centralized PKI-IAM", "ABAC (no BC)", "Blockchain-only (sync)", "Proposed BC-ZTA"]
 DEVICE_COUNTS = [10, 25, 50, 100, 150, 200, 250, 300, 400]
+REF_DEVICES = 50          # reference scale: highest load below the measured ledger saturation
+MEASURED_AGG = os.path.join(HERE, "..", "benchmark", "results", "ci-2026-10-06", "aggregate.json")
 
 
 def lognorm(rng, mean, sigma, size):
@@ -88,11 +99,9 @@ def lognorm(rng, mean, sigma, size):
 
 
 def finality_ms(rng, size, p=PARAMS):
-    """Time for a transaction to be included and final under IBFT 2.0:
-    uniform wait for the next block + message rounds among validators."""
-    wait = rng.uniform(0.0, p["block_period_ms"], size)
-    rounds = lognorm(rng, p["ibft_message_rounds"] * p["rtt_validator_ms"], p["net_sigma"], size)
-    return wait + rounds
+    """Write confirmation latency (ms) under IBFT 2.0 with a 2 s block period, as a lognormal
+    fitted to the measured mean (1.52 s) and P95 (about 2.4 s) at low load."""
+    return lognorm(rng, p["finality_mean_ms"], p["finality_sigma"], size)
 
 
 def queue_wait_ms(offered_tps, p=PARAMS):
@@ -104,7 +113,7 @@ def queue_wait_ms(offered_tps, p=PARAMS):
     return 1000.0 * rho / (mu * (1.0 - rho))
 
 
-def simulate_latency(rng, trials, n_devices=100, p=PARAMS):
+def simulate_latency(rng, trials, n_devices=50, p=PARAMS):
     """Return per-scheme arrays of authentication and authorization latency (ms)."""
     lan = lambda: lognorm(rng, p["rtt_lan_ms"], p["net_sigma"], trials)
     wan = lambda: lognorm(rng, p["rtt_wan_ms"], p["net_sigma"], trials)
@@ -155,7 +164,7 @@ def revocation_delay(rng, trials, p=PARAMS):
     fin = finality_ms(rng, trials) / 1000.0
     ttl_wait = rng.uniform(0.0, p["cache_ttl_s"], trials)  # remaining cache validity
     chain_read = p["chain_read_ms"] / 1000.0
-    worst_fin = p["block_period_ms"] / 1000.0 + 0.1
+    worst_fin = 2.44  # measured P95 confirmation latency at low load (S3, 10 tx/s)
     return {
         "Centralized PKI-IAM": {"mean_s": 0.0, "worst_s": 0.0, "note": "online lookup; effective on next request"},
         "ABAC (no BC)": {"mean_s": 0.0, "worst_s": 0.0, "note": "local store updated directly"},
@@ -191,15 +200,27 @@ def run(seed=42, trials=100000):
     rng = np.random.default_rng(seed)
     res = {"seed": seed, "trials": trials, "params": PARAMS}
 
-    # --- latency at reference scale (100 devices) -------------------------
-    lat = simulate_latency(rng, trials, n_devices=100)
-    res["latency_100_devices"] = {}
+    meas = json.load(open(MEASURED_AGG))
+    res["measured_source"] = os.path.relpath(MEASURED_AGG, HERE)
+    res["measured"] = meas
+    s3 = {int(r["offered_tps"]): r for r in meas["S3_per_event_logging"]}
+    # --- latency at reference scale ---------------------------------------
+    res["ref_devices"] = REF_DEVICES
+    lat = simulate_latency(rng, trials, n_devices=REF_DEVICES)
+    res["latency_ref_devices"] = {}
     for s in SCHEMES:
         a, z = lat[s]
-        res["latency_100_devices"][s] = {
+        res["latency_ref_devices"][s] = {
             "auth_mean_ms": float(np.mean(a)), "auth_p95_ms": float(np.percentile(a, 95)),
             "authz_mean_ms": float(np.mean(z)), "authz_p95_ms": float(np.percentile(z, 95)),
         }
+
+    # measured override for the synchronous on-chain baseline (Besu S3 at the same offered load)
+    r50 = s3[int(REF_DEVICES * PARAMS["request_rate_per_device"])]
+    ov = res["latency_ref_devices"]["Blockchain-only (sync)"]
+    ov.update({"authz_mean_ms": r50["mean_ms"], "authz_p95_ms": r50["p95_ms"],
+               "auth_mean_ms": r50["mean_ms"] + 7.0, "auth_p95_ms": r50["p95_ms"] + 7.0,
+               "measured": True})
 
     # --- scalability sweep ------------------------------------------------
     sweep = {"devices": DEVICE_COUNTS}
@@ -210,7 +231,13 @@ def run(seed=42, trials=100000):
             loads.append(round(load, 2))
             sat = queue_wait_ms(load) is None
             saturated.append(bool(sat))
-            if sat:
+            if s == "Blockchain-only (sync)":
+                r = s3.get(int(round(load)))
+                sat = (load >= PARAMS["chain_capacity_tps"]) if r is None else bool(
+                    r["confirmed_fraction"] < 0.999 or r["committed_tps"] < 0.9 * load)
+                saturated[-1] = sat
+                authz_mean.append(None if r is None else float(r["mean_ms"]))
+            elif sat:
                 authz_mean.append(None)
             else:
                 z = simulate_latency(rng, max(trials // 4, 20000), n_devices=n)[s][1]
@@ -223,6 +250,9 @@ def run(seed=42, trials=100000):
     res["blockchain_only_saturation_analytic"] = PARAMS["chain_capacity_tps"] / PARAMS["request_rate_per_device"]
 
     res["revocation_delay"] = revocation_delay(rng, trials)
+    res["revocation_delay"]["measured_phase_locked_visibility_s"] = {
+        "mean_s": meas["S5_revocation_visibility_phase_locked"]["mean_ms"] / 1000.0,
+        "p95_s": meas["S5_revocation_visibility_phase_locked"]["p95_ms"] / 1000.0}
     res["storage"] = storage_footprint()
     # per-day audit growth at 400 devices if every access is logged individually
     ev_per_day = 400 * PARAMS["request_rate_per_device"] * 86400
@@ -247,7 +277,7 @@ def run(seed=42, trials=100000):
     plot_fig3(res)
     plot_fig4(res)
     plot_fig5(res)
-    print(json.dumps({k: res[k] for k in ["latency_100_devices", "blockchain_only_saturation_devices",
+    print(json.dumps({k: res[k] for k in ["latency_ref_devices", "blockchain_only_saturation_devices",
                                            "revocation_delay", "audit_growth_400_devices"]}, indent=2))
 
 
@@ -259,8 +289,8 @@ def write_tables(res):
             w.writerow([k, v])
         w.writerow(["seed", res["seed"]])
         w.writerow(["trials", res["trials"]])
-    lat = res["latency_100_devices"]
-    with open(os.path.join(OUT_DIR, "table4_comlondonon.csv"), "w", newline="") as f:
+    lat = res["latency_ref_devices"]
+    with open(os.path.join(OUT_DIR, "table4_comparison.csv"), "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["Metric"] + SCHEMES)
         w.writerow(["Mean authentication latency (ms)"] + [f'{lat[s]["auth_mean_ms"]:.1f}' for s in SCHEMES])
@@ -323,7 +353,7 @@ def plot_fig5(res):
 
 def plot_fig3(res):
     _style()
-    lat = res["latency_100_devices"]
+    lat = res["latency_ref_devices"]
     labels = ["PKI-\nIAM", "ABAC\n(no BC)", "BC-only\n(sync)", "BC-\nZTA"]
     auth = [lat[s]["auth_mean_ms"] for s in SCHEMES]
     authz = [lat[s]["authz_mean_ms"] for s in SCHEMES]
@@ -359,7 +389,7 @@ def plot_fig4(res):
         ys = [v for v in sw[s]["authz_mean_ms"] if v is not None]
         a2.plot(xs, ys, "-" + m, color=c, ms=3, lw=1.3, label=s)
     a1.axhline(cap, color="#444444", ls="--", lw=0.9)
-    a1.text(n[0], cap * 1.04, f"assumed ledger capacity ({cap:.0f} tx/s)", fontsize=7.5, va="bottom")
+    a1.text(n[0], cap * 1.04, f"measured ledger capacity ({cap:.0f} tx/s)", fontsize=7.5, va="bottom")
     a1.set_ylabel("On-chain write load (tx/s)")
     a1.set_ylim(0, cap * 1.75)
     a1.legend(frameon=False, loc="upper left")

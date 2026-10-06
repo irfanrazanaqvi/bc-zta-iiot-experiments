@@ -1,0 +1,133 @@
+{
+  "meta": {
+    "rpc": "http://127.0.0.1:8545",
+    "chainId": 2026,
+    "quick": false,
+    "date": "2026-10-06T16:50:32.812Z",
+    "workers": 8,
+    "duration_s": 20
+  },
+  "S1_write_confirmation": {
+    "AuditLog.logEvent": {
+      "n": 50,
+      "mean_ms": 1967.6546882600012,
+      "p50_ms": 2050.907567999995,
+      "p95_ms": 2084.481235000014,
+      "max_ms": 2091.3638160000264
+    },
+    "AuditLog.anchorBatch": {
+      "n": 50,
+      "mean_ms": 2000.4081335400044,
+      "p50_ms": 2047.750212999992,
+      "p95_ms": 2065.786494,
+      "max_ms": 2291.571739999985
+    }
+  },
+  "S2_read_latency": {
+    "AccessControl.evaluateRequest (eth_call)": {
+      "n": 500,
+      "mean_ms": 5.163497951998026,
+      "p50_ms": 4.280131999985315,
+      "p95_ms": 9.906870000006165,
+      "max_ms": 29.503945000004023
+    }
+  },
+  "S3_per_event_logging": [
+    {
+      "offered_tps": 10,
+      "duration_s": 20,
+      "submitted": 200,
+      "confirmed": 200,
+      "failed": 0,
+      "errors": {},
+      "committed_tps": 9.420438467097105,
+      "n": 200,
+      "mean_ms": 1475.8634136999913,
+      "p50_ms": 1471.5886689999606,
+      "p95_ms": 2403.5862220000126,
+      "max_ms": 2648.110302999965
+    },
+    {
+      "offered_tps": 25,
+      "duration_s": 20,
+      "submitted": 500,
+      "confirmed": 500,
+      "failed": 0,
+      "errors": {},
+      "committed_tps": 23.19715823094325,
+      "n": 500,
+      "mean_ms": 1833.0300591980122,
+      "p50_ms": 1834.3615090000094,
+      "p95_ms": 2797.3293330000015,
+      "max_ms": 3094.464982000005
+    },
+    {
+      "offered_tps": 50,
+      "duration_s": 20,
+      "submitted": 1000,
+      "confirmed": 1000,
+      "failed": 0,
+      "errors": {},
+      "committed_tps": 46.34896123477009,
+      "n": 1000,
+      "mean_ms": 2450.105764566002,
+      "p50_ms": 2436.5072370000416,
+      "p95_ms": 4141.11417700001,
+      "max_ms": 4776.753524
+    },
+    {
+      "offered_tps": 100,
+      "duration_s": 20,
+      "submitted": 2000,
+      "confirmed": 1975,
+      "failed": 25,
+      "errors": {
+        "could not coalesce error": 25
+      },
+      "committed_tps": 55.83037450890249,
+      "n": 1975,
+      "mean_ms": 13842.243051643052,
+      "p50_ms": 15117.091347000038,
+      "p95_ms": 22535.72907,
+      "max_ms": 25733.743855000008
+    },
+    {
+      "offered_tps": 200,
+      "duration_s": 20,
+      "submitted": 4000,
+      "confirmed": 1915,
+      "failed": 1851,
+      "errors": {
+        "could not coalesce error": 1851
+      },
+      "committed_tps": 57.91248556956847,
+      "n": 1915,
+      "mean_ms": 18899.64200382192,
+      "p50_ms": 21849.731410999957,
+      "p95_ms": 29639.685577999975,
+      "max_ms": 31049.316473999934
+    }
+  ],
+  "S4_batch_anchoring": {
+    "note": "1 anchorBatch tx/s covers up to the offered event rate of S3 (batch size = events/s)",
+    "offered_tps": 1,
+    "duration_s": 20,
+    "submitted": 20,
+    "confirmed": 20,
+    "failed": 0,
+    "errors": {},
+    "committed_tps": 0.9739251063892871,
+    "n": 20,
+    "mean_ms": 1153.9348573999946,
+    "p50_ms": 765.401325999992,
+    "p95_ms": 1740.3909540000604,
+    "max_ms": 1765.5162019999698
+  },
+  "S5_revocation_visibility": {
+    "n": 10,
+    "mean_ms": 1857.9202956000227,
+    "p50_ms": 1894.444134999998,
+    "p95_ms": 1944.3003289999906,
+    "max_ms": 1944.3003289999906
+  }
+}
