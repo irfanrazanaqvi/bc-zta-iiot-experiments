@@ -14,7 +14,7 @@ permissions:
 jobs:
   benchmark:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 70
     steps:
       - uses: actions/checkout@v4
 
@@ -32,36 +32,36 @@ jobs:
             docker --version
           } | tee benchmark/output/environment.txt
 
-      - name: Start 4-validator Besu IBFT 2.0 network
-        working-directory: besu
-        run: |
-          ./setup.sh
-          docker compose up -d
-          for i in $(seq 1 60); do
-            BN=$(curl -s -X POST -H 'Content-Type: application/json' --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' localhost:8545 | sed -n 's/.*"result":"\(0x[0-9a-f]*\)".*/\1/p')
-            if [ -n "$BN" ] && [ $((BN)) -ge 3 ]; then echo "block $((BN)) reached"; break; fi
-            sleep 3
-          done
-          ./check.sh | tee ../benchmark/output/network_check.txt
-          docker exec besu-node1 besu --version | tee ../benchmark/output/besu_version.txt || true
-
       - name: Install and compile contracts
         run: |
           npm install --legacy-peer-deps
           npx hardhat compile
 
-      - name: Run benchmark (3 repetitions)
+      - name: Run benchmark (3 repetitions, each on a freshly started network)
         run: |
+          cd besu
+          ./setup.sh
+          cd ..
           for r in 1 2 3; do
+            (cd besu && docker compose down -v >/dev/null 2>&1; docker compose up -d)
+            for i in $(seq 1 60); do
+              BN=$(curl -s -X POST -H 'Content-Type: application/json' --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' localhost:8545 | sed -n 's/.*"result":"\(0x[0-9a-f]*\)".*/\1/p')
+              if [ -n "$BN" ] && [ $((BN)) -ge 3 ]; then echo "run $r: block $((BN)) reached"; break; fi
+              sleep 3
+            done
+            if [ $r -eq 1 ]; then
+              (cd besu && ./check.sh) | tee benchmark/output/network_check.txt
+              docker exec besu-node1 besu --version | tee benchmark/output/besu_version.txt || true
+            fi
             OUT=benchmark/output/run$r RPC_URL=http://127.0.0.1:8545 node benchmark/run_benchmark.js
-            sleep 10
+            for i in 1 2 3 4; do docker logs --tail 200 besu-node$i > benchmark/output/run$r-besu-node$i.log 2>&1 || true; done
           done
 
       - name: Collect node logs
         if: always()
         run: |
           mkdir -p benchmark/output
-          for i in 1 2 3 4; do docker logs --tail 300 besu-node$i > benchmark/output/besu-node$i.log 2>&1 || true; done
+          true
 
       - uses: actions/upload-artifact@v4
         if: always()

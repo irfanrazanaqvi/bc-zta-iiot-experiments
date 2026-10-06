@@ -11,6 +11,7 @@ services:
       - --p2p-port=30303
       - --min-gas-price=0
       - --rpc-http-enabled
+      - --rpc-http-max-active-connections=2000
       - --rpc-http-host=0.0.0.0
       - --rpc-http-api=ETH,NET,WEB3,IBFT,TXPOOL,ADMIN
       - --rpc-ws-enabled
@@ -40,6 +41,7 @@ services:
       - --bootnodes=${BOOTNODE}
       - --min-gas-price=0
       - --rpc-http-enabled
+      - --rpc-http-max-active-connections=2000
       - --rpc-http-host=0.0.0.0
       - --rpc-http-api=ETH,NET,WEB3,IBFT,TXPOOL,ADMIN
       - --rpc-ws-enabled
@@ -69,6 +71,7 @@ services:
       - --bootnodes=${BOOTNODE}
       - --min-gas-price=0
       - --rpc-http-enabled
+      - --rpc-http-max-active-connections=2000
       - --rpc-http-host=0.0.0.0
       - --rpc-http-api=ETH,NET,WEB3,IBFT,TXPOOL,ADMIN
       - --rpc-ws-enabled
@@ -98,6 +101,7 @@ services:
       - --bootnodes=${BOOTNODE}
       - --min-gas-price=0
       - --rpc-http-enabled
+      - --rpc-http-max-active-connections=2000
       - --rpc-http-host=0.0.0.0
       - --rpc-http-api=ETH,NET,WEB3,IBFT,TXPOOL,ADMIN
       - --rpc-ws-enabled

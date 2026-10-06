@@ -128,27 +128,52 @@ async function main() {
   console.log("S2", JSON.stringify(result.S2_read_latency));
 
   // ---- S3 / S4: offered-rate sweeps ------------------------------------------------------------------------
-  async function sweep(rate, makeTx, perSecondBatch) {
-    const total = rate * DURATION, sent = [], lat = [];
-    let failed = 0;
+  // Wait until every worker has no pending transactions, then re-sync nonces from the chain.
+  async function drain(maxMs = 90000) {
     const t0 = now();
-    const pending = [];
-    for (let i = 0; i < total; i++) {
-      const due = t0 + (i * 1000) / rate;
-      const wait = due - now();
-      if (wait > 0) await sleep(wait);
-      const wi = i % WORKERS, nonce = nonces[wi]++;
-      const sendT = now();
-      pending.push(
-        workers[wi].sendTransaction({ ...makeTx(i), nonce, ...feeOpts })
-          .then((tx) => watcher.watch(tx.hash).then(({ t }) => { lat.push(t - sendT); sent.push(t); }))
-          .catch(() => { failed++; })
-      );
+    for (;;) {
+      const [latest, pending] = await Promise.all([
+        Promise.all(workers.map((w) => provider.getTransactionCount(w.address, "latest"))),
+        Promise.all(workers.map((w) => provider.getTransactionCount(w.address, "pending"))),
+      ]);
+      if (latest.every((n, i) => n === pending[i]) || now() - t0 > maxMs) { latest.forEach((n, i) => (nonces[i] = n)); return; }
+      await sleep(500);
     }
-    const timeout = sleep(30000).then(() => "timeout");
-    await Promise.race([Promise.allSettled(pending), timeout]);
+  }
+  // Transactions are pre-signed before the timed loop so the single-threaded Node client is not the bottleneck;
+  // each worker then broadcasts its share (sequential per worker, bounded concurrency = WORKERS) at the offered rate.
+  async function sweep(rate, makeTx) {
+    await drain();
+    const total = rate * DURATION, sent = [], lat = [], errors = {};
+    const txType = feeOpts.gasPrice != null ? 0 : 2;
+    const raws = new Array(total);
+    const counters = nonces.slice();
+    for (let i = 0; i < total; i++) {
+      const wi = i % WORKERS;
+      raws[i] = await workers[wi].signTransaction({ ...makeTx(i), nonce: counters[wi]++, chainId: net.chainId, type: txType, ...feeOpts });
+    }
+    let failed = 0;
+    const pending = [];
+    const t0 = now();
+    const runWorker = async (wi) => {
+      for (let i = wi; i < total; i += WORKERS) {
+        const wait = t0 + (i * 1000) / rate - now();
+        if (wait > 0) await sleep(wait);
+        const sendT = now();
+        try {
+          const hash = await provider.send("eth_sendRawTransaction", [raws[i]]);
+          pending.push(watcher.watch(hash).then(({ t }) => { lat.push(t - sendT); sent.push(t); }));
+        } catch (e) {
+          failed++;
+          const m = String(e.shortMessage || e.message || e).slice(0, 80);
+          errors[m] = (errors[m] || 0) + 1;
+        }
+      }
+    };
+    await Promise.all(workers.map((_, wi) => runWorker(wi)));
+    await Promise.race([Promise.allSettled(pending), sleep(60000)]);
     const span = sent.length ? (Math.max(...sent) - t0) / 1000 : null;
-    return { offered_tps: rate, duration_s: DURATION, submitted: total, confirmed: sent.length, failed,
+    return { offered_tps: rate, duration_s: DURATION, submitted: total, confirmed: sent.length, failed, errors,
              committed_tps: span ? sent.length / span : 0, ...stats(lat) };
   }
   result.S3_per_event_logging = [];
@@ -156,9 +181,10 @@ async function main() {
     const row = await sweep(r, (i) => ({ to: alAddr, data: alIface.encodeFunctionData("logEvent", [DID, RES, 1]), gasLimit: 300000 }));
     result.S3_per_event_logging.push(row);
     console.log("S3", JSON.stringify(row));
-    await sleep(3000);
+    await drain();
   }
   // S4: whatever the event rate, anchor one batch per second
+  await drain();
   const row4 = await sweep(1, (i) => ({ to: alAddr, data: alIface.encodeFunctionData("anchorBatch", [h("batch" + i), 1000]), gasLimit: 250000 }));
   result.S4_batch_anchoring = { note: "1 anchorBatch tx/s covers up to the offered event rate of S3 (batch size = events/s)", ...row4 };
   console.log("S4", JSON.stringify(row4));
