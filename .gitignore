@@ -1,0 +1,9 @@
+node_modules/
+artifacts/
+cache/
+typechain-types/
+benchmark/output/
+besu/networkFiles/
+besu/nodes/
+besu/.env
+.DS_Store

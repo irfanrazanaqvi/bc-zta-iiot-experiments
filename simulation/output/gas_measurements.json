@@ -1,0 +1,18 @@
+{
+  "evm": "london",
+  "optimizer_runs": 200,
+  "gas_used": {
+    "IdentityRegistry.registerDID": 55682,
+    "IdentityRegistry.updateKey": 31115,
+    "IdentityRegistry.commitEpoch": 75469,
+    "IdentityRegistry.revokeDID": 49550,
+    "AccessControl.setPolicy": 49731,
+    "AccessControl.evaluateRequest (view, estimateGas)": 44685,
+    "AccessControl.grantSession": 71689,
+    "TrustReputation.updateScore (first vote)": 75980,
+    "TrustReputation.updateScore (quorum reached)": 124772,
+    "TrustReputation.flagAnomaly": 95868,
+    "AuditLog.logEvent": 182008,
+    "AuditLog.anchorBatch": 134747
+  }
+}

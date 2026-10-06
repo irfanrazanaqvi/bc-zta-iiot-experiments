@@ -1,0 +1,5 @@
+Metric,Centralized PKI-IAM,ABAC (no BC),Blockchain-only (sync),Proposed BC-ZTA
+Mean authentication latency (ms),62.0,8.0,1020.4,8.5
+P95 authentication latency (ms),85.1,9.5,1922.3,15.4
+Mean authorization latency (ms),55.9,2.0,1015.9,2.0
+P95 authorization latency (ms),78.7,2.4,1915.6,9.0

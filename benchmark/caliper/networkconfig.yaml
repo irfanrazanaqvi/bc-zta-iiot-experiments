@@ -1,0 +1,21 @@
+# UNTESTED TEMPLATE (see benchconfig.yaml). Caliper's Ethereum connector needs a WebSocket endpoint
+# (Besu node 1 exposes it on host port 8645 via docker-compose) and a JSON file per contract
+# containing {abi, bytecode} (copy from ./artifacts/contracts/<Name>.sol/<Name>.json).
+name: Besu IBFT2 BC-ZTA
+version: "2.0.0"
+caliper:
+  blockchain: ethereum
+ethereum:
+  url: ws://localhost:8645
+  # Well-known test keys, pre-funded in besu/ibftConfigFile.json. NEVER use on a real network.
+  contractDeployerAddress: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+  contractDeployerAddressPrivateKey: "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+  fromAddress: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+  fromAddressPrivateKey: "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"
+  transactionConfirmationBlocks: 1
+  contracts:
+    AuditLog:
+      path: benchmark/caliper/contracts/AuditLog.json
+      gas:
+        logEvent: 300000
+        anchorBatch: 250000

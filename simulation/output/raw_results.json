@@ -1,0 +1,273 @@
+{
+  "seed": 42,
+  "trials": 100000,
+  "params": {
+    "rtt_lan_ms": 2.0,
+    "rtt_wan_ms": 40.0,
+    "rtt_validator_ms": 5.0,
+    "ecdsa_verify_ms": 3.0,
+    "ecdsa_sign_ms": 2.0,
+    "merkle_verify_ms": 0.5,
+    "ldap_lookup_ms": 15.0,
+    "local_lookup_ms": 1.0,
+    "local_policy_eval_ms": 1.0,
+    "chain_read_ms": 8.0,
+    "cache_hit_ms": 0.2,
+    "cache_hit_ratio": 0.9,
+    "block_period_ms": 2000.0,
+    "ibft_message_rounds": 3,
+    "cache_ttl_s": 30.0,
+    "trust_update_interval_s": 30.0,
+    "quorum": 2,
+    "audit_batch_interval_s": 1.0,
+    "chain_capacity_tps": 300.0,
+    "request_rate_per_device": 1.0,
+    "cpu_sigma": 0.15,
+    "net_sigma": 0.3
+  },
+  "latency_100_devices": {
+    "Centralized PKI-IAM": {
+      "auth_mean_ms": 62.04001758691464,
+      "auth_p95_ms": 85.07742962412549,
+      "authz_mean_ms": 55.939484353011714,
+      "authz_p95_ms": 78.73332015787928
+    },
+    "ABAC (no BC)": {
+      "auth_mean_ms": 8.002923771362235,
+      "auth_p95_ms": 9.466253973915737,
+      "authz_mean_ms": 2.001209860570869,
+      "authz_p95_ms": 2.368643791420419
+    },
+    "Blockchain-only (sync)": {
+      "auth_mean_ms": 1020.4323811588214,
+      "auth_p95_ms": 1922.2573574561313,
+      "authz_mean_ms": 1015.9483793239511,
+      "authz_p95_ms": 1915.5781944148043
+    },
+    "Proposed BC-ZTA": {
+      "auth_mean_ms": 8.469066800794174,
+      "auth_p95_ms": 15.36767645760591,
+      "authz_mean_ms": 1.9837025501936214,
+      "authz_p95_ms": 8.951861204109896
+    }
+  },
+  "scalability": {
+    "devices": [
+      10,
+      25,
+      50,
+      100,
+      150,
+      200,
+      250,
+      300,
+      400
+    ],
+    "Blockchain-only (sync)": {
+      "onchain_load_tps": [
+        10.0,
+        25.0,
+        50.0,
+        100.0,
+        150.0,
+        200.0,
+        250.0,
+        300.0,
+        400.0
+      ],
+      "authz_mean_ms": [
+        1011.2375793403756,
+        1009.5582224698693,
+        1011.5453195169962,
+        1015.4253086416746,
+        1021.0259757198186,
+        1017.6722561508819,
+        1029.476704490615,
+        null,
+        null
+      ],
+      "saturated": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true
+      ]
+    },
+    "Proposed BC-ZTA": {
+      "onchain_load_tps": [
+        1.67,
+        2.67,
+        4.33,
+        7.67,
+        11.0,
+        14.33,
+        17.67,
+        21.0,
+        27.67
+      ],
+      "authz_mean_ms": [
+        1.9870307986327203,
+        1.9527447870836514,
+        2.010357219335918,
+        1.990308963427141,
+        1.9761800793309574,
+        1.9535484950145572,
+        1.9802606349854666,
+        1.9796861550932412,
+        1.9811594788303875
+      ],
+      "saturated": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "ledger_capacity_tps": 300.0,
+  "blockchain_only_saturation_devices": 300,
+  "blockchain_only_saturation_analytic": 300.0,
+  "revocation_delay": {
+    "Centralized PKI-IAM": {
+      "mean_s": 0.0,
+      "worst_s": 0.0,
+      "note": "online lookup; effective on next request"
+    },
+    "ABAC (no BC)": {
+      "mean_s": 0.0,
+      "worst_s": 0.0,
+      "note": "local store updated directly"
+    },
+    "Blockchain-only (sync)": {
+      "mean_s": 1.016668457075323,
+      "worst_s": 2.1,
+      "note": "next block"
+    },
+    "Proposed BC-ZTA (TTL expiry)": {
+      "mean_s": 16.02054410508,
+      "worst_s": 32.1,
+      "note": "block finality + remaining cache TTL"
+    },
+    "Proposed BC-ZTA (event-driven)": {
+      "mean_s": 1.024668457075323,
+      "worst_s": 2.108,
+      "note": "gateway subscribes to DIDRevoked events"
+    }
+  },
+  "storage": {
+    "DIDRecord_bytes": 96,
+    "AuditEntry_bytes": 192,
+    "AuditAnchor_bytes": 160
+  },
+  "audit_growth_400_devices": {
+    "events_per_day": 34560000.0,
+    "per_event_logging_MB_per_day": 6635.52,
+    "batch_anchoring_MB_per_day": 13.824
+  },
+  "sensitivity": {
+    "cache_hit_ratio": [
+      {
+        "hit": 0.5,
+        "authz_mean_ms": 5.116528370073363,
+        "authz_p95_ms": 10.591046399381229
+      },
+      {
+        "hit": 0.7,
+        "authz_mean_ms": 3.525077488172401,
+        "authz_p95_ms": 10.117842124098132
+      },
+      {
+        "hit": 0.8,
+        "authz_mean_ms": 2.7735907022016035,
+        "authz_p95_ms": 9.745499157367197
+      },
+      {
+        "hit": 0.9,
+        "authz_mean_ms": 1.975765881527548,
+        "authz_p95_ms": 8.883513140597511
+      },
+      {
+        "hit": 0.95,
+        "authz_mean_ms": 1.5829742388345547,
+        "authz_p95_ms": 1.8020167605428168
+      },
+      {
+        "hit": 0.99,
+        "authz_mean_ms": 1.2799712740502645,
+        "authz_p95_ms": 1.4885221487893183
+      }
+    ],
+    "cache_ttl_s": [
+      {
+        "ttl": 5,
+        "ttl_mean_s": 3.5150857714892663,
+        "ttl_worst_s": 7.1,
+        "event_mean_s": 1.0226351024375293,
+        "reads_per_s_400dev": 80.0
+      },
+      {
+        "ttl": 10,
+        "ttl_mean_s": 6.009971425179966,
+        "ttl_worst_s": 12.1,
+        "event_mean_s": 1.0247951491539549,
+        "reads_per_s_400dev": 40.0
+      },
+      {
+        "ttl": 30,
+        "ttl_mean_s": 15.982817483135982,
+        "ttl_worst_s": 32.1,
+        "event_mean_s": 1.0166618439853987,
+        "reads_per_s_400dev": 13.333333333333334
+      },
+      {
+        "ttl": 60,
+        "ttl_mean_s": 31.05141147599431,
+        "ttl_worst_s": 62.1,
+        "event_mean_s": 1.0251943297817705,
+        "reads_per_s_400dev": 6.666666666666667
+      },
+      {
+        "ttl": 120,
+        "ttl_mean_s": 60.973430513325894,
+        "ttl_worst_s": 122.1,
+        "event_mean_s": 1.025259627118106,
+        "reads_per_s_400dev": 3.3333333333333335
+      },
+      {
+        "ttl": 300,
+        "ttl_mean_s": 151.04196836112177,
+        "ttl_worst_s": 302.1,
+        "event_mean_s": 1.021671298232635,
+        "reads_per_s_400dev": 1.3333333333333333
+      }
+    ]
+  },
+  "gas_used": {
+    "IdentityRegistry.registerDID": 55682,
+    "IdentityRegistry.updateKey": 31115,
+    "IdentityRegistry.commitEpoch": 75469,
+    "IdentityRegistry.revokeDID": 49550,
+    "AccessControl.setPolicy": 49731,
+    "AccessControl.evaluateRequest (view, estimateGas)": 44685,
+    "AccessControl.grantSession": 71689,
+    "TrustReputation.updateScore (first vote)": 75980,
+    "TrustReputation.updateScore (quorum reached)": 124772,
+    "TrustReputation.flagAnomaly": 95868,
+    "AuditLog.logEvent": 182008,
+    "AuditLog.anchorBatch": 134747
+  },
+  "gas_per_record": {
+    "logEvent_per_record": 182008,
+    "anchorBatch_per_record_at_1000": 134.747
+  }
+}

@@ -1,0 +1,21 @@
+# Hyperledger Caliper benchmark template for the BC-ZTA contracts.
+# UNTESTED TEMPLATE: written from the Caliper Ethereum-connector documentation; adjust versions/paths on first run.
+# The tested measurement path in this package is benchmark/run_benchmark.js.
+test:
+  name: bc-zta-besu
+  description: Per-event logging versus batch anchoring on a 4-validator Besu IBFT 2.0 network
+  workers:
+    number: 2
+  rounds:
+    - label: logEvent-50tps
+      txDuration: 30
+      rateControl: { type: fixed-rate, opts: { tps: 50 } }
+      workload: { module: benchmark/caliper/workloads/logEvent.js }
+    - label: logEvent-100tps
+      txDuration: 30
+      rateControl: { type: fixed-rate, opts: { tps: 100 } }
+      workload: { module: benchmark/caliper/workloads/logEvent.js }
+    - label: anchorBatch-1tps
+      txDuration: 30
+      rateControl: { type: fixed-rate, opts: { tps: 1 } }
+      workload: { module: benchmark/caliper/workloads/anchorBatch.js }
