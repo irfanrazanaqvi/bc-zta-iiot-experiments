@@ -57,3 +57,7 @@ The seed (42) makes the run reproducible.
 `benchmark/results/ci-2026-10-06/` holds three fresh-network Besu v26.9.0 IBFT 2.0 runs (4 validators on one shared 2-vCPU runner).
 `python3 benchmark/aggregate_results.py` produces `aggregate.json`, which `simulation/simulate_experiment.py` uses for the ledger-side inputs.
 Headline: ~1.5 s confirmation at 10 tx/s, 5.4 ms reads, ledger saturation near 60 tx/s. The shared host makes these lower bounds for a multi-server deployment; the edge-cache path and PKI/ABAC baselines remain modelled.
+
+## End-to-end evaluation (GitHub Actions, 2026-10-07)
+
+`system/` contains the PEP/PDP prototype, the three baselines and the load generator; `.github/workflows/e2e-benchmark.yml` runs it against a fresh 4-validator Besu network (3 repetitions). Raw results: `benchmark/results/e2e-2026-10-07/`; aggregation and figures: `python3 system/make_e2e_artifacts.py benchmark/results/e2e-2026-10-07 system/output`. The paper's Section VI uses these measurements. `simulation/` (the earlier Monte-Carlo model) is kept as supplementary material and is no longer used for the paper's results.

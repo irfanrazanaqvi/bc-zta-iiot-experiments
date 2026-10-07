@@ -1,0 +1,796 @@
+{
+  "meta": {
+    "date": "2026-10-07T18:00:40.061Z",
+    "rpc": "http://127.0.0.1:8545",
+    "chainId": 2026,
+    "counts": [
+      10,
+      25,
+      50,
+      100,
+      200
+    ],
+    "duration_s": 20,
+    "warmup_s": 5,
+    "wan_rtt_ms": 40,
+    "quick": false
+  },
+  "E1": {
+    "central": [
+      {
+        "devices": 10,
+        "duration_s": 20,
+        "offered_rps": 10,
+        "measured": 200,
+        "ok": 200,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 10,
+        "n": 200,
+        "mean_ms": 47.6446895850054,
+        "p50_ms": 46.964037999976426,
+        "p95_ms": 51.43338799988851,
+        "p99_ms": 53.63093800004572,
+        "max_ms": 55.80507200001739,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.05409974772152573
+        }
+      },
+      {
+        "devices": 25,
+        "duration_s": 20,
+        "offered_rps": 25,
+        "measured": 500,
+        "ok": 500,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 25,
+        "n": 500,
+        "mean_ms": 47.86087329200329,
+        "p50_ms": 46.69430799991824,
+        "p95_ms": 53.05294999992475,
+        "p99_ms": 72.18436000007205,
+        "max_ms": 86.2737489999272,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.10592980109576376
+        }
+      },
+      {
+        "devices": 50,
+        "duration_s": 20,
+        "offered_rps": 50,
+        "measured": 1000,
+        "ok": 1000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 50,
+        "n": 1000,
+        "mean_ms": 47.647345126994416,
+        "p50_ms": 46.33245900017209,
+        "p95_ms": 54.52040800009854,
+        "p99_ms": 68.55330600007437,
+        "max_ms": 75.97234600014053,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.19721133228061916
+        }
+      },
+      {
+        "devices": 100,
+        "duration_s": 20,
+        "offered_rps": 100,
+        "measured": 2000,
+        "ok": 2000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 100,
+        "n": 2000,
+        "mean_ms": 49.14066960449901,
+        "p50_ms": 45.88547100010328,
+        "p95_ms": 67.67562299990095,
+        "p99_ms": 112.77258499991149,
+        "max_ms": 169.26433999999426,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.31088330756737764
+        }
+      },
+      {
+        "devices": 200,
+        "duration_s": 20,
+        "offered_rps": 200,
+        "measured": 4000,
+        "ok": 4000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 200,
+        "n": 4000,
+        "mean_ms": 56.928017341247816,
+        "p50_ms": 47.34632799983956,
+        "p95_ms": 108.88631299999543,
+        "p99_ms": 153.8555199999828,
+        "max_ms": 195.96876099985093,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.5102787665160107
+        }
+      }
+    ],
+    "abac": [
+      {
+        "devices": 10,
+        "duration_s": 20,
+        "offered_rps": 10,
+        "measured": 200,
+        "ok": 200,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 10,
+        "n": 200,
+        "mean_ms": 4.0704793549876195,
+        "p50_ms": 3.457888000179082,
+        "p95_ms": 7.360381999984384,
+        "p99_ms": 10.027445000130683,
+        "max_ms": 13.926571999909356,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.047308142064264404
+        }
+      },
+      {
+        "devices": 25,
+        "duration_s": 20,
+        "offered_rps": 25,
+        "measured": 500,
+        "ok": 500,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 25,
+        "n": 500,
+        "mean_ms": 4.002653849997558,
+        "p50_ms": 3.348943999968469,
+        "p95_ms": 6.595414999872446,
+        "p99_ms": 14.52742200018838,
+        "max_ms": 33.51056699990295,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.09418149058346871
+        }
+      },
+      {
+        "devices": 50,
+        "duration_s": 20,
+        "offered_rps": 50,
+        "measured": 1000,
+        "ok": 1000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 50,
+        "n": 1000,
+        "mean_ms": 4.131989881000249,
+        "p50_ms": 3.209300999995321,
+        "p95_ms": 8.277606999967247,
+        "p99_ms": 21.38459699996747,
+        "max_ms": 46.0935439998284,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.16675768680270367
+        }
+      },
+      {
+        "devices": 100,
+        "duration_s": 20,
+        "offered_rps": 100,
+        "measured": 2000,
+        "ok": 2000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 100,
+        "n": 2000,
+        "mean_ms": 5.941477696501301,
+        "p50_ms": 2.8915619999170303,
+        "p95_ms": 23.391378999920562,
+        "p99_ms": 57.2837830001954,
+        "max_ms": 141.60355399991386,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.28218420538990796
+        }
+      },
+      {
+        "devices": 200,
+        "duration_s": 20,
+        "offered_rps": 200,
+        "measured": 4000,
+        "ok": 4000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 200,
+        "n": 4000,
+        "mean_ms": 10.241488204251043,
+        "p50_ms": 2.803287999937311,
+        "p95_ms": 48.40059900004417,
+        "p99_ms": 124.21567400009371,
+        "max_ms": 238.88340699998662,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.5280685884813542
+        }
+      }
+    ],
+    "bczta": [
+      {
+        "devices": 10,
+        "duration_s": 20,
+        "offered_rps": 10,
+        "measured": 200,
+        "ok": 200,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 10,
+        "n": 200,
+        "mean_ms": 7.124513650009176,
+        "p50_ms": 3.955225999932736,
+        "p95_ms": 17.215269000036642,
+        "p99_ms": 59.72146399994381,
+        "max_ms": 68.69343400001526,
+        "pep": {
+          "cache_hit_ratio": 0.96,
+          "chain_reads": 10,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 25,
+          "anchors_confirmed": 24,
+          "anchored_events": 246,
+          "cpu_cores_avg": 0.1155585729490482
+        }
+      },
+      {
+        "devices": 25,
+        "duration_s": 20,
+        "offered_rps": 25,
+        "measured": 500,
+        "ok": 500,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 25,
+        "n": 500,
+        "mean_ms": 6.083993567992468,
+        "p50_ms": 3.744327000109479,
+        "p95_ms": 15.790496000088751,
+        "p99_ms": 34.75173099990934,
+        "max_ms": 44.25932199996896,
+        "pep": {
+          "cache_hit_ratio": 0.96,
+          "chain_reads": 25,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 25,
+          "anchors_confirmed": 25,
+          "anchored_events": 612,
+          "cpu_cores_avg": 0.16471337841196657
+        }
+      },
+      {
+        "devices": 50,
+        "duration_s": 20,
+        "offered_rps": 50,
+        "measured": 1000,
+        "ok": 1000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 50,
+        "n": 1000,
+        "mean_ms": 6.150264371002558,
+        "p50_ms": 3.6316179998684675,
+        "p95_ms": 17.490340000018477,
+        "p99_ms": 34.84380399994552,
+        "max_ms": 62.76432100008242,
+        "pep": {
+          "cache_hit_ratio": 0.96,
+          "chain_reads": 50,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 24,
+          "anchors_confirmed": 24,
+          "anchored_events": 1200,
+          "cpu_cores_avg": 0.25776197171565773
+        }
+      },
+      {
+        "devices": 100,
+        "duration_s": 20,
+        "offered_rps": 100,
+        "measured": 2000,
+        "ok": 2000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 100,
+        "n": 2000,
+        "mean_ms": 8.299279369992087,
+        "p50_ms": 3.3250710000284016,
+        "p95_ms": 37.617351999972016,
+        "p99_ms": 75.45648099994287,
+        "max_ms": 108.91517599998042,
+        "pep": {
+          "cache_hit_ratio": 0.96,
+          "chain_reads": 100,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 25,
+          "anchors_confirmed": 24,
+          "anchored_events": 2417,
+          "cpu_cores_avg": 0.40492119620171546
+        }
+      },
+      {
+        "devices": 200,
+        "duration_s": 20,
+        "offered_rps": 200,
+        "measured": 4000,
+        "ok": 4000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 200,
+        "n": 4000,
+        "mean_ms": 43.887614601001374,
+        "p50_ms": 10.001040999777615,
+        "p95_ms": 171.18544599972665,
+        "p99_ms": 250.8628130001016,
+        "max_ms": 332.985693000257,
+        "pep": {
+          "cache_hit_ratio": 0.9588,
+          "chain_reads": 206,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 24,
+          "anchors_confirmed": 23,
+          "anchored_events": 4900,
+          "cpu_cores_avg": 0.6696553657432409
+        }
+      }
+    ],
+    "bcsync": [
+      {
+        "devices": 10,
+        "duration_s": 20,
+        "offered_rps": 10,
+        "measured": 200,
+        "ok": 200,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 10,
+        "n": 200,
+        "mean_ms": 1356.6446834900044,
+        "p50_ms": 1359.9843990001827,
+        "p95_ms": 2246.4001539996825,
+        "p99_ms": 2379.6786119998433,
+        "max_ms": 2424.810954000335,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 250,
+          "tx_sent": 250,
+          "tx_confirmed": 250,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.11748666297570717
+        }
+      },
+      {
+        "devices": 25,
+        "duration_s": 20,
+        "offered_rps": 25,
+        "measured": 500,
+        "ok": 498,
+        "denied": 2,
+        "failed_or_timeout": 0,
+        "reasons": {
+          "error:Internal error": 2
+        },
+        "goodput_rps": 24.9,
+        "n": 500,
+        "mean_ms": 2157.831747472001,
+        "p50_ms": 2133.0168749997392,
+        "p95_ms": 3542.9180080001242,
+        "p99_ms": 4028.1659289998934,
+        "max_ms": 5336.997746000066,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 625,
+          "tx_sent": 623,
+          "tx_confirmed": 623,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.23154271704895757
+        }
+      },
+      {
+        "devices": 50,
+        "duration_s": 20,
+        "offered_rps": 50,
+        "measured": 1000,
+        "ok": 791,
+        "denied": 209,
+        "failed_or_timeout": 0,
+        "reasons": {
+          "error:Internal error": 3,
+          "stale": 206
+        },
+        "goodput_rps": 39.55,
+        "n": 1000,
+        "mean_ms": 8937.655222062012,
+        "p50_ms": 8561.81544499984,
+        "p95_ms": 16141.25192799978,
+        "p99_ms": 16961.052838000003,
+        "max_ms": 17266.518659000285,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 1044,
+          "tx_sent": 1041,
+          "tx_confirmed": 1041,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.29850632053978093
+        }
+      },
+      {
+        "devices": 100,
+        "duration_s": 20,
+        "offered_rps": 100,
+        "measured": 2000,
+        "ok": 876,
+        "denied": 1124,
+        "failed_or_timeout": 0,
+        "reasons": {
+          "error:Internal error": 2,
+          "stale": 1122
+        },
+        "goodput_rps": 43.8,
+        "n": 2000,
+        "mean_ms": 14150.089218884495,
+        "p50_ms": 13946.713189000264,
+        "p95_ms": 19774.88922200026,
+        "p99_ms": 21206.11733599985,
+        "max_ms": 27745.72943999991,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 1079,
+          "tx_sent": 1077,
+          "tx_confirmed": 1077,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.2577818976266106
+        }
+      },
+      {
+        "devices": 200,
+        "duration_s": 20,
+        "offered_rps": 200,
+        "measured": 4000,
+        "ok": 780,
+        "denied": 2580,
+        "failed_or_timeout": 640,
+        "reasons": {
+          "error:Internal error": 2,
+          "stale": 2578
+        },
+        "goodput_rps": 39,
+        "n": 3360,
+        "mean_ms": 14607.63594014434,
+        "p50_ms": 13255.537825999781,
+        "p95_ms": 28773.54502800014,
+        "p99_ms": 34247.244793000165,
+        "max_ms": 44322.061344000045,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 1069,
+          "tx_sent": 1067,
+          "tx_confirmed": 1067,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.20711702937543128
+        }
+      }
+    ]
+  },
+  "E2": {
+    "central": {
+      "ttl_s": null,
+      "reps": 8,
+      "n": 8,
+      "mean_ms": 48.503709250013344,
+      "p50_ms": 47.518166000023484,
+      "p95_ms": 53.89172700000927,
+      "p99_ms": 53.89172700000927,
+      "max_ms": 53.89172700000927,
+      "samples_ms": [
+        48.84619100019336,
+        53.89172700000927,
+        46.678838999941945,
+        47.518166000023484,
+        48.10393900005147,
+        47.48902099998668,
+        48.153028999920934,
+        47.348761999979615
+      ]
+    },
+    "abac": {
+      "ttl_s": null,
+      "reps": 8,
+      "n": 8,
+      "mean_ms": 4.690591624996159,
+      "p50_ms": 4.377660000231117,
+      "p95_ms": 5.806493000127375,
+      "p99_ms": 5.806493000127375,
+      "max_ms": 5.806493000127375,
+      "samples_ms": [
+        5.4185549998655915,
+        4.377660000231117,
+        4.63055400038138,
+        4.360897999722511,
+        4.199552999809384,
+        5.806493000127375,
+        4.299380999989808,
+        4.431638999842107
+      ]
+    },
+    "bcsync": {
+      "ttl_s": null,
+      "reps": 8,
+      "n": 8,
+      "mean_ms": 2021.9505943749682,
+      "p50_ms": 2020.7804809999652,
+      "p95_ms": 2054.6873749997467,
+      "p99_ms": 2054.6873749997467,
+      "max_ms": 2054.6873749997467,
+      "samples_ms": [
+        2047.207475000061,
+        2020.931962000206,
+        2005.480392999947,
+        2054.6873749997467,
+        2014.391311999876,
+        2020.7804809999652,
+        2024.0391359999776,
+        1988.0866209999658
+      ]
+    },
+    "bczta-events": {
+      "ttl_s": 10,
+      "reps": 8,
+      "n": 8,
+      "mean_ms": 1066.6839054999873,
+      "p50_ms": 517.1401529996656,
+      "p95_ms": 2116.299074999988,
+      "p99_ms": 2116.299074999988,
+      "max_ms": 2116.299074999988,
+      "samples_ms": [
+        517.1401529996656,
+        1714.0464639998972,
+        1138.6857099998742,
+        303.80278600007296,
+        1953.833349000197,
+        454.7492949999869,
+        334.91441200021654,
+        2116.299074999988
+      ]
+    },
+    "bczta-ttl": {
+      "ttl_s": 10,
+      "reps": 8,
+      "n": 8,
+      "mean_ms": 4822.61122074991,
+      "p50_ms": 4409.15422399994,
+      "p95_ms": 8301.484674999956,
+      "p99_ms": 8301.484674999956,
+      "max_ms": 8301.484674999956,
+      "samples_ms": [
+        2887.232177000027,
+        2934.322184999939,
+        5675.092315999791,
+        6178.037783999927,
+        8301.484674999956,
+        7401.475617999677,
+        794.0907870000228,
+        4409.15422399994
+      ]
+    }
+  },
+  "E3": {
+    "legitimate_requests (control)": {
+      "attempts": 50,
+      "allowed": 50,
+      "denied": 0,
+      "reasons": {}
+    },
+    "forged_signature": {
+      "attempts": 50,
+      "allowed": 0,
+      "denied": 50,
+      "reasons": {
+        "sigmismatch": 50
+      }
+    },
+    "replayed_request": {
+      "attempts": 50,
+      "allowed": 0,
+      "denied": 50,
+      "reasons": {
+        "replay": 50
+      }
+    },
+    "stale_timestamp": {
+      "attempts": 50,
+      "allowed": 0,
+      "denied": 50,
+      "reasons": {
+        "stale": 50
+      }
+    },
+    "unregistered_DID": {
+      "attempts": 50,
+      "allowed": 0,
+      "denied": 50,
+      "reasons": {
+        "unknown": 50
+      }
+    },
+    "tampered_merkle_proof": {
+      "attempts": 50,
+      "allowed": 0,
+      "denied": 50,
+      "reasons": {
+        "merkle": 50
+      }
+    },
+    "device_class_outside_policy": {
+      "attempts": 50,
+      "allowed": 0,
+      "denied": 50,
+      "reasons": {
+        "class": 50
+      }
+    },
+    "low_trust_score": {
+      "attempts": 50,
+      "allowed": 0,
+      "denied": 50,
+      "reasons": {
+        "trust": 50
+      }
+    },
+    "revoked_device": {
+      "accepted_before_revocation": 5,
+      "accepted_after_tx_confirmed": 0,
+      "first_denial_after_confirmation_ms": 8.070278000086546
+    }
+  },
+  "E4": {
+    "bczta_idle_ledger": {
+      "devices": 50,
+      "duration_s": 20,
+      "offered_rps": 50,
+      "measured": 1000,
+      "ok": 1000,
+      "denied": 0,
+      "failed_or_timeout": 0,
+      "reasons": {},
+      "goodput_rps": 50,
+      "n": 1000,
+      "mean_ms": 4.47565497900499,
+      "p50_ms": 3.5018819998949766,
+      "p95_ms": 7.503550999797881,
+      "p99_ms": 26.48997200001031,
+      "max_ms": 55.010378000326455,
+      "flood": null
+    },
+    "bczta_under_flood": {
+      "devices": 50,
+      "duration_s": 20,
+      "offered_rps": 50,
+      "measured": 1000,
+      "ok": 547,
+      "denied": 453,
+      "failed_or_timeout": 0,
+      "reasons": {
+        "stale": 453
+      },
+      "goodput_rps": 27.35,
+      "n": 1000,
+      "mean_ms": 8323.341877635004,
+      "p50_ms": 5030.130803000182,
+      "p95_ms": 21082.290878000204,
+      "p99_ms": 22108.393978999928,
+      "max_ms": 22403.152623999864,
+      "flood": {
+        "offered_tps": 200,
+        "seconds": 35,
+        "txs": 7000,
+        "sent": 1838,
+        "rejected": 5162
+      }
+    }
+  }
+}

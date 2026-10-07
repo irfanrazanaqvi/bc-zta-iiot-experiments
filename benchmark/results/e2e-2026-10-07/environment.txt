@@ -1,0 +1,5 @@
+date: 2026-10-07T17:37:57Z
+cpu: AMD EPYC 7763 64-Core Processor  cores: 2
+Mem:            7938        1093        4262          45        2929        6844
+node: v20.20.2
+Docker version 28.0.4, build b8034c0

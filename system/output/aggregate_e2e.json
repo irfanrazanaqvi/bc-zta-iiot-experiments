@@ -1,0 +1,479 @@
+{
+  "runs": 3,
+  "counts": [
+    10,
+    25,
+    50,
+    100,
+    200
+  ],
+  "duration_s": 20,
+  "warmup_s": 5,
+  "wan_rtt_ms": 40,
+  "E1": {
+    "central": [
+      {
+        "devices": 10,
+        "mean_ms": 47.988934218340056,
+        "mean_ms_sd": 0.29817148887527006,
+        "p95_ms": 52.20636399994449,
+        "p99_ms": 58.329399000116005,
+        "goodput_rps": 10.0,
+        "goodput_sd": 0.0,
+        "success_ratio": 1.0,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.054801729979490205,
+        "cache_hit_ratio": null,
+        "onchain_tx_per_s": 0.0
+      },
+      {
+        "devices": 25,
+        "mean_ms": 47.97305702733349,
+        "mean_ms_sd": 0.09925140694928314,
+        "p95_ms": 54.560292333286874,
+        "p99_ms": 67.22877166664694,
+        "goodput_rps": 25.0,
+        "goodput_sd": 0.0,
+        "success_ratio": 1.0,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.10854302901045403,
+        "cache_hit_ratio": null,
+        "onchain_tx_per_s": 0.0
+      },
+      {
+        "devices": 50,
+        "mean_ms": 48.24140036166091,
+        "mean_ms_sd": 0.5522303026618007,
+        "p95_ms": 57.079552333375126,
+        "p99_ms": 75.62496033341934,
+        "goodput_rps": 50.0,
+        "goodput_sd": 0.0,
+        "success_ratio": 1.0,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.20113564700661482,
+        "cache_hit_ratio": null,
+        "onchain_tx_per_s": 0.0
+      },
+      {
+        "devices": 100,
+        "mean_ms": 48.82603320266552,
+        "mean_ms_sd": 0.32049855326706916,
+        "p95_ms": 66.67096733325161,
+        "p99_ms": 96.36592566668212,
+        "goodput_rps": 100.0,
+        "goodput_sd": 0.0,
+        "success_ratio": 1.0,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.3259764214866479,
+        "cache_hit_ratio": null,
+        "onchain_tx_per_s": 0.0
+      },
+      {
+        "devices": 200,
+        "mean_ms": 60.840559604832485,
+        "mean_ms_sd": 4.226493760673769,
+        "p95_ms": 126.71164466665748,
+        "p99_ms": 223.71174633328337,
+        "goodput_rps": 200.0,
+        "goodput_sd": 0.0,
+        "success_ratio": 1.0,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.546061607438419,
+        "cache_hit_ratio": null,
+        "onchain_tx_per_s": 0.0
+      }
+    ],
+    "abac": [
+      {
+        "devices": 10,
+        "mean_ms": 4.054189354994451,
+        "mean_ms_sd": 0.0785412497329536,
+        "p95_ms": 6.776845333321641,
+        "p99_ms": 10.403414999949746,
+        "goodput_rps": 10.0,
+        "goodput_sd": 0.0,
+        "success_ratio": 1.0,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.047176104134048456,
+        "cache_hit_ratio": null,
+        "onchain_tx_per_s": 0.0
+      },
+      {
+        "devices": 25,
+        "mean_ms": 4.237665488668019,
+        "mean_ms_sd": 0.20401981646988623,
+        "p95_ms": 7.635315000001962,
+        "p99_ms": 16.304748666666757,
+        "goodput_rps": 25.0,
+        "goodput_sd": 0.0,
+        "success_ratio": 1.0,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.09602252751940725,
+        "cache_hit_ratio": null,
+        "onchain_tx_per_s": 0.0
+      },
+      {
+        "devices": 50,
+        "mean_ms": 4.427494205329878,
+        "mean_ms_sd": 0.2560257677650714,
+        "p95_ms": 8.768418999932086,
+        "p99_ms": 20.837822999921627,
+        "goodput_rps": 50.0,
+        "goodput_sd": 0.0,
+        "success_ratio": 1.0,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.17145017037589816,
+        "cache_hit_ratio": null,
+        "onchain_tx_per_s": 0.0
+      },
+      {
+        "devices": 100,
+        "mean_ms": 5.298973738333113,
+        "mean_ms_sd": 0.6966055044917788,
+        "p95_ms": 16.789148333404835,
+        "p99_ms": 43.2996493333485,
+        "goodput_rps": 100.0,
+        "goodput_sd": 0.0,
+        "success_ratio": 1.0,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.3028515893418352,
+        "cache_hit_ratio": null,
+        "onchain_tx_per_s": 0.0
+      },
+      {
+        "devices": 200,
+        "mean_ms": 11.99156065841938,
+        "mean_ms_sd": 2.5306955921966687,
+        "p95_ms": 60.46035133325495,
+        "p99_ms": 116.11538333333253,
+        "goodput_rps": 200.0,
+        "goodput_sd": 0.0,
+        "success_ratio": 1.0,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.53169112714462,
+        "cache_hit_ratio": null,
+        "onchain_tx_per_s": 0.0
+      }
+    ],
+    "bczta": [
+      {
+        "devices": 10,
+        "mean_ms": 7.3005155300067655,
+        "mean_ms_sd": 0.40558146863954253,
+        "p95_ms": 19.11495499991967,
+        "p99_ms": 44.37481433343297,
+        "goodput_rps": 10.0,
+        "goodput_sd": 0.0,
+        "success_ratio": 1.0,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.12230281326032506,
+        "cache_hit_ratio": 0.96,
+        "onchain_tx_per_s": 1.0
+      },
+      {
+        "devices": 25,
+        "mean_ms": 6.472630108000943,
+        "mean_ms_sd": 0.33760197753923893,
+        "p95_ms": 18.215815666830167,
+        "p99_ms": 34.38524966663681,
+        "goodput_rps": 25.0,
+        "goodput_sd": 0.0,
+        "success_ratio": 1.0,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.1732554289233017,
+        "cache_hit_ratio": 0.96,
+        "onchain_tx_per_s": 1.0
+      },
+      {
+        "devices": 50,
+        "mean_ms": 7.426094086668299,
+        "mean_ms_sd": 1.1247601744573719,
+        "p95_ms": 22.302210333330247,
+        "p99_ms": 56.973456333352566,
+        "goodput_rps": 50.0,
+        "goodput_sd": 0.0,
+        "success_ratio": 1.0,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.26418483416846544,
+        "cache_hit_ratio": 0.96,
+        "onchain_tx_per_s": 0.9866666666666667
+      },
+      {
+        "devices": 100,
+        "mean_ms": 11.298376988163062,
+        "mean_ms_sd": 3.0394381313709813,
+        "p95_ms": 52.79337500000838,
+        "p99_ms": 108.72603166658276,
+        "goodput_rps": 100.0,
+        "goodput_sd": 0.0,
+        "success_ratio": 1.0,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.4239083040974157,
+        "cache_hit_ratio": 0.96,
+        "onchain_tx_per_s": 1.0
+      },
+      {
+        "devices": 200,
+        "mean_ms": 54.69253085124864,
+        "mean_ms_sd": 10.209683862062185,
+        "p95_ms": 208.6297130000312,
+        "p99_ms": 313.55676933323656,
+        "goodput_rps": 200.0,
+        "goodput_sd": 0.0,
+        "success_ratio": 1.0,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.5938424029952397,
+        "cache_hit_ratio": 0.9590999864333197,
+        "onchain_tx_per_s": 0.9733333333333333
+      }
+    ],
+    "bcsync": [
+      {
+        "devices": 10,
+        "mean_ms": 1426.086196535006,
+        "mean_ms_sd": 123.01011940949364,
+        "p95_ms": 2311.7143996664477,
+        "p99_ms": 2423.8007210001037,
+        "goodput_rps": 9.983333333333333,
+        "goodput_sd": 0.0288675134594817,
+        "success_ratio": 0.9983333333333333,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.1257365633641052,
+        "cache_hit_ratio": null,
+        "onchain_tx_per_s": 9.986666666666666
+      },
+      {
+        "devices": 25,
+        "mean_ms": 2933.77974586667,
+        "mean_ms_sd": 1031.7263289439372,
+        "p95_ms": 4556.719632333377,
+        "p99_ms": 5224.498476333218,
+        "goodput_rps": 24.96666666666667,
+        "goodput_sd": 0.0577350269189634,
+        "success_ratio": 0.9986666666666667,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.2287826166860456,
+        "cache_hit_ratio": null,
+        "onchain_tx_per_s": 24.973333333333333
+      },
+      {
+        "devices": 50,
+        "mean_ms": 10256.578528975342,
+        "mean_ms_sd": 2950.449960640788,
+        "p95_ms": 15847.156191999946,
+        "p99_ms": 16707.558793000022,
+        "goodput_rps": 37.18333333333333,
+        "goodput_sd": 6.387748690527307,
+        "success_ratio": 0.7436666666666667,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.2900117495020532,
+        "cache_hit_ratio": null,
+        "onchain_tx_per_s": 39.21333333333333
+      },
+      {
+        "devices": 100,
+        "mean_ms": 13976.987179731668,
+        "mean_ms_sd": 176.67243631037647,
+        "p95_ms": 20591.98284800009,
+        "p99_ms": 24776.156091666548,
+        "goodput_rps": 46.699999999999996,
+        "goodput_sd": 3.405510240771567,
+        "success_ratio": 0.467,
+        "failed_or_timeout": 0,
+        "cpu_cores": 0.26904130150353023,
+        "cache_hit_ratio": null,
+        "onchain_tx_per_s": 46.72
+      },
+      {
+        "devices": 200,
+        "mean_ms": 15046.886299955708,
+        "mean_ms_sd": 415.98059819164797,
+        "p95_ms": 27169.212048999965,
+        "p99_ms": 31841.177460333332,
+        "goodput_rps": 41.833333333333336,
+        "goodput_sd": 4.907477288111819,
+        "success_ratio": 0.20916666666666667,
+        "failed_or_timeout": 2158,
+        "cpu_cores": 0.2191966859840239,
+        "cache_hit_ratio": null,
+        "onchain_tx_per_s": 42.17333333333334
+      }
+    ]
+  },
+  "E2": {
+    "central": {
+      "n": 24,
+      "mean_ms": 48.209101500009034,
+      "p95_ms": 50.44722189992899,
+      "max_ms": 53.89172700000927,
+      "ttl_s": null
+    },
+    "abac": {
+      "n": 24,
+      "mean_ms": 4.973033458295201,
+      "p95_ms": 5.800248800078407,
+      "max_ms": 11.918989999918267,
+      "ttl_s": null
+    },
+    "bcsync": {
+      "n": 24,
+      "mean_ms": 2025.8777434582782,
+      "p95_ms": 2056.863890100154,
+      "max_ms": 2097.7571999998763,
+      "ttl_s": null
+    },
+    "bczta-events": {
+      "n": 24,
+      "mean_ms": 1219.4578497499654,
+      "p95_ms": 2108.5139596499616,
+      "max_ms": 2118.537394999992,
+      "ttl_s": 10
+    },
+    "bczta-ttl": {
+      "n": 24,
+      "mean_ms": 5455.152573458297,
+      "p95_ms": 8476.204725000018,
+      "max_ms": 11181.172330000205,
+      "ttl_s": 10
+    }
+  },
+  "E3": {
+    "legitimate_requests (control)": {
+      "attempts": 150,
+      "allowed": 150,
+      "denied": 0
+    },
+    "forged_signature": {
+      "attempts": 150,
+      "allowed": 0,
+      "denied": 150
+    },
+    "replayed_request": {
+      "attempts": 150,
+      "allowed": 0,
+      "denied": 150
+    },
+    "stale_timestamp": {
+      "attempts": 150,
+      "allowed": 0,
+      "denied": 150
+    },
+    "unregistered_DID": {
+      "attempts": 150,
+      "allowed": 0,
+      "denied": 150
+    },
+    "tampered_merkle_proof": {
+      "attempts": 150,
+      "allowed": 0,
+      "denied": 150
+    },
+    "device_class_outside_policy": {
+      "attempts": 150,
+      "allowed": 0,
+      "denied": 150
+    },
+    "low_trust_score": {
+      "attempts": 150,
+      "allowed": 0,
+      "denied": 150
+    },
+    "revoked_device": {
+      "accepted_before_revocation": [
+        5,
+        5,
+        5
+      ],
+      "accepted_after_tx_confirmed": [
+        0,
+        0,
+        0
+      ],
+      "first_denial_after_confirmation_ms": [
+        6.016568999970332,
+        8.070278000086546,
+        6.565287999808788
+      ]
+    }
+  },
+  "E4": {
+    "bczta_idle_ledger": {
+      "mean_ms_per_run": [
+        4.327964459002018,
+        4.47565497900499,
+        4.7380427739978765
+      ],
+      "p95_ms_per_run": [
+        7.759243999840692,
+        7.503550999797881,
+        8.360451000276953
+      ],
+      "success_ratio_per_run": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "reasons": [
+        {},
+        {},
+        {}
+      ],
+      "flood": [
+        null,
+        null,
+        null
+      ]
+    },
+    "bczta_under_flood": {
+      "mean_ms_per_run": [
+        1191.5787906129933,
+        8323.341877635004,
+        2543.6237179169984
+      ],
+      "p95_ms_per_run": [
+        5269.143933000043,
+        21082.290878000204,
+        6636.867097000126
+      ],
+      "success_ratio_per_run": [
+        0.936,
+        0.547,
+        0.836
+      ],
+      "reasons": [
+        {
+          "stale": 64
+        },
+        {
+          "stale": 453
+        },
+        {
+          "stale": 164
+        }
+      ],
+      "flood": [
+        {
+          "offered_tps": 200,
+          "seconds": 35,
+          "txs": 7000,
+          "sent": 1701,
+          "rejected": 4346
+        },
+        {
+          "offered_tps": 200,
+          "seconds": 35,
+          "txs": 7000,
+          "sent": 1838,
+          "rejected": 5162
+        },
+        {
+          "offered_tps": 200,
+          "seconds": 35,
+          "txs": 7000,
+          "sent": 1699,
+          "rejected": 5301
+        }
+      ]
+    }
+  }
+}
