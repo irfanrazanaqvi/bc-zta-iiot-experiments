@@ -1,0 +1,72 @@
+name: End-to-end PEP benchmark (Besu IBFT2)
+
+# Runs the full BC-ZTA prototype (edge PEP/PDP + baselines + load generator) against a freshly started
+# 4-validator Besu network, 3 repetitions, and commits raw results to the branch `e2e-results`.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/e2e-benchmark.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 170
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Record environment
+        run: |
+          mkdir -p e2e_output
+          {
+            echo "date: $(date -u +%FT%TZ)"
+            echo "cpu: $(lscpu | grep 'Model name' | sed 's/.*: *//')  cores: $(nproc)"
+            free -m | sed -n 2p
+            echo "node: $(node -v)"
+            docker --version
+          } | tee e2e_output/environment.txt
+
+      - name: Install and compile contracts
+        run: |
+          npm install --legacy-peer-deps
+          npx hardhat compile
+
+      - name: Run end-to-end benchmark (3 repetitions, fresh network each)
+        run: |
+          cd besu && ./setup.sh && cd ..
+          for r in 1 2 3; do
+            (cd besu && docker compose down -v >/dev/null 2>&1; docker compose up -d)
+            for i in $(seq 1 60); do
+              BN=$(curl -s -X POST -H 'Content-Type: application/json' --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' localhost:8545 | sed -n 's/.*"result":"\(0x[0-9a-f]*\)".*/\1/p')
+              if [ -n "$BN" ] && [ $((BN)) -ge 3 ]; then echo "run $r: block $((BN)) reached"; break; fi
+              sleep 3
+            done
+            if [ $r -eq 1 ]; then docker exec besu-node1 besu --version | tee e2e_output/besu_version.txt || true; fi
+            OUT=e2e_output/run$r RPC_URL=http://127.0.0.1:8545 node system/run_e2e.js 2>&1 | tee e2e_output/run$r.log
+          done
+
+      - name: Strip local config
+        if: always()
+        run: rm -f e2e_output/run*/config.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-output
+          path: e2e_output
+
+      - name: Commit results to branch e2e-results
+        if: always()
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git checkout -b e2e-results
+          git add -f e2e_output
+          git commit -m "E2E benchmark results (run ${{ github.run_id }})" || echo "nothing to commit"
+          git push --force origin e2e-results
