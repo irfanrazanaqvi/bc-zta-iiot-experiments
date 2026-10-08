@@ -8,5 +8,5 @@ Removes the "everything on one shared host" limitation: 4 Besu validators, the P
 4. Download `~/e2e-gcp-results.tar.gz` (Cloud Shell ⋮ → Download) and send it back.
 5. **`./cleanup.sh`** to delete the VMs. (VMs also self-delete after 8 h as a safety net.)
 
-Cost: 7 × e2-standard-2 ≈ US$0.5/h → about US$1–2 in total. The default regional CPU quota must allow 14 vCPUs; if creation fails with a quota error, request an increase or run with `MACHINE=e2-medium`.
-Variables: `ZONE`, `MACHINE`, `REPS`, `BESU_VERSION`, `NETEM_VAL_MS`, `NETEM_WAN_MS`.
+Cost: roughly US$0.3/h → about US$1 in total. Free-trial projects are usually limited to 8 vCPUs in total, so the defaults are validators `e2-medium`, PEP and controller `e2-standard-2`, directory `e2-small`; if creation fails with a quota error, send me the message or override `MACHINE_VAL`, `MACHINE_PEP`, `MACHINE_CTL`, `MACHINE_DIR`.
+Variables: `ZONE`, `REPS`, `BESU_VERSION`, `NETEM_VAL_MS`, `NETEM_WAN_MS`.

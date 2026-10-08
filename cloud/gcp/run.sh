@@ -6,7 +6,9 @@
 set -euo pipefail
 ZIP="${1:?usage: ./run.sh path/to/code.zip}"
 ZONE="${ZONE:-us-central1-a}"
-MACHINE="${MACHINE:-e2-standard-2}"
+# Free-trial projects are usually limited to 8 vCPUs in total, so the defaults are sized to fit; override if your quota is larger.
+MACHINE_VAL="${MACHINE_VAL:-e2-medium}"; MACHINE_PEP="${MACHINE_PEP:-e2-standard-2}"; MACHINE_CTL="${MACHINE_CTL:-e2-standard-2}"; MACHINE_DIR="${MACHINE_DIR:-e2-small}"
+REGION="${ZONE%-*}"
 REPS="${REPS:-3}"
 BESU_VERSION="${BESU_VERSION:-26.9.0}"
 NETEM_VAL_MS="${NETEM_VAL_MS:-5}"      # one-way delay added on each validator's egress (separate-site links)
@@ -22,7 +24,8 @@ gcloud services enable compute.googleapis.com >/dev/null
 gcloud compute firewall-rules describe bczta-internal >/dev/null 2>&1 || \
   gcloud compute firewall-rules create bczta-internal --network default --allow tcp,udp,icmp --source-ranges 10.128.0.0/9 >/dev/null
 
-echo "== 2/8 creating VMs ($MACHINE in $ZONE)"
+echo "== 2/8 creating VMs in $ZONE (validators $MACHINE_VAL, pep $MACHINE_PEP, ctl $MACHINE_CTL, dir $MACHINE_DIR)"
+gcloud compute regions describe "$REGION" --format="value(quotas)" 2>/dev/null | tr ';' '\n' | grep "metric.*CPUS'" | head -2 || true
 cat > /tmp/startup.sh <<'EOS'
 #!/bin/bash
 export DEBIAN_FRONTEND=noninteractive
@@ -33,9 +36,10 @@ apt-get install -y nodejs
 systemctl enable --now docker
 touch /var/run/bczta-ready
 EOS
+mt_of() { case "$1" in val*) echo "$MACHINE_VAL";; pep) echo "$MACHINE_PEP";; ctl) echo "$MACHINE_CTL";; dir) echo "$MACHINE_DIR";; esac; }
 for vm in $VMS; do
   gcloud compute instances describe "$vm" --zone "$ZONE" >/dev/null 2>&1 || \
-  gcloud compute instances create "$vm" --zone "$ZONE" --machine-type "$MACHINE" --image-family debian-12 --image-project debian-cloud \
+  gcloud compute instances create "$vm" --zone "$ZONE" --machine-type "$(mt_of "$vm")" --image-family debian-12 --image-project debian-cloud \
     --boot-disk-size 30GB --metadata-from-file startup-script=/tmp/startup.sh \
     --max-run-duration=8h --instance-termination-action=DELETE --quiet >/dev/null &
 done
@@ -96,7 +100,7 @@ for r in $(seq 1 "$REPS"); do
 done
 
 echo "== 8/8 collecting results"
-sh ctl "cd ~/bc && rm -f e2e_output/run*/config.json && for v in val1; do :; done; echo \"gcp 7 x $MACHINE, zone $ZONE, besu $BESU_VERSION, netem validators ${NETEM_VAL_MS}ms, directory ${NETEM_WAN_MS}ms\" > e2e_output/environment.txt; tar czf ~/e2e-gcp-results.tar.gz e2e_output"
+sh ctl "cd ~/bc && rm -f e2e_output/run*/config.json && for v in val1; do :; done; echo \"gcp 7 VMs (val $MACHINE_VAL, pep $MACHINE_PEP, ctl $MACHINE_CTL, dir $MACHINE_DIR), zone $ZONE, besu $BESU_VERSION, netem validators ${NETEM_VAL_MS}ms, directory ${NETEM_WAN_MS}ms\" > e2e_output/environment.txt; tar czf ~/e2e-gcp-results.tar.gz e2e_output"
 $SCP "ctl:~/e2e-gcp-results.tar.gz" ~/e2e-gcp-results.tar.gz
 echo
 echo "DONE. Results: ~/e2e-gcp-results.tar.gz  (Cloud Shell menu -> Download -> that path), then attach it in the chat."
