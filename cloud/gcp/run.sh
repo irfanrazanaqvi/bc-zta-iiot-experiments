@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+# Multi-VM end-to-end benchmark on Google Cloud (run in Google Cloud Shell).
+#   usage: ./run.sh path/to/BC-ZTA_IIoT_Experimental_Code.zip
+# Creates 7 VMs: val1..val4 (Besu IBFT2 validators), pep (PEP/PDP), dir (central directory, +40 ms netem), ctl (load generator / orchestrator).
+# Runs 3 repetitions, each on a freshly started chain, then packs results into ~/e2e-gcp-results.tar.gz.
+set -euo pipefail
+ZIP="${1:?usage: ./run.sh path/to/code.zip}"
+ZONE="${ZONE:-us-central1-a}"
+MACHINE="${MACHINE:-e2-standard-2}"
+REPS="${REPS:-3}"
+BESU_VERSION="${BESU_VERSION:-26.9.0}"
+NETEM_VAL_MS="${NETEM_VAL_MS:-5}"      # one-way delay added on each validator's egress (separate-site links)
+NETEM_WAN_MS="${NETEM_WAN_MS:-40}"     # delay added on the central directory's egress (WAN round trip)
+VMS="val1 val2 val3 val4 pep dir ctl"
+if command -v docker >/dev/null 2>&1 && ! docker manifest inspect "hyperledger/besu:$BESU_VERSION" >/dev/null 2>&1; then echo "Besu tag $BESU_VERSION not found, using latest"; BESU_VERSION=latest; fi
+SSH="gcloud compute ssh --zone $ZONE --quiet --ssh-flag=-oServerAliveInterval=30 --ssh-flag=-oStrictHostKeyChecking=no"
+SCP="gcloud compute scp --zone $ZONE --quiet"
+sh() { local vm="$1"; shift; $SSH "$vm" --command "$*"; }
+
+echo "== 1/8 enabling API and firewall"
+gcloud services enable compute.googleapis.com >/dev/null
+gcloud compute firewall-rules describe bczta-internal >/dev/null 2>&1 || \
+  gcloud compute firewall-rules create bczta-internal --network default --allow tcp,udp,icmp --source-ranges 10.128.0.0/9 >/dev/null
+
+echo "== 2/8 creating VMs ($MACHINE in $ZONE)"
+cat > /tmp/startup.sh <<'EOS'
+#!/bin/bash
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -y
+apt-get install -y docker.io unzip curl ca-certificates gnupg iproute2 git
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+apt-get install -y nodejs
+systemctl enable --now docker
+touch /var/run/bczta-ready
+EOS
+for vm in $VMS; do
+  gcloud compute instances describe "$vm" --zone "$ZONE" >/dev/null 2>&1 || \
+  gcloud compute instances create "$vm" --zone "$ZONE" --machine-type "$MACHINE" --image-family debian-12 --image-project debian-cloud \
+    --boot-disk-size 30GB --metadata-from-file startup-script=/tmp/startup.sh \
+    --max-run-duration=8h --instance-termination-action=DELETE --quiet >/dev/null &
+done
+wait
+
+echo "== 3/8 waiting for VMs to finish installing Docker and Node"
+for vm in $VMS; do
+  until sh "$vm" "test -f /var/run/bczta-ready" >/dev/null 2>&1; do sleep 10; done
+  echo "   $vm ready"
+done
+ip_of() { gcloud compute instances describe "$1" --zone "$ZONE" --format='get(networkInterfaces[0].networkIP)'; }
+IP1=$(ip_of val1); IP2=$(ip_of val2); IP3=$(ip_of val3); IP4=$(ip_of val4); PEP_IP=$(ip_of pep); DIR_IP=$(ip_of dir)
+echo "   val: $IP1 $IP2 $IP3 $IP4  pep: $PEP_IP  dir: $DIR_IP"
+
+echo "== 4/8 installing code on ctl, pep and dir; pulling Besu image on validators"
+for vm in ctl pep dir; do
+  ( $SCP "$ZIP" "$vm:~/code.zip" && sh "$vm" "rm -rf ~/bc && mkdir ~/bc && cd ~/bc && unzip -q ../code.zip && npm install --legacy-peer-deps --no-audit --no-fund >/dev/null 2>&1 && npx hardhat compile >/dev/null 2>&1 && echo compiled-$vm" ) &
+done
+for vm in val1 val2 val3 val4; do ( sh "$vm" "sudo docker pull hyperledger/besu:$BESU_VERSION >/dev/null && echo pulled-$vm" ) & done
+wait
+
+echo "== 5/8 generating validator keys and genesis on ctl"
+sh ctl "cd ~/bc/besu && sudo rm -rf networkFiles nodes && sudo docker run --rm -v \$PWD:/work -w /work hyperledger/besu:$BESU_VERSION operator generate-blockchain-config --config-file=ibftConfigFile.json --to=networkFiles --private-key-file-name=key >/dev/null && sudo chmod -R a+rX networkFiles && i=1 && for d in networkFiles/keys/*/; do mkdir -p nodes/node\$i && sudo cp \$d/key \$d/key.pub nodes/node\$i/ && sudo chmod 644 nodes/node\$i/* && i=\$((i+1)); done && tar czf ~/chainfiles.tgz networkFiles/genesis.json nodes"
+$SCP "ctl:~/chainfiles.tgz" /tmp/chainfiles.tgz
+PUB1=$(sh ctl "sed 's/^0x//' ~/bc/besu/nodes/node1/key.pub" | tr -d '\r\n')
+for vm in val1 val2 val3 val4; do $SCP /tmp/chainfiles.tgz "$vm:~/chainfiles.tgz"; sh "$vm" "rm -rf ~/bc && mkdir ~/bc && tar xzf ~/chainfiles.tgz -C ~/bc"; done
+
+echo "== 6/8 network emulation (netem) and control agents"
+for vm in val1 val2 val3 val4; do sh "$vm" "IF=\$(ip route get 1.1.1.1 | sed -n 's/.* dev \([^ ]*\).*/\1/p'); sudo tc qdisc replace dev \$IF root netem delay ${NETEM_VAL_MS}ms"; done
+sh dir "IF=\$(ip route get 1.1.1.1 | sed -n 's/.* dev \([^ ]*\).*/\1/p'); sudo tc qdisc replace dev \$IF root netem delay ${NETEM_WAN_MS}ms"
+for vm in pep dir; do sh "$vm" "cd ~/bc && (CONFIG=\$HOME/agent_config.json nohup node system/agent.js > ~/agent.log 2>&1 &) ; sleep 2; curl -s localhost:9500/health"; echo; done
+
+start_chain() {
+  local ips=("$IP1" "$IP2" "$IP3" "$IP4") i
+  for i in 1 2 3 4; do
+    local ip="${ips[$((i-1))]}" boot=""
+    [ "$i" -gt 1 ] && boot="--bootnodes=enode://$PUB1@$IP1:30303"
+    sh "val$i" "sudo docker rm -f besu >/dev/null 2>&1; sudo rm -rf ~/besu-data; mkdir -p ~/besu-data; chmod 777 ~/besu-data; sudo docker run -d --name besu --network host -v \$HOME/bc/networkFiles/genesis.json:/config/genesis.json:ro -v \$HOME/bc/nodes/node$i:/opt/besu/keys:ro -v \$HOME/besu-data:/opt/besu/data hyperledger/besu:$BESU_VERSION --data-path=/opt/besu/data --node-private-key-file=/opt/besu/keys/key --genesis-file=/config/genesis.json --p2p-host=$ip --p2p-port=30303 $boot --min-gas-price=0 --rpc-http-enabled --rpc-http-host=0.0.0.0 --rpc-http-port=8545 --rpc-http-max-active-connections=2000 --rpc-http-api=ETH,NET,WEB3,IBFT,TXPOOL,ADMIN --host-allowlist='*' --rpc-http-cors-origins=all >/dev/null" &
+  done
+  wait
+  echo "   waiting for blocks..."
+  for t in $(seq 1 60); do
+    BN=$(sh ctl "curl -s -X POST -H 'Content-Type: application/json' --data '{\"jsonrpc\":\"2.0\",\"method\":\"eth_blockNumber\",\"params\":[],\"id\":1}' http://$IP1:8545" 2>/dev/null | sed -n 's/.*"result":"\(0x[0-9a-f]*\)".*/\1/p')
+    if [ -n "${BN:-}" ] && [ $((BN)) -ge 3 ]; then echo "   block $((BN)) reached"; return; fi
+    sleep 5
+  done
+  echo "chain did not start" >&2; exit 1
+}
+
+echo "== 7/8 benchmark ($REPS repetitions)"
+sh ctl "rm -rf ~/bc/e2e_output; mkdir -p ~/bc/e2e_output"
+for r in $(seq 1 "$REPS"); do
+  echo "-- run $r: fresh chain"
+  start_chain
+  sh ctl "cd ~/bc && rm -f ~/run$r.done && (RPC_URL=http://$IP1:8545 AGENT_PEP=http://$PEP_IP:9500 AGENT_DIR=http://$DIR_IP:9500 PEP_HOST=$PEP_IP CENTRAL_HOST=$DIR_IP CENTRAL_URL=http://$DIR_IP:9100 WAN_RTT_MS=0 NETEM_WAN_MS=$NETEM_WAN_MS NETEM_VAL_MS=$NETEM_VAL_MS DEPLOYMENT=gcp-7vm OUT=e2e_output/run$r nohup node system/run_e2e.js > e2e_output/run$r.log 2>&1; touch ~/run$r.done) > /dev/null 2>&1 &"
+  until sh ctl "test -f ~/run$r.done" >/dev/null 2>&1; do sleep 60; printf "."; done
+  echo; sh ctl "tail -3 ~/bc/e2e_output/run$r.log | cut -c1-160"
+done
+
+echo "== 8/8 collecting results"
+sh ctl "cd ~/bc && rm -f e2e_output/run*/config.json && for v in val1; do :; done; echo \"gcp 7 x $MACHINE, zone $ZONE, besu $BESU_VERSION, netem validators ${NETEM_VAL_MS}ms, directory ${NETEM_WAN_MS}ms\" > e2e_output/environment.txt; tar czf ~/e2e-gcp-results.tar.gz e2e_output"
+$SCP "ctl:~/e2e-gcp-results.tar.gz" ~/e2e-gcp-results.tar.gz
+echo
+echo "DONE. Results: ~/e2e-gcp-results.tar.gz  (Cloud Shell menu -> Download -> that path), then attach it in the chat."
+echo "IMPORTANT: run ./cleanup.sh now to delete the VMs and stop all charges."

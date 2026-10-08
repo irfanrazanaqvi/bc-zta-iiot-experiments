@@ -26,6 +26,20 @@ const PORT = 9000, CPORT = 9100;
 const MODES = [["central", "central", {}], ["abac", "abac", {}], ["bczta", "bczta", { INVALIDATION: "events", TTL_S: "30" }], ["bcsync", "bcsync", {}]];
 const CONFIG = path.join(OUT, "config.json");
 
+const AGENT = { pep: process.env.AGENT_PEP, dir: process.env.AGENT_DIR };   // set for multi-host runs
+const CENTRAL_HOST = process.env.CENTRAL_HOST || "127.0.0.1";
+const agentPost = (base, p, body) => new Promise((resolve, reject) => {
+  const u = new URL(base + p);
+  const rq = require("http").request({ host: u.hostname, port: u.port, path: u.pathname, method: "POST", timeout: 90000 }, (res) => {
+    const c = []; res.on("data", (d) => c.push(d)); res.on("end", () => (res.statusCode === 200 ? resolve() : reject(new Error("agent " + p + ": " + Buffer.concat(c).toString()))));
+  });
+  rq.on("error", reject); rq.end(typeof body === "string" ? body : JSON.stringify(body));
+});
+async function startProc(where, file, env, readyText) {
+  if (!AGENT[where]) { const p = await spawnProc(file, env, readyText); return { stop: () => stop(p) }; }
+  await agentPost(AGENT[where], "/start", { file, env, ready: readyText });
+  return { stop: () => agentPost(AGENT[where], "/stop", { file }) };
+}
 function spawnProc(file, env, readyText) {
   return new Promise((resolve, reject) => {
     const p = spawn("node", [path.join(__dirname, file)], { env: { ...process.env, CONFIG, ...env }, stdio: ["ignore", "pipe", "inherit"] });
@@ -43,10 +57,11 @@ async function main() {
   const variants = ["central", "abac", "bcsync", "bczta-events", "bczta-ttl"];
   const ob = await onboard({ rpcUrl: RPC_URL, nLoad: Math.max(...COUNTS), variants, nRev: REV_REPS });
   fs.writeFileSync(CONFIG, JSON.stringify(ob.config));
+  for (const w of ["pep", "dir"]) if (AGENT[w]) await agentPost(AGENT[w], "/config", JSON.stringify(ob.config));
   const { config, devices, deployer, feeSend } = ob;
   const dev = (name) => devices.find((d) => d.name === name);
-  const result = { meta: { date: new Date().toISOString(), rpc: RPC_URL, chainId: config.chainId, counts: COUNTS, duration_s: DURATION, warmup_s: WARMUP, wan_rtt_ms: WAN, quick: QUICK } };
-  const central = await spawnProc("central.js", { PORT: String(CPORT), WAN_RTT_MS: String(WAN) }, "central ready");
+  const result = { meta: { date: new Date().toISOString(), rpc: RPC_URL, chainId: config.chainId, counts: COUNTS, duration_s: DURATION, warmup_s: WARMUP, wan_rtt_ms: WAN, deployment: process.env.DEPLOYMENT || "single-host", netem_wan_ms: Number(process.env.NETEM_WAN_MS || 0), netem_validator_ms: Number(process.env.NETEM_VAL_MS || 0), quick: QUICK } };
+  const central = await startProc("dir", "central.js", { PORT: String(CPORT), WAN_RTT_MS: String(WAN) }, "central ready");
 
   const drain = async (maxMs = 180000) => {
     const t0 = now();
@@ -64,7 +79,7 @@ async function main() {
   for (const [label, mode, env] of MODES) {
     result.E1[label] = [];
     for (const N of COUNTS) {
-      const pep = await spawnProc("pep.js", { MODE: mode, PORT: String(PORT), ...env }, "pep ready");
+      const pep = await startProc("pep", "pep.js", { MODE: mode, PORT: String(PORT), CENTRAL_URL: process.env.CENTRAL_URL || `http://127.0.0.1:${CPORT}`, ...env }, "pep ready");
       const t0 = now();
       const r = await runLoad({ port: PORT, devices: devices.slice(0, N), resource: config.resource, durationS: DURATION, warmupS: WARMUP });
       const st = await getStats(PORT);
@@ -73,7 +88,7 @@ async function main() {
                 anchors_sent: st.anchorsSent, anchors_confirmed: st.anchorsConfirmed, anchored_events: st.anchorLeaves, cpu_cores_avg: (st.cpu.user + st.cpu.system) / 1e6 / wall };
       result.E1[label].push(r);
       console.log(`E1 ${label} N=${N}: mean ${r.mean_ms?.toFixed(1)} ms p95 ${r.p95_ms?.toFixed(1)} ms goodput ${r.goodput_rps.toFixed(1)}/s fail ${r.failed_or_timeout} denied ${r.denied}`);
-      await stop(pep);
+      await pep.stop();
       if (mode === "bcsync" || mode === "bczta") await drain();
     }
   }
@@ -82,14 +97,14 @@ async function main() {
   const authority = deployer;
   const IRc = ob.contracts.IR;
   const revoke = {
-    central: async (d) => { await post(CPORT, "/admin/revoke", { did: d.did }); },
+    central: async (d) => { await post(CPORT, "/admin/revoke", { did: d.did }, 30000, CENTRAL_HOST); },
     abac: async (d) => { await post(PORT, "/admin/revoke", { did: d.did }); },
     chain: async (d) => { await IRc.revokeDID(d.did, feeSend); },
   };
   result.E2 = {};
   for (const [variant, mode, env, how] of [["central", "central", {}, "central"], ["abac", "abac", {}, "abac"], ["bcsync", "bcsync", {}, "chain"],
         ["bczta-events", "bczta", { INVALIDATION: "events", TTL_S: String(REV_TTL) }, "chain"], ["bczta-ttl", "bczta", { INVALIDATION: "ttl", TTL_S: String(REV_TTL) }, "chain"]]) {
-    const pep = await spawnProc("pep.js", { MODE: mode, PORT: String(PORT), ...env }, "pep ready");
+    const pep = await startProc("pep", "pep.js", { MODE: mode, PORT: String(PORT), CENTRAL_URL: process.env.CENTRAL_URL || `http://127.0.0.1:${CPORT}`, ...env }, "pep ready");
     const delays = [];
     for (let j = 0; j < REV_REPS; j++) {
       const d = dev(`rev-${variant}-${j}`);
@@ -110,12 +125,12 @@ async function main() {
     }
     result.E2[variant] = { ttl_s: variant.startsWith("bczta") ? REV_TTL : null, reps: REV_REPS, ...stats(delays), samples_ms: delays };
     console.log("E2", variant, JSON.stringify({ mean: result.E2[variant].mean_ms, p95: result.E2[variant].p95_ms, max: result.E2[variant].max_ms }));
-    await stop(pep);
+    await pep.stop();
     if (mode !== "abac" && mode !== "central") await drain();
   }
 
   // ---------------- E3: security tests (proposed architecture) ----------------
-  const pep = await spawnProc("pep.js", { MODE: "bczta", PORT: String(PORT), INVALIDATION: "events", TTL_S: "30" }, "pep ready");
+  const pep = await startProc("pep", "pep.js", { MODE: "bczta", PORT: String(PORT), INVALIDATION: "events", TTL_S: "30", CENTRAL_URL: process.env.CENTRAL_URL || `http://127.0.0.1:${CPORT}` }, "pep ready");
   const NSEC = QUICK ? 10 : 50;
   const ghost = new ethers.Wallet(h("bc-zta-ghost"));
   const sec = {};
@@ -140,7 +155,7 @@ async function main() {
     console.log("E3 revoked_device", JSON.stringify(sec["revoked_device"]));
   }
   result.E3 = sec;
-  await stop(pep);
+  await pep.stop();
   await drain();
 
   // ---------------- E4: availability under ledger flooding ----------------
@@ -149,7 +164,7 @@ async function main() {
     const N = Math.min(50, Math.max(...COUNTS));
     const spamRate = Number(process.env.SPAM_TPS || 200), spamSec = DURATION + WARMUP + 10;
     for (const withSpam of [false, true]) {
-      const pepx = await spawnProc("pep.js", { MODE: "bczta", PORT: String(PORT), INVALIDATION: "events", TTL_S: "30" }, "pep ready");
+      const pepx = await startProc("pep", "pep.js", { MODE: "bczta", PORT: String(PORT), INVALIDATION: "events", TTL_S: "30", CENTRAL_URL: process.env.CENTRAL_URL || `http://127.0.0.1:${CPORT}` }, "pep ready");
       let spamP = Promise.resolve(), spamInfo = null;
       if (withSpam) {
         const sp = new SenderPool(rpc, ob.spamKeys, config.chainId, config.fee.type === 2 ? { type: 2, maxFeePerGas: BigInt(config.fee.maxFeePerGas), maxPriorityFeePerGas: BigInt(config.fee.maxPriorityFeePerGas) } : { type: 0, gasPrice: BigInt(config.fee.gasPrice) });
@@ -160,13 +175,13 @@ async function main() {
         spamP = (async () => { const t0 = now(); let sent = 0, errs = 0; for (let i = 0; i < total; i++) { const w = t0 + (i * 1000) / spamRate - now(); if (w > 1) await sleep(w); rpc.one("eth_sendRawTransaction", [raws[i]]).then(() => sent++).catch(() => errs++); } await sleep(500); spamInfo.sent = sent; spamInfo.rejected = errs; })();
       }
       const r = await runLoad({ port: PORT, devices: devices.slice(0, N), resource: config.resource, durationS: DURATION, warmupS: WARMUP });
-      await spamP; await stop(pepx);
+      await spamP; await pepx.stop();
       result.E4[withSpam ? "bczta_under_flood" : "bczta_idle_ledger"] = { ...r, flood: spamInfo };
       console.log("E4", withSpam ? "flood" : "idle", `mean ${r.mean_ms?.toFixed(1)} p95 ${r.p95_ms?.toFixed(1)} ok ${r.ok}/${r.measured}`);
       await drain(240000);
     }
   }
-  await stop(central);
+  await central.stop();
   fs.writeFileSync(path.join(OUT, "e2e_results.json"), JSON.stringify(result, null, 2));
   console.log("wrote", OUT);
   process.exit(0);

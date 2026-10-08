@@ -4,10 +4,11 @@ const http = require("http");
 const { h, now, sleep, stats, ethers } = require("./lib");
 
 const agent = new http.Agent({ keepAlive: true, maxSockets: 4096 });
-function post(port, path, body, timeoutMs = 30000) {
+const HOST = process.env.PEP_HOST || "127.0.0.1";
+function post(port, path, body, timeoutMs = 30000, host = HOST) {
   return new Promise((resolve) => {
     const t0 = now();
-    const rq = http.request({ host: "127.0.0.1", port, path, method: "POST", agent, headers: { "content-type": "application/json" }, timeout: timeoutMs }, (res) => {
+    const rq = http.request({ host, port, path, method: "POST", agent, headers: { "content-type": "application/json" }, timeout: timeoutMs }, (res) => {
       const ch = []; res.on("data", (c) => ch.push(c));
       res.on("end", () => { let j = null; try { j = JSON.parse(Buffer.concat(ch).toString()); } catch (e) {} resolve({ ms: now() - t0, out: j }); });
     });
