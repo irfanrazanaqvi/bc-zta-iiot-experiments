@@ -9,7 +9,7 @@ ZONE="${ZONE:-us-central1-a}"
 # Free-trial projects are usually limited to 8 vCPUs in total, so the defaults are sized to fit; override if your quota is larger.
 MACHINE_VAL="${MACHINE_VAL:-e2-medium}"; MACHINE_PEP="${MACHINE_PEP:-e2-standard-2}"; MACHINE_CTL="${MACHINE_CTL:-e2-standard-2}"; MACHINE_DIR="${MACHINE_DIR:-e2-small}"
 REGION="${ZONE%-*}"
-REPS="${REPS:-3}"
+REPS="${REPS:-5}"
 BESU_VERSION="${BESU_VERSION:-26.9.0}"
 NETEM_VAL_MS="${NETEM_VAL_MS:-5}"      # one-way delay added on each validator's egress (separate-site links)
 NETEM_WAN_MS="${NETEM_WAN_MS:-40}"     # delay added on the central directory's egress (WAN round trip)
@@ -98,6 +98,17 @@ for r in $(seq 1 "$REPS"); do
   until sh ctl "test -f ~/run$r.done" >/dev/null 2>&1; do sleep 60; printf "."; done
   echo; sh ctl "tail -3 ~/bc/e2e_output/run$r.log | cut -c1-160"
 done
+
+echo "-- fault test: stop one validator for 30 s while 50 devices are served and a device is revoked"
+start_chain
+sh ctl "cd ~/bc && rm -f ~/fault.done && (RPC_URL=http://$IP1:8545 AGENT_PEP=http://$PEP_IP:9500 DEPLOYMENT=gcp-7vm OUT=e2e_output/fault nohup node system/run_fault.js > e2e_output/fault.log 2>&1; touch ~/fault.done) > /dev/null 2>&1 &"
+until sh ctl "grep -q FAULT_WINDOW_START ~/bc/e2e_output/fault.log" >/dev/null 2>&1; do sleep 3; done
+sleep 15
+echo "   stopping val4"; sh val4 "sudo docker stop besu >/dev/null"
+sleep 30
+echo "   restarting val4"; sh val4 "sudo docker start besu >/dev/null"
+until sh ctl "test -f ~/fault.done" >/dev/null 2>&1; do sleep 10; printf "."; done
+echo; sh ctl "tail -2 ~/bc/e2e_output/fault.log | cut -c1-200"
 
 echo "== 8/8 collecting results"
 sh ctl "cd ~/bc && rm -f e2e_output/run*/config.json && for v in val1; do :; done; echo \"gcp 7 VMs (val $MACHINE_VAL, pep $MACHINE_PEP, ctl $MACHINE_CTL, dir $MACHINE_DIR), zone $ZONE, besu $BESU_VERSION, netem validators ${NETEM_VAL_MS}ms, directory ${NETEM_WAN_MS}ms\" > e2e_output/environment.txt; tar czf ~/e2e-gcp-results.tar.gz e2e_output"

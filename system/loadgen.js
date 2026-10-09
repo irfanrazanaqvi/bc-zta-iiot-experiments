@@ -26,7 +26,7 @@ async function makeReq(dev, resource, ts, opts = {}) {
   return { did: dev.did, res: resource, ts, nonce, sig, proof: opts.proof ?? dev.proof, cls: dev.cls };
 }
 
-async function runLoad({ port, devices, resource, durationS, warmupS, timeoutMs = 30000 }) {
+async function runLoad({ port, devices, resource, durationS, warmupS, timeoutMs = 30000, onStart = null }) {
   const N = devices.length, total = warmupS + durationS;
   const plan = [];
   // calibrate signing speed, then schedule the window after pre-signing is expected to finish (+50% margin)
@@ -41,6 +41,7 @@ async function runLoad({ port, devices, resource, durationS, warmupS, timeoutMs 
   }
   for (let j = 0; j < plan.length; j += 64) await Promise.all(plan.slice(j, j + 64).map(async (p) => { p.req = await makeReq(devices[p.i], resource, p.at); }));
   if (Date.now() > t0w - 500) console.warn("warning: pre-signing finished late; early requests may be stale");
+  if (onStart) setTimeout(onStart, Math.max(0, t0w - Date.now()));
   const lat = [], pending = [];
   let ok = 0, denied = 0, fail = 0, measured = 0;
   const reasons = {};
@@ -59,7 +60,7 @@ async function runLoad({ port, devices, resource, durationS, warmupS, timeoutMs 
   }
   await Promise.all(pending);
   const span = durationS;
-  return { devices: N, duration_s: durationS, offered_rps: N, measured, ok, denied, failed_or_timeout: fail, reasons, goodput_rps: ok / span, ...stats(lat) };
+  return { devices: N, duration_s: durationS, offered_rps: N, measured, ok, denied, failed_or_timeout: fail, reasons, goodput_rps: ok / span, late: reasons.stale || 0, ...stats(lat) };
 }
 async function getStats(port) { return (await post(port, "/stats", {})).out; }
 module.exports = { post, makeReq, runLoad, getStats };

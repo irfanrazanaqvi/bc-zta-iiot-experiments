@@ -109,16 +109,17 @@ async function main() {
     for (let j = 0; j < REV_REPS; j++) {
       const d = dev(`rev-${variant}-${j}`);
       const wait = (variant === "bczta-ttl" ? Math.random() * REV_TTL : 0.5 + Math.random() * 1.5) * 1000;
-      let T0 = null, revokeDone = null;
-      const tStart = now();
-      let tDeny = null;
-      for (let it = 0; it < 4000; it++) {
+      let T0 = null, revokeDone = null, tDeny = null;
+      const tStart = now(), inflight = [];
+      // open-loop probe: a new signed request every 50 ms, so detection is not limited by the latency of an in-flight request
+      for (let it = 0; it < 6000 && tDeny === null; it++) {
         if (T0 === null && now() - tStart >= wait) { T0 = now(); revokeDone = revoke[how](d); }
-        const rq = await makeReq(d, config.resource, Date.now());
-        const r = await post(PORT, "/access", rq, 60000);
-        if (T0 !== null && r.out && !r.out.ok && r.out.reason === "revoked") { tDeny = now(); break; }
-        await sleep(20);
+        inflight.push(makeReq(d, config.resource, Date.now()).then((rq) => post(PORT, "/access", rq, 60000)).then((r) => {
+          if (T0 !== null && tDeny === null && r.out && !r.out.ok && r.out.reason === "revoked") tDeny = now();
+        }));
+        await sleep(50);
       }
+      await Promise.allSettled(inflight);
       await revokeDone;
       if (tDeny) delays.push(tDeny - T0);
       await sleep(300);
