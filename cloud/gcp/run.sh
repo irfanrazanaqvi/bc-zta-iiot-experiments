@@ -4,7 +4,12 @@
 # Creates 7 VMs: val1..val4 (Besu IBFT2 validators), pep (PEP/PDP), dir (central directory, +40 ms netem), ctl (load generator / orchestrator).
 # Runs 3 repetitions, each on a freshly started chain, then packs results into ~/e2e-gcp-results.tar.gz.
 set -euo pipefail
-ZIP="${1:?usage: ./run.sh path/to/code.zip}"
+ZIP="${1:-$(cd "$(dirname "$0")/../.." && pwd)}"   # a code zip, or the cloned repository folder (default: this repository)
+if [ -d "$ZIP" ]; then
+  echo "packing $ZIP"; rm -f /tmp/bczta-code.zip
+  (cd "$ZIP" && zip -qr /tmp/bczta-code.zip . -x ".git/*" "node_modules/*" "artifacts/*" "cache/*" "besu/networkFiles/*" "besu/nodes/*" "e2e_output/*" "benchmark/output/*")
+  ZIP=/tmp/bczta-code.zip
+fi
 ZONE="${ZONE:-us-central1-a}"
 # Free-trial projects are usually limited to 8 vCPUs in total, so the defaults are sized to fit; override if your quota is larger.
 MACHINE_VAL="${MACHINE_VAL:-e2-medium}"; MACHINE_PEP="${MACHINE_PEP:-e2-standard-2}"; MACHINE_CTL="${MACHINE_CTL:-e2-standard-2}"; MACHINE_DIR="${MACHINE_DIR:-e2-small}"
