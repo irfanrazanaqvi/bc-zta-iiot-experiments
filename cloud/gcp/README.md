@@ -1,14 +1,16 @@
-# Multi-VM benchmark on Google Cloud
+# Multi-VM evaluation on Google Cloud (7 VMs, internal IPs + Cloud NAT)
 
-Removes the "everything on one shared host" limitation: 4 Besu validators, the PEP, the central directory and the load generator run on 7 separate VMs, with network delay injected by `tc netem` (5 ms on validator links, 40 ms on the central directory).
+Roles: val1-val4 (Besu IBFT 2.0 validators, +5 ms netem), pep (PEP/PDP), dir (central directory baseline, +40 ms netem), ctl (load generator / orchestrator).
+VMs have no external IPs (free-trial limit: 4 per region); internet goes through one Cloud NAT, SSH through IAP.
 
-1. Create a Google Cloud account (new accounts get free-trial credit) and a project with billing enabled.
-2. Open **Cloud Shell** (the `>_` button in the console). Upload `BC-ZTA_IIoT_Experimental_Code.zip` (Cloud Shell menu ⋮ → Upload) and the two scripts, or `unzip` it and `cd cloud/gcp`.
-3. `./run.sh ~/BC-ZTA_IIoT_Experimental_Code.zip` (about 3 hours; it prints a dot per minute while waiting).
-4. Download `~/e2e-gcp-results.tar.gz` (Cloud Shell ⋮ → Download) and send it back.
-5. **`./cleanup.sh`** to delete the VMs. (VMs also self-delete after 8 h as a safety net.)
-
-Cost: roughly US$0.3/h → about US$1 in total. Free-trial projects are usually limited to 8 vCPUs in total, so the defaults are validators `e2-medium`, PEP and controller `e2-standard-2`, directory `e2-small`; if creation fails with a quota error, send me the message or override `MACHINE_VAL`, `MACHINE_PEP`, `MACHINE_CTL`, `MACHINE_DIR`.
-Variables: `ZONE`, `REPS`, `BESU_VERSION`, `NETEM_VAL_MS`, `NETEM_WAN_MS`.
-
-From GitHub instead of a zip: `git clone https://github.com/<user>/bc-zta-iiot-experiments && cd bc-zta-iiot-experiments/cloud/gcp && ./run.sh` (private repository: run `gh auth login` first, or use a personal access token as the password).
+1. Open Cloud Shell on your project (`gcloud config list project`).
+2. Upload `bczta-v2.zip` (menu, three dots, Upload), then:
+   ```
+   cd ~ && rm -rf bczta && mkdir bczta && cd bczta && unzip -oq ~/bczta-v2.zip && cd cloud/gcp
+   chmod +x *.sh
+   nohup ./run.sh > ~/run.log 2>&1 &
+   tail -f ~/run.log
+   ```
+   Re-running `./run.sh` after an interruption skips finished steps and finished repetitions.
+3. Takes about 3-4 hours. Result: `~/e2e-gcp-results.tar.gz` (Download it from the Cloud Shell menu).
+4. `./cleanup.sh` deletes VMs, router/NAT and firewall rules. Cost: about US$2-3.

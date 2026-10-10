@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # Multi-VM end-to-end benchmark on Google Cloud (run in Google Cloud Shell).
-#   usage: ./run.sh path/to/BC-ZTA_IIoT_Experimental_Code.zip
+#   usage: nohup ./run.sh > ~/run.log 2>&1 &   then   tail -f ~/run.log     (safe to re-run: finished steps are skipped)
 # Creates 7 VMs: val1..val4 (Besu IBFT2 validators), pep (PEP/PDP), dir (central directory, +40 ms netem), ctl (load generator / orchestrator).
-# Runs 3 repetitions, each on a freshly started chain, then packs results into ~/e2e-gcp-results.tar.gz.
+# Runs 5 repetitions, each on a freshly started chain, then packs results into ~/e2e-gcp-results.tar.gz.
 set -euo pipefail
 ZIP="${1:-$(cd "$(dirname "$0")/../.." && pwd)}"   # a code zip, or the cloned repository folder (default: this repository)
 if [ -d "$ZIP" ]; then
+  command -v zip >/dev/null || sudo apt-get install -y zip >/dev/null
   echo "packing $ZIP"; rm -f /tmp/bczta-code.zip
   (cd "$ZIP" && zip -qr /tmp/bczta-code.zip . -x ".git/*" "node_modules/*" "artifacts/*" "cache/*" "besu/networkFiles/*" "besu/nodes/*" "e2e_output/*" "benchmark/output/*")
   ZIP=/tmp/bczta-code.zip
@@ -58,6 +59,13 @@ for vm in $VMS; do
     --max-run-duration=8h --instance-termination-action=DELETE --quiet >/dev/null &
 done
 wait
+MISSING=""
+for vm in $VMS; do gcloud compute instances describe "$vm" --zone "$ZONE" >/dev/null 2>&1 || MISSING="$MISSING $vm"; done
+if [ -n "$MISSING" ]; then
+  echo "ERROR: these VMs were not created:$MISSING" >&2
+  echo "Most likely a free-trial quota (vCPUs). Upgrade the account (Billing -> Activate full account) or try ZONE=us-east1-b ./run.sh, then run ./run.sh again (existing VMs are reused)." >&2
+  exit 1
+fi
 
 echo "== 3/8 waiting for VMs to finish installing Docker and Node"
 for vm in $VMS; do
@@ -104,9 +112,11 @@ start_chain() {
 }
 
 echo "== 7/8 benchmark ($REPS repetitions)"
-sh ctl "rm -rf ~/bc/e2e_output; mkdir -p ~/bc/e2e_output"
+sh ctl "mkdir -p ~/bc/e2e_output"
 for r in $(seq 1 "$REPS"); do
+  if sh ctl "test -f ~/run$r.done" >/dev/null 2>&1; then echo "-- run $r already finished, skipping"; continue; fi
   echo "-- run $r: fresh chain"
+  sh ctl "pkill -f '[r]un_e2e.js' || true; rm -rf ~/bc/e2e_output/run$r" >/dev/null 2>&1 || true
   start_chain
   sh ctl "cd ~/bc && rm -f ~/run$r.done && (RPC_URL=http://$IP1:8545 AGENT_PEP=http://$PEP_IP:9500 AGENT_DIR=http://$DIR_IP:9500 PEP_HOST=$PEP_IP CENTRAL_HOST=$DIR_IP CENTRAL_URL=http://$DIR_IP:9100 WAN_RTT_MS=0 NETEM_WAN_MS=$NETEM_WAN_MS NETEM_VAL_MS=$NETEM_VAL_MS DEPLOYMENT=gcp-7vm OUT=e2e_output/run$r nohup node system/run_e2e.js > e2e_output/run$r.log 2>&1; touch ~/run$r.done) > /dev/null 2>&1 &"
   until sh ctl "test -f ~/run$r.done" >/dev/null 2>&1; do sleep 60; printf "."; done
@@ -114,6 +124,8 @@ for r in $(seq 1 "$REPS"); do
 done
 
 echo "-- fault test: stop one validator for 30 s while 50 devices are served and a device is revoked"
+if sh ctl "test -f ~/fault.done" >/dev/null 2>&1; then echo "   fault test already finished, skipping"; else
+sh ctl "pkill -f '[r]un_fault.js' || true; rm -rf ~/bc/e2e_output/fault ~/bc/e2e_output/fault.log" >/dev/null 2>&1 || true
 start_chain
 sh ctl "cd ~/bc && rm -f ~/fault.done && (RPC_URL=http://$IP1:8545 AGENT_PEP=http://$PEP_IP:9500 DEPLOYMENT=gcp-7vm OUT=e2e_output/fault nohup node system/run_fault.js > e2e_output/fault.log 2>&1; touch ~/fault.done) > /dev/null 2>&1 &"
 until sh ctl "grep -q FAULT_WINDOW_START ~/bc/e2e_output/fault.log" >/dev/null 2>&1; do sleep 3; done
@@ -123,6 +135,7 @@ sleep 30
 echo "   restarting val4"; sh val4 "sudo docker start besu >/dev/null"
 until sh ctl "test -f ~/fault.done" >/dev/null 2>&1; do sleep 10; printf "."; done
 echo; sh ctl "tail -2 ~/bc/e2e_output/fault.log | cut -c1-200"
+fi
 
 echo "== 8/8 collecting results"
 sh ctl "cd ~/bc && rm -f e2e_output/run*/config.json && for v in val1; do :; done; echo \"gcp 7 VMs (val $MACHINE_VAL, pep $MACHINE_PEP, ctl $MACHINE_CTL, dir $MACHINE_DIR), zone $ZONE, besu $BESU_VERSION, netem validators ${NETEM_VAL_MS}ms, directory ${NETEM_WAN_MS}ms\" > e2e_output/environment.txt; tar czf ~/e2e-gcp-results.tar.gz e2e_output"
