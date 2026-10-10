@@ -78,16 +78,17 @@ echo "   val: $IP1 $IP2 $IP3 $IP4  pep: $PEP_IP  dir: $DIR_IP"
 
 echo "== 4/8 installing code on ctl, pep and dir; pulling Besu image on validators"
 for vm in ctl pep dir; do
-  ( $SCP "$ZIP" "$vm:~/code.zip" && sh "$vm" "rm -rf ~/bc && mkdir ~/bc && cd ~/bc && unzip -q ../code.zip && npm install --legacy-peer-deps --no-audit --no-fund >/dev/null 2>&1 && npx hardhat compile >/dev/null 2>&1 && echo compiled-$vm" ) &
+  ( $SCP "$ZIP" "$vm:~/code.zip" && sh "$vm" "sudo rm -rf ~/bc && mkdir ~/bc && cd ~/bc && unzip -q ../code.zip && test -f besu/ibftConfigFile.json && npm install --legacy-peer-deps --no-audit --no-fund >/dev/null 2>&1 && npx hardhat compile >/dev/null 2>&1 && echo compiled-$vm" ) &
 done
 for vm in val1 val2 val3 val4; do ( sh "$vm" "sudo docker pull hyperledger/besu:$BESU_VERSION >/dev/null && echo pulled-$vm" ) & done
 wait
 
 echo "== 5/8 generating validator keys and genesis on ctl"
 sh ctl "cd ~/bc/besu && sudo rm -rf networkFiles nodes && sudo docker run --rm --user \"\$(id -u):\$(id -g)\" -v \$PWD:/work -w /work hyperledger/besu:$BESU_VERSION operator generate-blockchain-config --config-file=ibftConfigFile.json --to=networkFiles --private-key-file-name=key >/dev/null && chmod -R a+rX networkFiles && i=1 && for d in networkFiles/keys/*/; do mkdir -p nodes/node\$i && cp \$d/key \$d/key.pub nodes/node\$i/ && chmod 644 nodes/node\$i/* && i=\$((i+1)); done && tar czf ~/chainfiles.tgz networkFiles/genesis.json nodes"
+sh ctl "test -s ~/chainfiles.tgz && test -s ~/bc/besu/networkFiles/genesis.json" || { echo "ERROR: key/genesis generation failed on ctl (see messages above)" >&2; exit 1; }
 $SCP "ctl:~/chainfiles.tgz" /tmp/chainfiles.tgz
 PUB1=$(sh ctl "sed 's/^0x//' ~/bc/besu/nodes/node1/key.pub" | tr -d '\r\n')
-for vm in val1 val2 val3 val4; do $SCP /tmp/chainfiles.tgz "$vm:~/chainfiles.tgz"; sh "$vm" "rm -rf ~/bc && mkdir ~/bc && tar xzf ~/chainfiles.tgz -C ~/bc"; done
+for vm in val1 val2 val3 val4; do $SCP /tmp/chainfiles.tgz "$vm:~/chainfiles.tgz"; sh "$vm" "sudo rm -rf ~/bc && mkdir ~/bc && tar xzf ~/chainfiles.tgz -C ~/bc"; done
 
 echo "== 6/8 network emulation (netem) and control agents"
 for vm in val1 val2 val3 val4; do sh "$vm" "IF=\$(ip route get 1.1.1.1 | sed -n 's/.* dev \([^ ]*\).*/\1/p'); sudo tc qdisc replace dev \$IF root netem delay ${NETEM_VAL_MS}ms"; done
