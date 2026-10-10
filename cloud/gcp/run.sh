@@ -84,7 +84,7 @@ for vm in val1 val2 val3 val4; do ( sh "$vm" "sudo docker pull hyperledger/besu:
 wait
 
 echo "== 5/8 generating validator keys and genesis on ctl"
-sh ctl "cd ~/bc/besu && sudo rm -rf networkFiles nodes && sudo docker run --rm -v \$PWD:/work -w /work hyperledger/besu:$BESU_VERSION operator generate-blockchain-config --config-file=ibftConfigFile.json --to=networkFiles --private-key-file-name=key >/dev/null && sudo chmod -R a+rX networkFiles && i=1 && for d in networkFiles/keys/*/; do mkdir -p nodes/node\$i && sudo cp \$d/key \$d/key.pub nodes/node\$i/ && sudo chmod 644 nodes/node\$i/* && i=\$((i+1)); done && tar czf ~/chainfiles.tgz networkFiles/genesis.json nodes"
+sh ctl "cd ~/bc/besu && sudo rm -rf networkFiles nodes && sudo docker run --rm --user \"\$(id -u):\$(id -g)\" -v \$PWD:/work -w /work hyperledger/besu:$BESU_VERSION operator generate-blockchain-config --config-file=ibftConfigFile.json --to=networkFiles --private-key-file-name=key >/dev/null && chmod -R a+rX networkFiles && i=1 && for d in networkFiles/keys/*/; do mkdir -p nodes/node\$i && cp \$d/key \$d/key.pub nodes/node\$i/ && chmod 644 nodes/node\$i/* && i=\$((i+1)); done && tar czf ~/chainfiles.tgz networkFiles/genesis.json nodes"
 $SCP "ctl:~/chainfiles.tgz" /tmp/chainfiles.tgz
 PUB1=$(sh ctl "sed 's/^0x//' ~/bc/besu/nodes/node1/key.pub" | tr -d '\r\n')
 for vm in val1 val2 val3 val4; do $SCP /tmp/chainfiles.tgz "$vm:~/chainfiles.tgz"; sh "$vm" "rm -rf ~/bc && mkdir ~/bc && tar xzf ~/chainfiles.tgz -C ~/bc"; done
