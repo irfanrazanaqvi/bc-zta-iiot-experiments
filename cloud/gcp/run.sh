@@ -20,14 +20,23 @@ NETEM_VAL_MS="${NETEM_VAL_MS:-5}"      # one-way delay added on each validator's
 NETEM_WAN_MS="${NETEM_WAN_MS:-40}"     # delay added on the central directory's egress (WAN round trip)
 VMS="val1 val2 val3 val4 pep dir ctl"
 if command -v docker >/dev/null 2>&1 && ! docker manifest inspect "hyperledger/besu:$BESU_VERSION" >/dev/null 2>&1; then echo "Besu tag $BESU_VERSION not found, using latest"; BESU_VERSION=latest; fi
-SSH="gcloud compute ssh --zone $ZONE --quiet --ssh-flag=-oServerAliveInterval=30 --ssh-flag=-oStrictHostKeyChecking=no"
-SCP="gcloud compute scp --zone $ZONE --quiet"
+SSH="gcloud compute ssh --tunnel-through-iap --zone $ZONE --quiet --ssh-flag=-oServerAliveInterval=30 --ssh-flag=-oStrictHostKeyChecking=no"
+SCP="gcloud compute scp --tunnel-through-iap --zone $ZONE --quiet"
 sh() { local vm="$1"; shift; $SSH "$vm" --command "$*"; }
 
 echo "== 1/8 enabling API and firewall"
 gcloud services enable compute.googleapis.com >/dev/null
 gcloud compute firewall-rules describe bczta-internal >/dev/null 2>&1 || \
   gcloud compute firewall-rules create bczta-internal --network default --allow tcp,udp,icmp --source-ranges 10.128.0.0/9 >/dev/null
+
+# Free-trial accounts allow only 4 external IPs per region, so the VMs get internal addresses only.
+# Internet access (apt, npm, docker) goes through one Cloud NAT; SSH goes through IAP.
+gcloud compute firewall-rules describe bczta-iap >/dev/null 2>&1 || \
+  gcloud compute firewall-rules create bczta-iap --network default --allow tcp:22 --source-ranges 35.235.240.0/20 >/dev/null
+gcloud compute routers describe bczta-router --region "$REGION" >/dev/null 2>&1 || \
+  gcloud compute routers create bczta-router --network default --region "$REGION" >/dev/null
+gcloud compute routers nats describe bczta-nat --router bczta-router --region "$REGION" >/dev/null 2>&1 || \
+  gcloud compute routers nats create bczta-nat --router bczta-router --region "$REGION" --auto-allocate-nat-external-ips --nat-all-subnet-ip-ranges >/dev/null
 
 echo "== 2/8 creating VMs in $ZONE (validators $MACHINE_VAL, pep $MACHINE_PEP, ctl $MACHINE_CTL, dir $MACHINE_DIR)"
 gcloud compute regions describe "$REGION" --format="value(quotas)" 2>/dev/null | tr ';' '\n' | grep "metric.*CPUS'" | head -2 || true
@@ -45,7 +54,7 @@ mt_of() { case "$1" in val*) echo "$MACHINE_VAL";; pep) echo "$MACHINE_PEP";; ct
 for vm in $VMS; do
   gcloud compute instances describe "$vm" --zone "$ZONE" >/dev/null 2>&1 || \
   gcloud compute instances create "$vm" --zone "$ZONE" --machine-type "$(mt_of "$vm")" --image-family debian-12 --image-project debian-cloud \
-    --boot-disk-size 30GB --metadata-from-file startup-script=/tmp/startup.sh \
+    --boot-disk-size 30GB --no-address --metadata-from-file startup-script=/tmp/startup.sh \
     --max-run-duration=8h --instance-termination-action=DELETE --quiet >/dev/null &
 done
 wait
