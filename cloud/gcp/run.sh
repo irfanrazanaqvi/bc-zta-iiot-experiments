@@ -78,7 +78,7 @@ echo "   val: $IP1 $IP2 $IP3 $IP4  pep: $PEP_IP  dir: $DIR_IP"
 
 echo "== 4/8 installing code on ctl, pep and dir; pulling Besu image on validators"
 for vm in ctl pep dir; do
-  ( $SCP "$ZIP" "$vm:~/code.zip" && sh "$vm" "sudo rm -rf ~/bc && mkdir ~/bc && cd ~/bc && unzip -q ../code.zip && test -f besu/ibftConfigFile.json && npm install --legacy-peer-deps --no-audit --no-fund >/dev/null 2>&1 && npx hardhat compile >/dev/null 2>&1 && echo compiled-$vm" ) &
+  ( $SCP "$ZIP" "$vm:~/code.zip" && sh "$vm" "if [ -d ~/bc/e2e_output ]; then sudo rm -rf ~/e2e_keep; sudo mv ~/bc/e2e_output ~/e2e_keep; fi; sudo rm -rf ~/bc && mkdir ~/bc && cd ~/bc && unzip -q ../code.zip && test -f besu/ibftConfigFile.json && { if [ -d ~/e2e_keep ]; then mv ~/e2e_keep ~/bc/e2e_output; fi; true; } && npm install --legacy-peer-deps --no-audit --no-fund >/dev/null 2>&1 && npx hardhat compile >/dev/null 2>&1 && echo compiled-$vm" ) &
 done
 for vm in val1 val2 val3 val4; do ( sh "$vm" "sudo docker pull hyperledger/besu:$BESU_VERSION >/dev/null && echo pulled-$vm" ) & done
 wait
@@ -115,7 +115,7 @@ start_chain() {
 echo "== 7/8 benchmark ($REPS repetitions)"
 sh ctl "mkdir -p ~/bc/e2e_output"
 for r in $(seq 1 "$REPS"); do
-  if sh ctl "test -f ~/run$r.done" >/dev/null 2>&1; then echo "-- run $r already finished, skipping"; continue; fi
+  if sh ctl "test -f ~/run$r.done && test -s ~/bc/e2e_output/run$r/e2e_results.json" >/dev/null 2>&1; then echo "-- run $r already finished, skipping"; continue; fi
   echo "-- run $r: fresh chain"
   sh ctl "pkill -f '[r]un_e2e.js' || true; rm -rf ~/bc/e2e_output/run$r" >/dev/null 2>&1 || true
   start_chain
@@ -125,7 +125,7 @@ for r in $(seq 1 "$REPS"); do
 done
 
 echo "-- fault test: stop one validator for 30 s while 50 devices are served and a device is revoked"
-if sh ctl "test -f ~/fault.done" >/dev/null 2>&1; then echo "   fault test already finished, skipping"; else
+if sh ctl "test -f ~/fault.done && test -s ~/bc/e2e_output/fault/fault_results.json" >/dev/null 2>&1; then echo "   fault test already finished, skipping"; else
 sh ctl "pkill -f '[r]un_fault.js' || true; rm -rf ~/bc/e2e_output/fault ~/bc/e2e_output/fault.log" >/dev/null 2>&1 || true
 start_chain
 sh ctl "cd ~/bc && rm -f ~/fault.done && (RPC_URL=http://$IP1:8545 AGENT_PEP=http://$PEP_IP:9500 DEPLOYMENT=gcp-7vm OUT=e2e_output/fault nohup node system/run_fault.js > e2e_output/fault.log 2>&1; touch ~/fault.done) > /dev/null 2>&1 &"
@@ -139,6 +139,7 @@ echo; sh ctl "tail -2 ~/bc/e2e_output/fault.log | cut -c1-200"
 fi
 
 echo "== 8/8 collecting results"
+sh ctl "cd ~/bc/e2e_output && n=\$(ls run*/e2e_results.json 2>/dev/null | wc -l) && [ \$n -ge $REPS ] && test -s fault/fault_results.json" || { echo "ERROR: result files are missing on ctl, not packing an empty archive" >&2; exit 1; }
 sh ctl "cd ~/bc && rm -f e2e_output/run*/config.json && for v in val1; do :; done; echo \"gcp 7 VMs (val $MACHINE_VAL, pep $MACHINE_PEP, ctl $MACHINE_CTL, dir $MACHINE_DIR), zone $ZONE, besu $BESU_VERSION, netem validators ${NETEM_VAL_MS}ms, directory ${NETEM_WAN_MS}ms\" > e2e_output/environment.txt; tar czf ~/e2e-gcp-results.tar.gz e2e_output"
 $SCP "ctl:~/e2e-gcp-results.tar.gz" ~/e2e-gcp-results.tar.gz
 echo
