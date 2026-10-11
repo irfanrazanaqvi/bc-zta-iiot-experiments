@@ -128,7 +128,7 @@ echo "-- fault test: stop one validator for 30 s while 50 devices are served and
 if sh ctl "test -f ~/fault.done && test -s ~/bc/e2e_output/fault/fault_results.json" >/dev/null 2>&1; then echo "   fault test already finished, skipping"; else
 sh ctl "pkill -f '[r]un_fault.js' || true; rm -rf ~/bc/e2e_output/fault ~/bc/e2e_output/fault.log" >/dev/null 2>&1 || true
 start_chain
-sh ctl "cd ~/bc && rm -f ~/fault.done && (RPC_URL=http://$IP1:8545 AGENT_PEP=http://$PEP_IP:9500 DEPLOYMENT=gcp-7vm OUT=e2e_output/fault nohup node system/run_fault.js > e2e_output/fault.log 2>&1; touch ~/fault.done) > /dev/null 2>&1 &"
+sh ctl "cd ~/bc && rm -f ~/fault.done && (RPC_URL=http://$IP1:8545 AGENT_PEP=http://$PEP_IP:9500 PEP_HOST=$PEP_IP DEPLOYMENT=gcp-7vm OUT=e2e_output/fault nohup node system/run_fault.js > e2e_output/fault.log 2>&1; touch ~/fault.done) > /dev/null 2>&1 &"
 until sh ctl "grep -q FAULT_WINDOW_START ~/bc/e2e_output/fault.log" >/dev/null 2>&1; do sleep 3; done
 sleep 15
 echo "   stopping val4"; sh val4 "sudo docker stop besu >/dev/null"
