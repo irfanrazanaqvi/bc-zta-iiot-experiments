@@ -105,7 +105,7 @@ start_chain() {
   wait
   echo "   waiting for blocks..."
   for t in $(seq 1 60); do
-    BN=$(sh ctl "curl -s -X POST -H 'Content-Type: application/json' --data '{\"jsonrpc\":\"2.0\",\"method\":\"eth_blockNumber\",\"params\":[],\"id\":1}' http://$IP1:8545" 2>/dev/null | sed -n 's/.*"result":"\(0x[0-9a-f]*\)".*/\1/p')
+    BN=$(sh ctl "curl -s -X POST -H 'Content-Type: application/json' --data '{\"jsonrpc\":\"2.0\",\"method\":\"eth_blockNumber\",\"params\":[],\"id\":1}' http://$IP1:8545" 2>/dev/null | sed -n 's/.*"result":"\(0x[0-9a-f]*\)".*/\1/p') || true
     if [ -n "${BN:-}" ] && [ $((BN)) -ge 3 ]; then echo "   block $((BN)) reached"; return; fi
     sleep 5
   done
