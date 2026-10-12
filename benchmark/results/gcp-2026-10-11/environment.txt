@@ -1,0 +1,1 @@
+gcp 7 VMs (val e2-medium, pep e2-standard-2, ctl e2-standard-2, dir e2-small), zone us-central1-a, besu 26.9.0, netem validators 5ms, directory 40ms

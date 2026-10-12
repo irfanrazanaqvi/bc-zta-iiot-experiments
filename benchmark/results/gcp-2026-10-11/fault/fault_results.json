@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "date": "2026-10-11T17:40:07.106Z",
+    "rpc": "http://10.128.0.22:8545",
+    "deployment": "gcp-7vm",
+    "duration_s": 70,
+    "revoke_at_s": 25
+  },
+  "load": {
+    "devices": 50,
+    "duration_s": 70,
+    "offered_rps": 50,
+    "measured": 3500,
+    "ok": 3500,
+    "denied": 0,
+    "failed_or_timeout": 0,
+    "reasons": {},
+    "goodput_rps": 50,
+    "late": 0,
+    "n": 3500,
+    "mean_ms": 5.387326053729015,
+    "p50_ms": 4.992639001458883,
+    "p95_ms": 6.795327000319958,
+    "p99_ms": 15.757154997438192,
+    "max_ms": 46.14433499798179
+  },
+  "revocation_during_fault_ms": 1760.2076779976487,
+  "pep": {
+    "anchors_sent": 75,
+    "anchors_confirmed": 73,
+    "anchored_events": 4043,
+    "chain_reads": 153,
+    "invalidations": 1
+  }
+}

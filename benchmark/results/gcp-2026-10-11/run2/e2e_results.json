@@ -1,0 +1,816 @@
+{
+  "meta": {
+    "date": "2026-10-11T15:25:23.673Z",
+    "rpc": "http://10.128.0.22:8545",
+    "chainId": 2026,
+    "counts": [
+      10,
+      25,
+      50,
+      100,
+      200
+    ],
+    "duration_s": 20,
+    "warmup_s": 5,
+    "wan_rtt_ms": 0,
+    "deployment": "gcp-7vm",
+    "netem_wan_ms": 40,
+    "netem_validator_ms": 5,
+    "quick": false
+  },
+  "E1": {
+    "central": [
+      {
+        "devices": 10,
+        "duration_s": 20,
+        "offered_rps": 10,
+        "measured": 200,
+        "ok": 200,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 10,
+        "late": 0,
+        "n": 200,
+        "mean_ms": 49.72533192023635,
+        "p50_ms": 49.746144000440836,
+        "p95_ms": 50.712513998150826,
+        "p99_ms": 51.879714999347925,
+        "max_ms": 52.239183001220226,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.06332708290918884
+        }
+      },
+      {
+        "devices": 25,
+        "duration_s": 20,
+        "offered_rps": 25,
+        "measured": 500,
+        "ok": 500,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 25,
+        "late": 0,
+        "n": 500,
+        "mean_ms": 49.644219725944104,
+        "p50_ms": 49.6058109998703,
+        "p95_ms": 50.705030001699924,
+        "p99_ms": 51.94664900004864,
+        "max_ms": 53.733665000647306,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.13407456370725507
+        }
+      },
+      {
+        "devices": 50,
+        "duration_s": 20,
+        "offered_rps": 50,
+        "measured": 1000,
+        "ok": 1000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 50,
+        "late": 0,
+        "n": 1000,
+        "mean_ms": 49.02019545000792,
+        "p50_ms": 49.01596800237894,
+        "p95_ms": 49.95610899850726,
+        "p99_ms": 51.02311899885535,
+        "max_ms": 51.51470799744129,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.24319574050831366
+        }
+      },
+      {
+        "devices": 100,
+        "duration_s": 20,
+        "offered_rps": 100,
+        "measured": 2000,
+        "ok": 2000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 100,
+        "late": 0,
+        "n": 2000,
+        "mean_ms": 48.13187906854227,
+        "p50_ms": 48.07496700063348,
+        "p95_ms": 49.24266700074077,
+        "p99_ms": 50.20024700090289,
+        "max_ms": 56.540298003703356,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.38637404681328896
+        }
+      },
+      {
+        "devices": 200,
+        "duration_s": 20,
+        "offered_rps": 200,
+        "measured": 4000,
+        "ok": 4000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 200,
+        "late": 0,
+        "n": 4000,
+        "mean_ms": 48.761671720502896,
+        "p50_ms": 48.87935499846935,
+        "p95_ms": 50.57703500241041,
+        "p99_ms": 51.39188599959016,
+        "max_ms": 52.43981599807739,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.5463194264136404
+        }
+      }
+    ],
+    "abac": [
+      {
+        "devices": 10,
+        "duration_s": 20,
+        "offered_rps": 10,
+        "measured": 200,
+        "ok": 200,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 10,
+        "late": 0,
+        "n": 200,
+        "mean_ms": 4.94896996486932,
+        "p50_ms": 4.938290998339653,
+        "p95_ms": 5.459790997207165,
+        "p99_ms": 6.318112000823021,
+        "max_ms": 6.5992310009896755,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.05194956854348406
+        }
+      },
+      {
+        "devices": 25,
+        "duration_s": 20,
+        "offered_rps": 25,
+        "measured": 500,
+        "ok": 500,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 25,
+        "late": 0,
+        "n": 500,
+        "mean_ms": 5.0404640061110255,
+        "p50_ms": 5.060430999845266,
+        "p95_ms": 5.5697210021317005,
+        "p99_ms": 6.504192002117634,
+        "max_ms": 7.599580999463797,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.10717302600071887
+        }
+      },
+      {
+        "devices": 50,
+        "duration_s": 20,
+        "offered_rps": 50,
+        "measured": 1000,
+        "ok": 1000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 50,
+        "late": 0,
+        "n": 1000,
+        "mean_ms": 5.187817307982594,
+        "p50_ms": 5.128421999514103,
+        "p95_ms": 5.908181998878717,
+        "p99_ms": 6.9822509996593,
+        "max_ms": 7.974651999771595,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.19991492387301724
+        }
+      },
+      {
+        "devices": 100,
+        "duration_s": 20,
+        "offered_rps": 100,
+        "measured": 2000,
+        "ok": 2000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 100,
+        "late": 0,
+        "n": 2000,
+        "mean_ms": 4.8449956350233405,
+        "p50_ms": 4.819092001765966,
+        "p95_ms": 5.560031000524759,
+        "p99_ms": 6.426731001585722,
+        "max_ms": 7.7542519979178905,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.33099523862897684
+        }
+      },
+      {
+        "devices": 200,
+        "duration_s": 20,
+        "offered_rps": 200,
+        "measured": 4000,
+        "ok": 4000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 200,
+        "late": 0,
+        "n": 4000,
+        "mean_ms": 4.219396677242592,
+        "p50_ms": 4.134961001574993,
+        "p95_ms": 5.120570998638868,
+        "p99_ms": 5.974080998450518,
+        "max_ms": 8.656722001731396,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 0,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.560086182713009
+        }
+      }
+    ],
+    "bczta": [
+      {
+        "devices": 10,
+        "duration_s": 20,
+        "offered_rps": 10,
+        "measured": 200,
+        "ok": 200,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 10,
+        "late": 0,
+        "n": 200,
+        "mean_ms": 5.395984935220331,
+        "p50_ms": 5.278110999614,
+        "p95_ms": 6.463861998170614,
+        "p99_ms": 7.86167100071907,
+        "max_ms": 12.817113000899553,
+        "pep": {
+          "cache_hit_ratio": 0.96,
+          "chain_reads": 10,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 25,
+          "anchors_confirmed": 23,
+          "anchored_events": 249,
+          "cpu_cores_avg": 0.1447134851284794
+        }
+      },
+      {
+        "devices": 25,
+        "duration_s": 20,
+        "offered_rps": 25,
+        "measured": 500,
+        "ok": 500,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 25,
+        "late": 0,
+        "n": 500,
+        "mean_ms": 5.447564153939486,
+        "p50_ms": 5.4430310018360615,
+        "p95_ms": 6.063811000436544,
+        "p99_ms": 7.172681998461485,
+        "max_ms": 8.11226100102067,
+        "pep": {
+          "cache_hit_ratio": 0.96,
+          "chain_reads": 25,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 25,
+          "anchors_confirmed": 24,
+          "anchored_events": 611,
+          "cpu_cores_avg": 0.20801956254931495
+        }
+      },
+      {
+        "devices": 50,
+        "duration_s": 20,
+        "offered_rps": 50,
+        "measured": 1000,
+        "ok": 1000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 50,
+        "late": 0,
+        "n": 1000,
+        "mean_ms": 5.399059547021985,
+        "p50_ms": 5.322021000087261,
+        "p95_ms": 6.210780002176762,
+        "p99_ms": 7.238150998950005,
+        "max_ms": 8.909691002219915,
+        "pep": {
+          "cache_hit_ratio": 0.96,
+          "chain_reads": 50,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 24,
+          "anchors_confirmed": 23,
+          "anchored_events": 1202,
+          "cpu_cores_avg": 0.30108659223369144
+        }
+      },
+      {
+        "devices": 100,
+        "duration_s": 20,
+        "offered_rps": 100,
+        "measured": 2000,
+        "ok": 2000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 100,
+        "late": 0,
+        "n": 2000,
+        "mean_ms": 5.158137121034786,
+        "p50_ms": 5.08483100309968,
+        "p95_ms": 6.105510998517275,
+        "p99_ms": 7.749191999435425,
+        "max_ms": 13.778992000967264,
+        "pep": {
+          "cache_hit_ratio": 0.96,
+          "chain_reads": 100,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 24,
+          "anchors_confirmed": 24,
+          "anchored_events": 2403,
+          "cpu_cores_avg": 0.4181844585821428
+        }
+      },
+      {
+        "devices": 200,
+        "duration_s": 20,
+        "offered_rps": 200,
+        "measured": 4000,
+        "ok": 4000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 200,
+        "late": 0,
+        "n": 4000,
+        "mean_ms": 4.634752830483951,
+        "p50_ms": 4.384650997817516,
+        "p95_ms": 5.832859996706247,
+        "p99_ms": 11.433110997080803,
+        "max_ms": 20.984521999955177,
+        "pep": {
+          "cache_hit_ratio": 0.96,
+          "chain_reads": 200,
+          "tx_sent": 0,
+          "tx_confirmed": 0,
+          "anchors_sent": 25,
+          "anchors_confirmed": 25,
+          "anchored_events": 4906,
+          "cpu_cores_avg": 0.6693728509548164
+        }
+      }
+    ],
+    "bcsync": [
+      {
+        "devices": 10,
+        "duration_s": 20,
+        "offered_rps": 10,
+        "measured": 200,
+        "ok": 200,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 10,
+        "late": 0,
+        "n": 200,
+        "mean_ms": 1188.025935409963,
+        "p50_ms": 1179.66422900185,
+        "p95_ms": 2079.804469000548,
+        "p99_ms": 2146.589249998331,
+        "max_ms": 2179.570718999952,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 250,
+          "tx_sent": 250,
+          "tx_confirmed": 250,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.14360632052620953
+        }
+      },
+      {
+        "devices": 25,
+        "duration_s": 20,
+        "offered_rps": 25,
+        "measured": 500,
+        "ok": 500,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 25,
+        "late": 0,
+        "n": 500,
+        "mean_ms": 1270.015128259994,
+        "p50_ms": 1273.8781460002065,
+        "p95_ms": 2165.2828460000455,
+        "p99_ms": 2249.7418569996953,
+        "max_ms": 2298.8570819981396,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 625,
+          "tx_sent": 625,
+          "tx_confirmed": 625,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.23982627065140066
+        }
+      },
+      {
+        "devices": 50,
+        "duration_s": 20,
+        "offered_rps": 50,
+        "measured": 1000,
+        "ok": 998,
+        "denied": 2,
+        "failed_or_timeout": 0,
+        "reasons": {
+          "error:Internal error": 2
+        },
+        "goodput_rps": 49.9,
+        "late": 0,
+        "n": 1000,
+        "mean_ms": 1400.3304839440918,
+        "p50_ms": 1410.5350099988282,
+        "p95_ms": 2290.116209998727,
+        "p99_ms": 2394.7151409983635,
+        "max_ms": 2468.4643229991198,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 1250,
+          "tx_sent": 1248,
+          "tx_confirmed": 1248,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.3907225260162151
+        }
+      },
+      {
+        "devices": 100,
+        "duration_s": 20,
+        "offered_rps": 100,
+        "measured": 2000,
+        "ok": 1999,
+        "denied": 1,
+        "failed_or_timeout": 0,
+        "reasons": {
+          "error:Internal error": 1
+        },
+        "goodput_rps": 99.95,
+        "late": 0,
+        "n": 2000,
+        "mean_ms": 2490.290938134972,
+        "p50_ms": 2545.441839002073,
+        "p95_ms": 3766.7376290000975,
+        "p99_ms": 4048.6850559972227,
+        "max_ms": 4244.818876001984,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 2500,
+          "tx_sent": 2498,
+          "tx_confirmed": 2498,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.5392046883775691
+        }
+      },
+      {
+        "devices": 200,
+        "duration_s": 20,
+        "offered_rps": 200,
+        "measured": 4000,
+        "ok": 1834,
+        "denied": 1406,
+        "failed_or_timeout": 760,
+        "reasons": {
+          "error:Internal error": 7,
+          "error:Transaction nonce is too dista": 1133,
+          "stale": 266
+        },
+        "goodput_rps": 91.7,
+        "late": 266,
+        "n": 3240,
+        "mean_ms": 6274.7922082139285,
+        "p50_ms": 6517.381710998714,
+        "p95_ms": 13364.597286000848,
+        "p99_ms": 14001.654357001185,
+        "max_ms": 14211.900069002062,
+        "pep": {
+          "cache_hit_ratio": null,
+          "chain_reads": 4734,
+          "tx_sent": 3594,
+          "tx_confirmed": 2834,
+          "anchors_sent": 0,
+          "anchors_confirmed": 0,
+          "anchored_events": 0,
+          "cpu_cores_avg": 0.5035235161107434
+        }
+      }
+    ]
+  },
+  "E2": {
+    "central": {
+      "ttl_s": null,
+      "reps": 8,
+      "n": 8,
+      "mean_ms": 57.01342500047758,
+      "p50_ms": 50.08704400062561,
+      "p95_ms": 105.10221499949694,
+      "p99_ms": 105.10221499949694,
+      "max_ms": 105.10221499949694,
+      "samples_ms": [
+        105.10221499949694,
+        50.98522200062871,
+        49.81268300116062,
+        50.19012900069356,
+        49.88316199928522,
+        50.173872999846935,
+        50.08704400062561,
+        49.87307200208306
+      ]
+    },
+    "abac": {
+      "ttl_s": null,
+      "reps": 8,
+      "n": 8,
+      "mean_ms": 25.612681875005364,
+      "p50_ms": 7.257239997386932,
+      "p95_ms": 57.527734000235796,
+      "p99_ms": 57.527734000235796,
+      "max_ms": 57.527734000235796,
+      "samples_ms": [
+        7.628220003098249,
+        5.834180999547243,
+        56.98494400084019,
+        56.67356500029564,
+        5.863639999181032,
+        7.257239997386932,
+        57.527734000235796,
+        7.131930999457836
+      ]
+    },
+    "bcsync": {
+      "ttl_s": null,
+      "reps": 8,
+      "n": 8,
+      "mean_ms": 1171.791920001153,
+      "p50_ms": 937.388248000294,
+      "p95_ms": 1932.8546099998057,
+      "p99_ms": 1932.8546099998057,
+      "max_ms": 1932.8546099998057,
+      "samples_ms": [
+        1654.6138130016625,
+        633.8940620012581,
+        629.8032370023429,
+        1808.586672000587,
+        1932.8546099998057,
+        937.388248000294,
+        1044.0860580019653,
+        733.1086600013077
+      ]
+    },
+    "bczta-events": {
+      "ttl_s": 10,
+      "reps": 8,
+      "n": 8,
+      "mean_ms": 1750.467501875013,
+      "p50_ms": 1808.905407000333,
+      "p95_ms": 2113.221808001399,
+      "p99_ms": 2113.221808001399,
+      "max_ms": 2113.221808001399,
+      "samples_ms": [
+        481.2157340012491,
+        2062.2506719976664,
+        1802.0708069987595,
+        2113.221808001399,
+        1808.905407000333,
+        1705.1881459988654,
+        2014.6018030010164,
+        2016.285638000816
+      ]
+    },
+    "bczta-ttl": {
+      "ttl_s": 10,
+      "reps": 8,
+      "n": 8,
+      "mean_ms": 7790.508935875725,
+      "p50_ms": 7438.509639002383,
+      "p95_ms": 11332.34497700259,
+      "p99_ms": 11332.34497700259,
+      "max_ms": 11332.34497700259,
+      "samples_ms": [
+        5187.219684001058,
+        6828.8434870019555,
+        11332.34497700259,
+        9437.39320000261,
+        9855.213959001005,
+        7438.509639002383,
+        8178.156382996589,
+        4066.390157997608
+      ]
+    }
+  },
+  "E3": {
+    "legitimate_requests (control)": {
+      "attempts": 50,
+      "allowed": 50,
+      "denied": 0,
+      "reasons": {}
+    },
+    "forged_signature": {
+      "attempts": 50,
+      "allowed": 0,
+      "denied": 50,
+      "reasons": {
+        "sigmismatch": 50
+      }
+    },
+    "replayed_request": {
+      "attempts": 50,
+      "allowed": 0,
+      "denied": 50,
+      "reasons": {
+        "replay": 50
+      }
+    },
+    "stale_timestamp": {
+      "attempts": 50,
+      "allowed": 0,
+      "denied": 50,
+      "reasons": {
+        "stale": 50
+      }
+    },
+    "unregistered_DID": {
+      "attempts": 50,
+      "allowed": 0,
+      "denied": 50,
+      "reasons": {
+        "unknown": 50
+      }
+    },
+    "tampered_merkle_proof": {
+      "attempts": 50,
+      "allowed": 0,
+      "denied": 50,
+      "reasons": {
+        "merkle": 50
+      }
+    },
+    "device_class_outside_policy": {
+      "attempts": 50,
+      "allowed": 0,
+      "denied": 50,
+      "reasons": {
+        "class": 50
+      }
+    },
+    "low_trust_score": {
+      "attempts": 50,
+      "allowed": 0,
+      "denied": 50,
+      "reasons": {
+        "trust": 50
+      }
+    },
+    "revoked_device": {
+      "accepted_before_revocation": 5,
+      "accepted_after_tx_confirmed": 0,
+      "first_denial_after_confirmation_ms": 12.883429002016783
+    }
+  },
+  "E4": {
+    "bczta_idle_ledger": {
+      "devices": 50,
+      "duration_s": 20,
+      "offered_rps": 50,
+      "measured": 1000,
+      "ok": 1000,
+      "denied": 0,
+      "failed_or_timeout": 0,
+      "reasons": {},
+      "goodput_rps": 50,
+      "late": 0,
+      "n": 1000,
+      "mean_ms": 5.27100018600002,
+      "p50_ms": 5.1982899978756905,
+      "p95_ms": 6.0491700023412704,
+      "p99_ms": 7.292141001671553,
+      "max_ms": 10.998549997806549,
+      "flood": null
+    },
+    "bczta_under_flood": {
+      "devices": 50,
+      "duration_s": 20,
+      "offered_rps": 50,
+      "measured": 1000,
+      "ok": 1000,
+      "denied": 0,
+      "failed_or_timeout": 0,
+      "reasons": {},
+      "goodput_rps": 50,
+      "late": 0,
+      "n": 1000,
+      "mean_ms": 4.9309535699673,
+      "p50_ms": 4.863329999148846,
+      "p95_ms": 5.899190001189709,
+      "p99_ms": 7.160558998584747,
+      "max_ms": 11.393710002303123,
+      "flood": {
+        "offered_tps": 200,
+        "seconds": 35,
+        "txs": 7000,
+        "sent": 7000,
+        "rejected": 0
+      }
+    }
+  }
+}

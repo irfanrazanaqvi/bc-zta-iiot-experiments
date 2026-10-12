@@ -1,6 +1,6 @@
-"""Aggregate the three end-to-end runs and draw Figs. 3-5 for the paper.
-usage: python3 system/make_e2e_artifacts.py benchmark/results/e2e-2026-10-07 system/output"""
-import json, sys, os, statistics as st
+"""Aggregate the end-to-end runs (run1..runN) and the E5 fault run, and draw Figs. 3-6 for the paper.
+usage: python3 system/make_e2e_artifacts.py benchmark/results/gcp-2026-10-11 system/output"""
+import json, sys, os, glob, statistics as st
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
@@ -8,14 +8,18 @@ import matplotlib.pyplot as plt
 
 src, out = sys.argv[1], sys.argv[2]
 os.makedirs(out, exist_ok=True)
-runs = [json.load(open(os.path.join(src, f"run{r}", "e2e_results.json"))) for r in (1, 2, 3)]
+RUN_IDS = sorted(int(os.path.basename(d)[3:]) for d in glob.glob(os.path.join(src, "run[0-9]*")) if os.path.isfile(os.path.join(d, "e2e_results.json")))
+runs = [json.load(open(os.path.join(src, f"run{r}", "e2e_results.json"))) for r in RUN_IDS]
+FAULT = os.path.join(src, "fault", "fault_results.json")
+fault = json.load(open(FAULT)) if os.path.isfile(FAULT) else None
 sd = lambda v: st.stdev(v) if len(v) > 1 else 0.0
 mean = lambda v: sum(v) / len(v)
 SYS = ["central", "abac", "bczta", "bcsync"]
 LABEL = {"central": "Central PKI-IAM", "abac": "ABAC (no BC)", "bczta": "Proposed BC-ZTA", "bcsync": "Blockchain-only (sync)"}
 counts = runs[0]["meta"]["counts"]
 agg = {"runs": len(runs), "counts": counts, "duration_s": runs[0]["meta"]["duration_s"], "warmup_s": runs[0]["meta"]["warmup_s"],
-       "wan_rtt_ms": runs[0]["meta"]["wan_rtt_ms"], "E1": {}, "E2": {}, "E3": {}, "E4": {}}
+       "wan_rtt_ms": runs[0]["meta"]["wan_rtt_ms"], "deployment": runs[0]["meta"].get("deployment", "single-host"),
+       "netem_wan_ms": runs[0]["meta"].get("netem_wan_ms"), "netem_validator_ms": runs[0]["meta"].get("netem_validator_ms"), "E1": {}, "E2": {}, "E3": {}, "E4": {}}
 for s in SYS:
     agg["E1"][s] = []
     for i, n in enumerate(counts):
@@ -24,7 +28,7 @@ for s in SYS:
         row = {"devices": n, "mean_ms": mean([x["mean_ms"] for x in rs]), "mean_ms_sd": sd([x["mean_ms"] for x in rs]),
                "p95_ms": mean([x["p95_ms"] for x in rs]), "p99_ms": mean([x["p99_ms"] for x in rs]),
                "goodput_rps": mean([x["goodput_rps"] for x in rs]), "goodput_sd": sd([x["goodput_rps"] for x in rs]),
-               "success_ratio": ok / meas, "failed_or_timeout": sum(x["failed_or_timeout"] for x in rs),
+               "success_ratio": ok / meas, "late": sum(x.get("late", 0) for x in rs), "failed_or_timeout": sum(x["failed_or_timeout"] for x in rs),
                "cpu_cores": mean([x["pep"]["cpu_cores_avg"] for x in rs]),
                "cache_hit_ratio": (mean([x["pep"]["cache_hit_ratio"] for x in rs]) if rs[0]["pep"]["cache_hit_ratio"] is not None else None),
                "onchain_tx_per_s": mean([(x["pep"]["tx_confirmed"] + x["pep"]["anchors_sent"]) / (agg["duration_s"] + agg["warmup_s"]) for x in rs])}
@@ -44,6 +48,10 @@ for k in runs[0]["E4"]:
     agg["E4"][k] = {"mean_ms_per_run": [x["mean_ms"] for x in rs], "p95_ms_per_run": [x["p95_ms"] for x in rs],
                     "success_ratio_per_run": [x["ok"] / x["measured"] for x in rs], "reasons": [x["reasons"] for x in rs],
                     "flood": [x.get("flood") for x in rs]}
+if fault:
+    agg["E5"] = {"duration_s": fault["meta"]["duration_s"], "revoke_at_s": fault["meta"]["revoke_at_s"], "mean_ms": fault["load"]["mean_ms"], "p95_ms": fault["load"]["p95_ms"],
+                "measured": fault["load"]["measured"], "ok": fault["load"]["ok"], "denied": fault["load"]["denied"], "failed_or_timeout": fault["load"]["failed_or_timeout"],
+                "late": fault["load"].get("late", 0), "revocation_during_fault_ms": fault["revocation_during_fault_ms"], "pep": fault["pep"]}
 json.dump(agg, open(os.path.join(out, "aggregate_e2e.json"), "w"), indent=2)
 
 plt.rcParams.update({"font.size": 7.5, "axes.spines.top": False, "axes.spines.right": False, "axes.linewidth": 0.7, "legend.frameon": False, "font.family": "DejaVu Sans"})

@@ -1,0 +1,39 @@
+deployed {"IR":"0x5FbDB2315678afecb367f032d93F642f64180aa3","TR":"0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512","AC":"0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0","AL":"0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"}
+onboarded 246 devices, epoch 0, root 0xea15b55ce3…
+E1 central N=10: mean 49.7 ms p95 50.7 ms goodput 10.0/s fail 0 denied 0
+E1 central N=25: mean 49.6 ms p95 50.7 ms goodput 25.0/s fail 0 denied 0
+E1 central N=50: mean 49.0 ms p95 50.0 ms goodput 50.0/s fail 0 denied 0
+E1 central N=100: mean 48.1 ms p95 49.2 ms goodput 100.0/s fail 0 denied 0
+E1 central N=200: mean 48.8 ms p95 50.6 ms goodput 200.0/s fail 0 denied 0
+E1 abac N=10: mean 4.9 ms p95 5.5 ms goodput 10.0/s fail 0 denied 0
+E1 abac N=25: mean 5.0 ms p95 5.6 ms goodput 25.0/s fail 0 denied 0
+E1 abac N=50: mean 5.2 ms p95 5.9 ms goodput 50.0/s fail 0 denied 0
+E1 abac N=100: mean 4.8 ms p95 5.6 ms goodput 100.0/s fail 0 denied 0
+E1 abac N=200: mean 4.2 ms p95 5.1 ms goodput 200.0/s fail 0 denied 0
+E1 bczta N=10: mean 5.4 ms p95 6.5 ms goodput 10.0/s fail 0 denied 0
+E1 bczta N=25: mean 5.4 ms p95 6.1 ms goodput 25.0/s fail 0 denied 0
+E1 bczta N=50: mean 5.4 ms p95 6.2 ms goodput 50.0/s fail 0 denied 0
+E1 bczta N=100: mean 5.2 ms p95 6.1 ms goodput 100.0/s fail 0 denied 0
+E1 bczta N=200: mean 4.6 ms p95 5.8 ms goodput 200.0/s fail 0 denied 0
+E1 bcsync N=10: mean 1188.0 ms p95 2079.8 ms goodput 10.0/s fail 0 denied 0
+E1 bcsync N=25: mean 1270.0 ms p95 2165.3 ms goodput 25.0/s fail 0 denied 0
+E1 bcsync N=50: mean 1400.3 ms p95 2290.1 ms goodput 49.9/s fail 0 denied 2
+E1 bcsync N=100: mean 2490.3 ms p95 3766.7 ms goodput 100.0/s fail 0 denied 1
+E1 bcsync N=200: mean 6274.8 ms p95 13364.6 ms goodput 91.7/s fail 760 denied 1406
+E2 central {"mean":57.01342500047758,"p95":105.10221499949694,"max":105.10221499949694}
+E2 abac {"mean":25.612681875005364,"p95":57.527734000235796,"max":57.527734000235796}
+E2 bcsync {"mean":1171.791920001153,"p95":1932.8546099998057,"max":1932.8546099998057}
+E2 bczta-events {"mean":1750.467501875013,"p95":2113.221808001399,"max":2113.221808001399}
+E2 bczta-ttl {"mean":7790.508935875725,"p95":11332.34497700259,"max":11332.34497700259}
+E3 legitimate_requests (control) {"attempts":50,"allowed":50,"denied":0,"reasons":{}}
+E3 forged_signature {"attempts":50,"allowed":0,"denied":50,"reasons":{"sigmismatch":50}}
+E3 replayed_request {"attempts":50,"allowed":0,"denied":50,"reasons":{"replay":50}}
+E3 stale_timestamp {"attempts":50,"allowed":0,"denied":50,"reasons":{"stale":50}}
+E3 unregistered_DID {"attempts":50,"allowed":0,"denied":50,"reasons":{"unknown":50}}
+E3 tampered_merkle_proof {"attempts":50,"allowed":0,"denied":50,"reasons":{"merkle":50}}
+E3 device_class_outside_policy {"attempts":50,"allowed":0,"denied":50,"reasons":{"class":50}}
+E3 low_trust_score {"attempts":50,"allowed":0,"denied":50,"reasons":{"trust":50}}
+E3 revoked_device {"accepted_before_revocation":5,"accepted_after_tx_confirmed":0,"first_denial_after_confirmation_ms":12.883429002016783}
+E4 idle mean 5.3 p95 6.0 ok 1000/1000
+E4 flood mean 4.9 p95 5.9 ok 1000/1000
+wrote e2e_output/run2
