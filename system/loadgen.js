@@ -23,21 +23,21 @@ async function makeReq(dev, resource, ts, opts = {}) {
   const msg = `${dev.did}|${resource}|${ts}|${nonce}`;
   const signer = opts.signer || dev.wallet;
   const sig = await signer.signMessage(msg);
-  return { did: dev.did, res: resource, ts, nonce, sig, proof: opts.proof ?? dev.proof, cls: dev.cls };
+  return { did: dev.did, res: resource, ts, nonce, sig, proof: opts.proof ?? dev.proof, cls: dev.cls, token: opts.token ?? dev.token };
 }
 
-async function runLoad({ port, devices, resource, durationS, warmupS, timeoutMs = 30000, onStart = null }) {
+async function runLoad({ port, devices, resource, durationS, warmupS, timeoutMs = 30000, onStart = null, rps = 1 }) {
   const N = devices.length, total = warmupS + durationS;
   const plan = [];
   // calibrate signing speed, then schedule the window after pre-signing is expected to finish (+50% margin)
   const cal0 = now();
   for (let j = 0; j < 40; j++) await devices[0].wallet.signMessage("calibration-" + j);
   const perSig = (now() - cal0) / 40;
-  const t0w = Date.now() + 2000 + Math.ceil(1.5 * perSig * N * total);
+  const t0w = Date.now() + 2000 + Math.ceil(1.5 * perSig * N * total * rps);
   // signing
   for (let i = 0; i < N; i++) {
     const phase = (i / N) * 1000;
-    for (let k = 0; k < total; k++) plan.push({ i, k, at: t0w + phase + k * 1000, req: null });
+    for (let k = 0; k < total; k++) for (let m = 0; m < rps; m++) plan.push({ i, k, at: t0w + phase + k * 1000 + (m * 1000) / rps, req: null });
   }
   for (let j = 0; j < plan.length; j += 64) await Promise.all(plan.slice(j, j + 64).map(async (p) => { p.req = await makeReq(devices[p.i], resource, p.at); }));
   if (Date.now() > t0w - 500) console.warn("warning: pre-signing finished late; early requests may be stale");
@@ -45,12 +45,16 @@ async function runLoad({ port, devices, resource, durationS, warmupS, timeoutMs 
   const lat = [], pending = [];
   let ok = 0, denied = 0, fail = 0, measured = 0;
   const reasons = {};
+  const series = Array.from({ length: total }, (_, k) => ({ k, n: 0, ok: 0, denied: 0, err: 0, fail: 0, lat_sum: 0 }));
   let tWarmEnd = null, statsAtWarm = null;
   plan.sort((a, b) => a.at - b.at);
   for (const p of plan) {
     const w = p.at - Date.now();
     if (w > 1) await sleep(w);
     pending.push(post(port, "/access", p.req, timeoutMs).then((r) => {
+      const sb = series[p.k]; sb.n++;
+      if (r.timeout || r.error || !r.out) sb.fail++;
+      else { sb.lat_sum += r.ms; if (r.out.ok) sb.ok++; else if (String(r.out.reason).startsWith("error")) sb.err++; else sb.denied++; }
       if (p.k < warmupS) return;
       measured++;
       if (r.timeout || r.error || !r.out) { fail++; return; }
@@ -60,7 +64,8 @@ async function runLoad({ port, devices, resource, durationS, warmupS, timeoutMs 
   }
   await Promise.all(pending);
   const span = durationS;
-  return { devices: N, duration_s: durationS, offered_rps: N, measured, ok, denied, failed_or_timeout: fail, reasons, goodput_rps: ok / span, late: reasons.stale || 0, ...stats(lat) };
+  return { devices: N, duration_s: durationS, offered_rps: N * rps, measured, ok, denied, failed_or_timeout: fail, reasons, goodput_rps: ok / span, late: reasons.stale || 0, ...stats(lat),
+    series: series.map((b) => ({ k: b.k, n: b.n, ok: b.ok, denied: b.denied, err: b.err, fail: b.fail, mean_ms: b.n - b.fail ? b.lat_sum / (b.n - b.fail) : null })) };
 }
 async function getStats(port) { return (await post(port, "/stats", {})).out; }
 module.exports = { post, makeReq, runLoad, getStats };

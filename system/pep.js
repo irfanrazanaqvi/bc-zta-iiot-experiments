@@ -5,6 +5,9 @@
 //            included in a block before the reply.
 //   abac   : baseline B2. Local attribute store, no ledger.
 //   central: baseline B1. One lookup per request at the (emulated-WAN) central directory server.
+//   keycloak: baseline B4. Real Keycloak IdP; the device presents an OIDC access token and the PEP introspects it (RFC 7662) at Keycloak.
+//   ldap   : baseline B5. Real OpenLDAP directory; one LDAP search per request.
+//   keycloak / ldap accept IAM_TTL_S > 0 to cache the central answer at the PEP (cached variants); 0 = lookup on every request.
 const http = require("http");
 const fs = require("fs");
 const { h, now, sleep, IFACES, Rpc, verifyProof, merkleRoot, BlockWatcher, SenderPool, ethers } = require("./lib");
@@ -16,6 +19,8 @@ const ANCHOR_MS = Number(process.env.ANCHOR_MS || 1000);
 const PORT = Number(process.env.PORT || 9000);
 const FRESH_MS = 5000;
 const CENTRAL = new URL(process.env.CENTRAL_URL || "http://127.0.0.1:9100");
+const IAM_TTL_MS = Number(process.env.IAM_TTL_S || 0) * 1000;
+const KC_URL = process.env.KC_URL || "http://127.0.0.1:8080", LDAP_URL = process.env.LDAP_URL || "ldap://127.0.0.1:389";
 const cfg = JSON.parse(fs.readFileSync(process.env.CONFIG, "utf8"));
 const rpc = new Rpc(cfg.rpc);
 const fee = cfg.fee.type === 2 ? { type: 2, maxFeePerGas: BigInt(cfg.fee.maxFeePerGas), maxPriorityFeePerGas: BigInt(cfg.fee.maxPriorityFeePerGas) } : { type: 0, gasPrice: BigInt(cfg.fee.gasPrice) };
@@ -25,7 +30,7 @@ const local = new Map(cfg.devices.map((d) => [d.did, { known: true, revoked: fal
 const policy = { active: true, minClass: cfg.policy.minClass, maxClass: cfg.policy.maxClass, minTrust: cfg.policy.minTrust };
 const proofs = new Map(cfg.devices.map((d) => [d.did, d.proof]));   // proofs are presented by devices in the request; kept here only for the unregistered case
 
-const S = { requests: 0, allow: 0, deny: {}, cacheHit: 0, cacheMiss: 0, invalidations: 0, anchorsSent: 0, anchorsConfirmed: 0, anchorLeaves: 0, chainReads: 0, txSent: 0, txConfirmed: 0 };
+const S = { requests: 0, allow: 0, deny: {}, cacheHit: 0, cacheMiss: 0, invalidations: 0, anchorsSent: 0, anchorsConfirmed: 0, anchorLeaves: 0, chainReads: 0, iamLookups: 0, txSent: 0, txConfirmed: 0 };
 const seen = new Map();
 setInterval(() => { const t = Date.now(); for (const [k, v] of seen) if (t - v > 15000) seen.delete(k); }, 2000).unref();
 
@@ -59,8 +64,31 @@ function central(did) {
   });
 }
 const centralAgent = new http.Agent({ keepAlive: true, maxSockets: 512 });
+let kcLib = null, ldapClient = null;
+if (MODE === "keycloak") kcLib = require("./iam/kc");
+if (MODE === "ldap") { const { Ldap } = require("./iam/ldap"); ldapClient = new Ldap(LDAP_URL, { poolSize: Number(process.env.LDAP_POOL || 16) }); }
+async function keycloak(token, did) {
+  if (!token) return { known: false };
+  const j = await kcLib.introspect(KC_URL, token, 5000);
+  if (j.active && j.username !== did) return { known: false };          // token issued to a different identity
+  if (!j.active) return { known: true, revoked: true, pkh: j.pkh, cls: Number(j.device_class), trust: Number(j.trust), policy };
+  return { known: true, revoked: false, pkh: j.pkh, cls: Number(j.device_class), trust: Number(j.trust), policy };
+}
+async function ldap(did) {
+  const r = await ldapClient.lookup(did);
+  return r ? { known: true, revoked: r.revoked, pkh: r.pkh, cls: r.cls, trust: r.trust, policy } : { known: false };
+}
 
-async function getState(did) {
+async function getState(did, token) {
+  if (MODE === "keycloak" || MODE === "ldap") {
+    const e = IAM_TTL_MS > 0 ? cache.get(did) : null;
+    if (e && now() < e.exp) { S.cacheHit++; return e.st; }
+    if (IAM_TTL_MS > 0) S.cacheMiss++;
+    S.iamLookups++;
+    const st = MODE === "keycloak" ? await keycloak(token, did) : await ldap(did);
+    if (IAM_TTL_MS > 0 && st.known) cache.set(did, { st, exp: now() + IAM_TTL_MS });
+    return st;
+  }
   if (MODE === "abac") return { ...(local.get(did) || { known: false }), policy };
   if (MODE === "central") return central(did);
   if (MODE === "bcsync") return readChainState(did);
@@ -116,7 +144,7 @@ async function startChain() {
 // ---------- request handling ----------
 function deny(reason) { S.deny[reason] = (S.deny[reason] || 0) + 1; return { ok: false, reason }; }
 async function decide(b) {
-  const { did, res, ts, nonce, sig, proof, cls } = b;
+  const { did, res, ts, nonce, sig, proof, cls, token } = b;
   if (!did || !sig) return deny("malformed");
   if (Math.abs(Date.now() - ts) > FRESH_MS) return deny("stale");
   const key = did + ":" + nonce;
@@ -124,7 +152,7 @@ async function decide(b) {
   seen.set(key, Date.now());
   let addr;
   try { addr = ethers.verifyMessage(`${did}|${res}|${ts}|${nonce}`, sig); } catch (e) { return deny("badsig"); }
-  const st = await getState(did);
+  const st = await getState(did, token);
   if (!st.known) return deny("unknown");
   if (st.revoked) return deny("revoked");
   if (ethers.keccak256(addr) !== st.pkh) return deny("sigmismatch");

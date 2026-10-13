@@ -54,7 +54,7 @@ async function onboard({ rpcUrl, nLoad, variants, nRev, log = console.log }) {
   // fund PEP sender wallets
   const senders = Array.from({ length: 8 }, (_, i) => new ethers.Wallet(senderKey(i)));
   for (const s of senders) await (await deployer.sendTransaction({ to: s.address, value: ethers.parseEther("10"), ...feeSend })).wait();
-  const spam = Array.from({ length: 8 }, (_, i) => new ethers.Wallet(h("bc-zta-spam-" + i)));
+  const spam = Array.from({ length: 16 }, (_, i) => new ethers.Wallet(h("bc-zta-spam-" + i)));
   for (const s of spam) await (await deployer.sendTransaction({ to: s.address, value: ethers.parseEther("10"), ...feeSend })).wait();
   const authorityKey = DEPLOYER_KEY;
 

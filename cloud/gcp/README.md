@@ -14,3 +14,21 @@ VMs have no external IPs (free-trial limit: 4 per region); internet goes through
    Re-running `./run.sh` after an interruption skips finished steps and finished repetitions.
 3. Takes about 3-4 hours. Result: `~/e2e-gcp-results.tar.gz` (Download it from the Cloud Shell menu).
 4. `./cleanup.sh` deletes VMs, router/NAT and firewall rules. Cost: about US$2-3.
+
+## Extended evaluation: real Keycloak / OpenLDAP baselines and ledger-flood sweep (`run_ext.sh`)
+
+`run_ext.sh` is a second, independent script (same 7-VM layout; the `dir` VM is e2-standard-2 and hosts Keycloak 26.4.0 in Docker and OpenLDAP, both behind the 40 ms emulated WAN).
+It runs, each repetition on a freshly started 4-validator chain:
+
+* `system/run_iam.js` (3 repetitions): X1 latency/goodput for Keycloak, OpenLDAP, their PEP-cached variants and BC-ZTA; X2 revocation delay; X3 availability while Keycloak / slapd is stopped for 25 s and restarted; X4 PEP capacity (200-1600 requests/s).
+* `system/run_flood.js` (2 repetitions x 2 modes): fixed offered flood rates 0-1200 tx/s against the ledger node while 50 devices are served, for BC-ZTA and the synchronous-ledger baseline.
+
+```bash
+cd ~/bc-zta-iiot-experiments/cloud/gcp && git pull
+QUICK=1 nohup ./run_ext.sh > ~/ext_quick.log 2>&1 &     # ~45 min shakedown, short runs; then:
+nohup ./run_ext.sh > ~/ext.log 2>&1 &                    # ~3 h real run (resumable; IAM_REPS / FLOOD_REPS override the repetitions)
+./status.sh                                              # progress
+./cleanup.sh                                             # when DONE and downloaded
+```
+Aggregate afterwards with `python3 system/make_ext_artifacts.py <extracted ext_output> <outdir>`.
+Note: `SenderPool` now sends one transaction per account at a time and only advances the nonce after the node accepted it (no nonce gaps under overload).

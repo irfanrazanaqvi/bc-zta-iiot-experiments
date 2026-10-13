@@ -36,6 +36,7 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
+    "ldapts": "^9.2.0",
     "solc": "^0.8.20"
   }
 }

@@ -97,15 +97,23 @@ const stats = (a) => {
   return { n: a.length, mean_ms: a.reduce((x, y) => x + y, 0) / a.length, p50_ms: q(0.5), p95_ms: q(0.95), p99_ms: q(0.99), max_ms: s[s.length - 1] };
 };
 
-/** Pool of sender wallets that sign and broadcast raw transactions (one nonce counter each). */
+/** Pool of sender wallets that sign and broadcast raw transactions. Each wallet sends strictly one transaction at a time in nonce order and
+ *  its nonce only advances when the node accepted the transaction, so a rejected submission (e.g. pool full) never leaves a nonce gap. */
 class SenderPool {
-  constructor(rpc, keys, chainId, feeOpts) { this.rpc = rpc; this.w = keys.map((k) => new ethers.Wallet(k)); this.chainId = chainId; this.fee = feeOpts; this.nonces = null; this.i = 0; }
+  constructor(rpc, keys, chainId, feeOpts) { this.rpc = rpc; this.w = keys.map((k) => new ethers.Wallet(k)); this.chainId = chainId; this.fee = feeOpts; this.nonces = null; this.i = 0; this.q = keys.map(() => Promise.resolve()); }
   async init() { this.nonces = await Promise.all(this.w.map((w) => this.rpc.one("eth_getTransactionCount", [w.address, "pending"]).then((x) => parseInt(x, 16)))); }
-  async send(to, data, gasLimit) {
+  send(to, data, gasLimit) {
     const k = this.i++ % this.w.length;
-    const nonce = this.nonces[k]++;
-    const raw = await this.w[k].signTransaction({ to, data, gasLimit, nonce, chainId: this.chainId, value: 0, ...this.fee });
-    return this.rpc.one("eth_sendRawTransaction", [raw]);
+    const job = this.q[k].then(async () => {
+      const raw = await this.w[k].signTransaction({ to, data, gasLimit, nonce: this.nonces[k], chainId: this.chainId, value: 0, ...this.fee });
+      try { const hash = await this.rpc.one("eth_sendRawTransaction", [raw]); this.nonces[k]++; return hash; }
+      catch (e) {
+        if (/nonce too low|already known|known transaction|replacement/i.test(String(e.message))) { this.nonces[k] = parseInt(await this.rpc.one("eth_getTransactionCount", [this.w[k].address, "pending"]), 16); }
+        throw e;
+      }
+    });
+    this.q[k] = job.catch(() => {});
+    return job;
   }
 }
 
