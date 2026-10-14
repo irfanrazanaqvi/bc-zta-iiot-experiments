@@ -98,7 +98,7 @@ PUB1=$(sh ctl "sed 's/^0x//' ~/bc/besu/nodes/node1/key.pub" | tr -d '\r\n')
 for vm in val1 val2 val3 val4; do $SCP /tmp/chainfiles.tgz "$vm:~/chainfiles.tgz"; sh "$vm" "sudo rm -rf ~/bc && mkdir ~/bc && tar xzf ~/chainfiles.tgz -C ~/bc"; done
 for vm in val1 val2 val3 val4; do sh "$vm" "IF=\$(ip route get 1.1.1.1 | sed -n 's/.* dev \([^ ]*\).*/\1/p'); sudo tc qdisc replace dev \$IF root netem delay ${NETEM_VAL_MS}ms"; done
 sh dir "IF=\$(ip route get 1.1.1.1 | sed -n 's/.* dev \([^ ]*\).*/\1/p'); sudo tc qdisc replace dev \$IF root netem delay ${NETEM_WAN_MS}ms"
-for vm in pep dir; do sh "$vm" "pkill -f '[s]ystem/agent.js' || true; sleep 1; cd ~/bc && (CONFIG=\$HOME/agent_config.json nohup node system/agent.js > ~/agent.log 2>&1 &) ; sleep 2; curl -s localhost:9500/health"; echo; done
+for vm in pep dir; do sh "$vm" "pkill -f '^node system/agent.js' || true; sleep 1; cd ~/bc && (CONFIG=\$HOME/agent_config.json nohup node system/agent.js > ~/agent.log 2>&1 &) ; sleep 2; curl -s localhost:9500/health"; echo; done
 # the PEP must reach both identity services from its own VM
 sh pep "curl -s -o /dev/null -w 'keycloak from pep: %{http_code}\n' http://$DIR_IP:8080/realms/master"
 sh pep "node -e \"const n=require('net').connect(389,'$DIR_IP',()=>{console.log('ldap port from pep: open');process.exit(0)});n.on('error',e=>{console.log('ldap port from pep: '+e.message);process.exit(1)})\""
@@ -129,7 +129,7 @@ run_job() {
   local name="$1" resf="$2" extra="$3" js="$4"
   if sh ctl "test -s ~/$OUTD/$name/$resf" >/dev/null 2>&1; then echo "-- $name already finished, skipping"; return; fi
   echo "-- $name: fresh chain ($(date +%H:%M))"
-  sh ctl "pkill -f '[r]un_iam.js' || true; pkill -f '[r]un_flood.js' || true; rm -rf ~/$OUTD/$name ~/$OUTD/$name.done ~/$OUTD/$name.log" >/dev/null 2>&1 || true
+  sh ctl "pkill -f '^node system/run_iam.js' || true; pkill -f '^node system/run_flood.js' || true; rm -rf ~/$OUTD/$name ~/$OUTD/$name.done ~/$OUTD/$name.log" >/dev/null 2>&1 || true
   start_chain
   sh ctl "cd ~/bc && (env $ENVS $extra OUT=\$HOME/$OUTD/$name nohup node system/$js > \$HOME/$OUTD/$name.log 2>&1; echo \$? > \$HOME/$OUTD/$name.done) > /dev/null 2>&1 &"
   until sh ctl "test -f ~/$OUTD/$name.done" >/dev/null 2>&1; do sleep 45; printf "."; done
