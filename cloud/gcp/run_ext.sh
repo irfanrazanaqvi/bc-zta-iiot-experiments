@@ -108,7 +108,7 @@ start_chain() {
   for i in 1 2 3 4; do
     local ip="${ips[$((i-1))]}" boot=""
     [ "$i" -gt 1 ] && boot="--bootnodes=enode://$PUB1@$IP1:30303"
-    sh "val$i" "sudo docker rm -f besu >/dev/null 2>&1; sudo rm -rf ~/besu-data; mkdir -p ~/besu-data; chmod 777 ~/besu-data; sudo docker run -d --name besu --network host -v \$HOME/bc/networkFiles/genesis.json:/config/genesis.json:ro -v \$HOME/bc/nodes/node$i:/opt/besu/keys:ro -v \$HOME/besu-data:/opt/besu/data hyperledger/besu:$BESU_VERSION --data-path=/opt/besu/data --node-private-key-file=/opt/besu/keys/key --genesis-file=/config/genesis.json --p2p-host=$ip --p2p-port=30303 $boot --min-gas-price=0 --rpc-http-enabled --rpc-http-host=0.0.0.0 --rpc-http-port=8545 --rpc-http-max-active-connections=2000 --rpc-http-api=ETH,NET,WEB3,IBFT,TXPOOL,ADMIN --host-allowlist='*' --rpc-http-cors-origins=all >/dev/null" &
+    sh "val$i" "sudo docker rm -f besu >/dev/null 2>&1; sudo rm -rf ~/besu-data; mkdir -p ~/besu-data; chmod 777 ~/besu-data; sudo docker run -d --name besu --network host -e JAVA_OPTS=-Xmx2560m -v \$HOME/bc/networkFiles/genesis.json:/config/genesis.json:ro -v \$HOME/bc/nodes/node$i:/opt/besu/keys:ro -v \$HOME/besu-data:/opt/besu/data hyperledger/besu:$BESU_VERSION --data-path=/opt/besu/data --node-private-key-file=/opt/besu/keys/key --genesis-file=/config/genesis.json --p2p-host=$ip --p2p-port=30303 $boot --min-gas-price=0 --rpc-http-enabled --rpc-http-host=0.0.0.0 --rpc-http-port=8545 --rpc-http-max-active-connections=2000 --rpc-http-api=ETH,NET,WEB3,IBFT,TXPOOL,ADMIN --host-allowlist='*' --rpc-http-cors-origins=all >/dev/null" &
   done
   wait
   echo "   waiting for blocks..."

@@ -79,6 +79,7 @@ async function main() {
   const window = WARMUP + DURATION;
 
   for (const rate of RATES) {
+   try {
     const startNonces = await Promise.all(wallets.map((w) => rpc.one("eth_getTransactionCount", [w.address, "latest"]).then((x) => parseInt(x, 16))));
     const pep = await startProc("pep", "pep.js", { MODE, PORT: String(PORT), INVALIDATION: "events", TTL_S: "30" }, "pep ready");
     const fl = rate > 0 ? await flood({ rpc, wallets, startNonces, rate, seconds: window + 2, cfg: config }) : null;
@@ -101,6 +102,12 @@ async function main() {
     result.rates.push(entry);
     console.log(`FLOOD ${MODE} offered ${rate}/s: accepted ${fres.accepted}/${fres.attempts} (rej ${fres.rejected} ${JSON.stringify(fres.reasons)}) committed ${blocks?.tps?.toFixed(1)} tx/s (${blocks?.tx_per_block?.toFixed(0)}/block) | PEP mean ${load.mean_ms?.toFixed(1)} p95 ${load.p95_ms?.toFixed(1)} ok ${load.ok}/${load.measured} fail ${load.failed_or_timeout} | drain ${drainS.toFixed(0)}s`);
     fs.writeFileSync(path.join(OUT, "flood_results.partial.json"), JSON.stringify(result));
+   } catch (e) {
+    // the ledger node itself failed under this offered rate: record it (a result in its own right) and stop the sweep
+    result.rates.push({ offered_tps: rate, node_failed: true, error: String(e.message).slice(0, 200) });
+    console.log(`FLOOD ${MODE} offered ${rate}/s: LEDGER NODE FAILED (${String(e.message).slice(0, 120)}); sweep stopped`);
+    break;
+   }
   }
   fs.writeFileSync(path.join(OUT, "flood_results.json"), JSON.stringify(result, null, 2));
   fs.unlinkSync(path.join(OUT, "flood_results.partial.json"));

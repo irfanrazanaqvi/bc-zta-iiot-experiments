@@ -52,12 +52,14 @@ for lab in ("keycloak", "ldap", "bczta"):
 agg["E7"] = E7
 
 # ---- flood sweep
-FL = {}
+FL, FAILED = {}, {}
 for mode in ("bczta", "bcsync"):
     runs = load(f"flood_{mode}_r*/flood_results.json"); agg["n_flood_runs"][mode] = len(runs)
     rows = {}
     for r in runs:
-        for e in r["rates"]: rows.setdefault(e["offered_tps"], []).append(e)
+        for e in r["rates"]:
+            if e.get("node_failed"): FAILED.setdefault(mode, []).append(e["offered_tps"]); continue
+            rows.setdefault(e["offered_tps"], []).append(e)
     FL[mode] = {}
     for rate, v in sorted(rows.items()):
         ok = [e["load"]["ok"] / e["load"]["measured"] for e in v]
@@ -69,7 +71,7 @@ for mode in ("bczta", "bcsync"):
             "tx_per_block": ms([e["ledger"]["tx_per_block"] for e in v if e.get("ledger")]),
             "mean_ms": ms([e["load"]["mean_ms"] for e in v]), "p95_ms": ms([e["load"]["p95_ms"] for e in v]), "ok_ratio": ms(ok),
             "fail": sum(e["load"]["failed_or_timeout"] for e in v), "drain_s": ms([e["drain_s"] for e in v])}
-agg["FLOOD"] = FL
+agg["FLOOD"] = FL; agg["FLOOD_NODE_FAILED_AT_OFFERED_TPS"] = FAILED
 json.dump(agg, open(os.path.join(out, "aggregate_ext.json"), "w"), indent=1)
 
 plt.rcParams.update({"font.size": 8, "axes.grid": True, "grid.alpha": .3})
