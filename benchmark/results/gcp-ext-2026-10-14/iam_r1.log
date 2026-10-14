@@ -1,0 +1,41 @@
+deployed {"IR":"0x5FbDB2315678afecb367f032d93F642f64180aa3","TR":"0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512","AC":"0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0","AL":"0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"}
+onboarded 246 devices, epoch 0, root 0x2f7c741d6e…
+IAM ready: 246 Keycloak users with tokens, 246 LDAP entries (52 s)
+X1 keycloak N=25: mean 50.6 ms p95 53.4 ms goodput 25.0/s fail 0 denied 0 pepcpu 0.16
+X1 keycloak N=100: mean 48.7 ms p95 50.7 ms goodput 100.0/s fail 0 denied 0 pepcpu 0.49
+X1 keycloak N=200: mean 155.6 ms p95 358.1 ms goodput 199.3/s fail 0 denied 15 pepcpu 0.75
+X1 keycloak-cached N=25: mean 10.3 ms p95 48.8 ms goodput 25.0/s fail 0 denied 0 pepcpu 0.15
+X1 keycloak-cached N=100: mean 9.8 ms p95 47.9 ms goodput 100.0/s fail 0 denied 0 pepcpu 0.42
+X1 keycloak-cached N=200: mean 13.3 ms p95 57.4 ms goodput 200.0/s fail 0 denied 0 pepcpu 0.45
+X1 ldap N=25: mean 47.4 ms p95 48.7 ms goodput 25.0/s fail 0 denied 0 pepcpu 0.16
+X1 ldap N=100: mean 46.7 ms p95 48.7 ms goodput 100.0/s fail 0 denied 0 pepcpu 0.48
+X1 ldap N=200: mean 81.0 ms p95 255.9 ms goodput 200.0/s fail 0 denied 0 pepcpu 0.69
+X1 ldap-cached N=25: mean 10.1 ms p95 47.2 ms goodput 25.0/s fail 0 denied 0 pepcpu 0.14
+X1 ldap-cached N=100: mean 9.5 ms p95 46.6 ms goodput 100.0/s fail 0 denied 0 pepcpu 0.44
+X1 ldap-cached N=200: mean 11.2 ms p95 50.8 ms goodput 200.0/s fail 0 denied 0 pepcpu 0.71
+X1 bczta N=25: mean 6.4 ms p95 7.4 ms goodput 25.0/s fail 0 denied 0 pepcpu 0.23
+X1 bczta N=100: mean 6.3 ms p95 7.5 ms goodput 100.0/s fail 0 denied 0 pepcpu 0.56
+X1 bczta N=200: mean 119.3 ms p95 258.5 ms goodput 199.9/s fail 0 denied 2 pepcpu 0.74
+X2 keycloak {"n":8,"mean":79.8134521250613,"p95":112.36025699973106,"max":112.36025699973106}
+X2 keycloak-cached {"n":8,"mean":5624.154373125057,"p95":9103.782162999734,"max":9103.782162999734}
+X2 ldap {"n":8,"mean":93.4716044999659,"p95":152.50776700023562,"max":152.50776700023562}
+X2 ldap-cached {"n":8,"mean":5089.519746500067,"p95":9809.20901300013,"max":9809.20901300013}
+X2 bczta-events {"n":8,"mean":1028.5599861249793,"p95":2079.640978999436,"max":2079.640978999436}
+X3 keycloak {"ok_fraction_before":1,"ok_fraction_during_outage":0,"ok_fraction_late_after":1,"seconds_until_service_loss":0,"seconds_to_recover_after_start":15,"service_ready_after_start_s":0.045441371999681}  
+X3 keycloak-cached {"ok_fraction_before":1,"ok_fraction_during_outage":0.041666666666666664,"ok_fraction_late_after":1,"seconds_until_service_loss":2,"seconds_to_recover_after_start":16,"service_ready_after_start_s":0.0461940559996292}  
+X3 ldap {"ok_fraction_before":1,"ok_fraction_during_outage":0,"ok_fraction_late_after":1,"seconds_until_service_loss":0,"seconds_to_recover_after_start":1,"service_ready_after_start_s":0.0846669779997319}  
+X3 ldap-cached {"ok_fraction_before":1,"ok_fraction_during_outage":0.041666666666666664,"ok_fraction_late_after":1,"seconds_until_service_loss":2,"seconds_to_recover_after_start":1,"service_ready_after_start_s":0.08391719199996442}  
+X3 bczta {"ok_fraction_before":1,"ok_fraction_during_outage":1,"ok_fraction_late_after":1,"seconds_until_service_loss":null,"seconds_to_recover_after_start":0,"service_ready_after_start_s":0.4661074620001018}  
+X4 keycloak offered 200/s: goodput 199/s mean 633 p95 1402 ms fail 6 late 1
+X4 keycloak offered 400/s: goodput 250/s mean 2266 p95 7783 ms fail 1008 late 795
+X4 keycloak offered 800/s: goodput 283/s mean 5287 p95 9868 ms fail 3488 late 2712
+X4 keycloak offered 1600/s: goodput 260/s mean 5599 p95 12103 ms fail 4329 late 11756
+X4 ldap offered 200/s: goodput 200/s mean 83 p95 189 ms fail 0 late 0
+X4 ldap offered 400/s: goodput 257/s mean 2285 p95 7865 ms fail 852 late 867
+X4 ldap offered 800/s: goodput 292/s mean 5379 p95 9831 ms fail 3077 late 3017
+X4 ldap offered 1600/s: goodput 273/s mean 5370 p95 7871 ms fail 3632 late 12293
+X4 bczta offered 200/s: goodput 198/s mean 274 p95 278 ms fail 0 late 25
+X4 bczta offered 400/s: goodput 246/s mean 2215 p95 7860 ms fail 1046 late 808
+X4 bczta offered 800/s: goodput 281/s mean 5491 p95 10137 ms fail 3647 late 2580
+X4 bczta offered 1600/s: goodput 132/s mean 5454 p95 11989 ms fail 4699 late 11598
+wrote /home/irfanrazanaqvi9/ext_output/iam_r1

@@ -1,0 +1,9 @@
+deployed {"IR":"0x5FbDB2315678afecb367f032d93F642f64180aa3","TR":"0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512","AC":"0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0","AL":"0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"}
+onboarded 56 devices, epoch 0, root 0xefd175d3b2…
+FLOOD bczta offered 0/s: accepted 0/0 (rej 0 {}) committed 1.0 tx/s (2/block) | PEP mean 6.2 p95 6.8 ok 1000/1000 fail 0 | drain 1s
+FLOOD bczta offered 100/s: accepted 2700/2700 (rej 0 {}) committed 98.8 tx/s (198/block) | PEP mean 5.9 p95 6.5 ok 1000/1000 fail 0 | drain 1s
+FLOOD bczta offered 200/s: accepted 5400/5400 (rej 0 {}) committed 186.3 tx/s (429/block) | PEP mean 5.8 p95 6.5 ok 1000/1000 fail 0 | drain 10s
+FLOOD bczta offered 400/s: accepted 7864/10800 (rej 2936 {"Transaction nonce is too distant from current sender nonce":2936}) committed 159.1 tx/s (566/block) | PEP mean 5.9 p95 6.8 ok 1000/1000 fail 0 | drain 22s
+FLOOD bczta offered 800/s: accepted 6837/21600 (rej 14763 {"Transaction nonce is too distant from current sender nonce":14763}) committed 133.0 tx/s (551/block) | PEP mean 6.0 p95 6.9 ok 1000/1000 fail 0 | drain 31s
+FLOOD bczta offered 1200/s: accepted 8136/32401 (rej 24265 {"Transaction nonce is too distant from current sender nonce":17555,"Transaction pool not enabled. (Either txpool explicitly disa":6710}) committed 109.3 tx/s (380/block) | PEP mean 6.1 p95 7.1 ok 1000/1000 fail 0 | drain 2s
+wrote /home/irfanrazanaqvi9/ext_output/flood_bczta_r2

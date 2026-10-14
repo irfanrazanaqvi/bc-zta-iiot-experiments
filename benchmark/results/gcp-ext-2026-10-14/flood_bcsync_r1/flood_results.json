@@ -1,0 +1,1765 @@
+{
+  "meta": {
+    "date": "2026-10-14T07:42:31.087Z",
+    "mode": "bcsync",
+    "rpc": "http://10.128.0.31:8545",
+    "chainId": 2026,
+    "rates": [
+      0,
+      100,
+      200,
+      400,
+      800,
+      1200
+    ],
+    "duration_s": 20,
+    "warmup_s": 5,
+    "devices": 50,
+    "spam_accounts": 16,
+    "deployment": "gcp-7vm",
+    "netem_validator_ms": 5,
+    "quick": false
+  },
+  "rates": [
+    {
+      "offered_tps": 0,
+      "flood": {
+        "attempts": 0,
+        "accepted": 0,
+        "rejected": 0,
+        "reasons": {},
+        "accepted_tps": 0,
+        "committed_total": 0,
+        "evicted_after_accept": 0
+      },
+      "ledger": {
+        "blocks": 13,
+        "span_s": 26,
+        "txs": 1250,
+        "tps": 48.07692307692308,
+        "tx_per_block": 96.15384615384616,
+        "gas_per_s": 8095615.384615385
+      },
+      "txpool_before": {
+        "max": -1,
+        "local": 0,
+        "remote": 0,
+        "total": 0
+      },
+      "txpool_end_of_window": {
+        "max": -1,
+        "local": 0,
+        "remote": 0,
+        "total": 0
+      },
+      "drain_s": 0.05540285999886692,
+      "pep": {
+        "tx_sent": 1250,
+        "tx_confirmed": 1250,
+        "anchors_sent": 0,
+        "anchors_confirmed": 0,
+        "deny": {}
+      },
+      "load": {
+        "devices": 50,
+        "duration_s": 20,
+        "offered_rps": 50,
+        "measured": 1000,
+        "ok": 1000,
+        "denied": 0,
+        "failed_or_timeout": 0,
+        "reasons": {},
+        "goodput_rps": 50,
+        "late": 0,
+        "n": 1000,
+        "mean_ms": 1570.773924706012,
+        "p50_ms": 1561.5018399991095,
+        "p95_ms": 2470.4041489996016,
+        "p99_ms": 2608.7264690008014,
+        "max_ms": 2720.1882100012153,
+        "series": [
+          {
+            "k": 0,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1612.6933246999233
+          },
+          {
+            "k": 1,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2150.6487368198486
+          },
+          {
+            "k": 2,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1874.8411002800613
+          },
+          {
+            "k": 3,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2134.911962579936
+          },
+          {
+            "k": 4,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1728.9433577599748
+          },
+          {
+            "k": 5,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1966.169587919861
+          },
+          {
+            "k": 6,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1548.4172235800697
+          },
+          {
+            "k": 7,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1871.1788452600315
+          },
+          {
+            "k": 8,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1494.703879200034
+          },
+          {
+            "k": 9,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1748.357833740078
+          },
+          {
+            "k": 10,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1338.8993982998654
+          },
+          {
+            "k": 11,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1783.0252806198225
+          },
+          {
+            "k": 12,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1463.004278300032
+          },
+          {
+            "k": 13,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1777.2285751599075
+          },
+          {
+            "k": 14,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1396.0842576800287
+          },
+          {
+            "k": 15,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1746.9228653800114
+          },
+          {
+            "k": 16,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1443.4235302600264
+          },
+          {
+            "k": 17,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1732.193610720001
+          },
+          {
+            "k": 18,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1339.3295468800516
+          },
+          {
+            "k": 19,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1671.2852583001927
+          },
+          {
+            "k": 20,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1299.132475580126
+          },
+          {
+            "k": 21,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1716.284602839984
+          },
+          {
+            "k": 22,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1383.623212500103
+          },
+          {
+            "k": 23,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1547.9578315801173
+          },
+          {
+            "k": 24,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 1148.2564003198966
+          }
+        ]
+      }
+    },
+    {
+      "offered_tps": 100,
+      "flood": {
+        "attempts": 2700,
+        "accepted": 2700,
+        "rejected": 0,
+        "reasons": {},
+        "accepted_tps": 108,
+        "committed_total": 2700,
+        "evicted_after_accept": 0
+      },
+      "ledger": {
+        "blocks": 12,
+        "span_s": 27,
+        "txs": 3911,
+        "tps": 144.85185185185185,
+        "tx_per_block": 325.9166666666667,
+        "gas_per_s": 24291037.037037037
+      },
+      "txpool_before": {
+        "max": -1,
+        "local": 0,
+        "remote": 0,
+        "total": 0
+      },
+      "txpool_end_of_window": {
+        "max": -1,
+        "local": 38,
+        "remote": 0,
+        "total": 38
+      },
+      "drain_s": 1.0536960560008883,
+      "pep": {
+        "tx_sent": 1249,
+        "tx_confirmed": 1249,
+        "anchors_sent": 0,
+        "anchors_confirmed": 0,
+        "deny": {
+          "error:Internal error": 1
+        }
+      },
+      "load": {
+        "devices": 50,
+        "duration_s": 20,
+        "offered_rps": 50,
+        "measured": 1000,
+        "ok": 999,
+        "denied": 1,
+        "failed_or_timeout": 0,
+        "reasons": {
+          "error:Internal error": 1
+        },
+        "goodput_rps": 49.95,
+        "late": 0,
+        "n": 1000,
+        "mean_ms": 3372.57785568998,
+        "p50_ms": 3273.7328619994223,
+        "p95_ms": 5171.28009000048,
+        "p99_ms": 5869.747454999015,
+        "max_ms": 6068.352802999318,
+        "series": [
+          {
+            "k": 0,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2150.819667899832
+          },
+          {
+            "k": 1,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2014.9914275200292
+          },
+          {
+            "k": 2,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2311.0343655599654
+          },
+          {
+            "k": 3,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2387.529979619905
+          },
+          {
+            "k": 4,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 3073.624458320029
+          },
+          {
+            "k": 5,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2466.456242759936
+          },
+          {
+            "k": 6,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2787.3566083198784
+          },
+          {
+            "k": 7,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2747.5638215399904
+          },
+          {
+            "k": 8,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2501.905924899764
+          },
+          {
+            "k": 9,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 3487.6721524799987
+          },
+          {
+            "k": 10,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 3256.1534726199134
+          },
+          {
+            "k": 11,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 5518.515441959985
+          },
+          {
+            "k": 12,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 4518.778606359959
+          },
+          {
+            "k": 13,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 3744.653871060014
+          },
+          {
+            "k": 14,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 4050.9350085800515
+          },
+          {
+            "k": 15,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 3772.1132264400644
+          },
+          {
+            "k": 16,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2859.564482099898
+          },
+          {
+            "k": 17,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 3947.719730800055
+          },
+          {
+            "k": 18,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2948.3829093598574
+          },
+          {
+            "k": 19,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 3461.8993879600985
+          },
+          {
+            "k": 20,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2840.5162753802165
+          },
+          {
+            "k": 21,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 3199.9414405601474
+          },
+          {
+            "k": 22,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 3033.3430006399008
+          },
+          {
+            "k": 23,
+            "n": 50,
+            "ok": 49,
+            "denied": 0,
+            "err": 1,
+            "fail": 0,
+            "mean_ms": 3207.368108319938
+          },
+          {
+            "k": 24,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 3100.7174016599356
+          }
+        ]
+      }
+    },
+    {
+      "offered_tps": 200,
+      "flood": {
+        "attempts": 5400,
+        "accepted": 5400,
+        "rejected": 0,
+        "reasons": {},
+        "accepted_tps": 216,
+        "committed_total": 5400,
+        "evicted_after_accept": 0
+      },
+      "ledger": {
+        "blocks": 10,
+        "span_s": 32,
+        "txs": 6647,
+        "tps": 207.71875,
+        "tx_per_block": 664.7,
+        "gas_per_s": 34832008.625
+      },
+      "txpool_before": {
+        "max": -1,
+        "local": 0,
+        "remote": 0,
+        "total": 0
+      },
+      "txpool_end_of_window": {
+        "max": -1,
+        "local": 0,
+        "remote": 0,
+        "total": 0
+      },
+      "drain_s": 1.3533283249996602,
+      "pep": {
+        "tx_sent": 1247,
+        "tx_confirmed": 1247,
+        "anchors_sent": 0,
+        "anchors_confirmed": 0,
+        "deny": {
+          "error:Internal error": 3
+        }
+      },
+      "load": {
+        "devices": 50,
+        "duration_s": 20,
+        "offered_rps": 50,
+        "measured": 1000,
+        "ok": 998,
+        "denied": 2,
+        "failed_or_timeout": 0,
+        "reasons": {
+          "error:Internal error": 2
+        },
+        "goodput_rps": 49.9,
+        "late": 0,
+        "n": 1000,
+        "mean_ms": 9344.57373685501,
+        "p50_ms": 10116.638547001407,
+        "p95_ms": 14319.298399999738,
+        "p99_ms": 15027.847645999864,
+        "max_ms": 15305.826424999163,
+        "series": [
+          {
+            "k": 0,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2069.6512437799947
+          },
+          {
+            "k": 1,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2442.696262380071
+          },
+          {
+            "k": 2,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2607.6782956399397
+          },
+          {
+            "k": 3,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2866.3147470798717
+          },
+          {
+            "k": 4,
+            "n": 50,
+            "ok": 49,
+            "denied": 0,
+            "err": 1,
+            "fail": 0,
+            "mean_ms": 2716.6325582600757
+          },
+          {
+            "k": 5,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 3985.7508246198295
+          },
+          {
+            "k": 6,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2986.2783667999133
+          },
+          {
+            "k": 7,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 6965.530442560129
+          },
+          {
+            "k": 8,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 6777.50850605987
+          },
+          {
+            "k": 9,
+            "n": 50,
+            "ok": 49,
+            "denied": 0,
+            "err": 1,
+            "fail": 0,
+            "mean_ms": 5661.496583919935
+          },
+          {
+            "k": 10,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 4778.229943020083
+          },
+          {
+            "k": 11,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 8320.380784179979
+          },
+          {
+            "k": 12,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 9266.95802806005
+          },
+          {
+            "k": 13,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 8267.271181700118
+          },
+          {
+            "k": 14,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 7267.720643919893
+          },
+          {
+            "k": 15,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 14105.415308200047
+          },
+          {
+            "k": 16,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 13786.85588911999
+          },
+          {
+            "k": 17,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 12787.519112100154
+          },
+          {
+            "k": 18,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 11787.938879399895
+          },
+          {
+            "k": 19,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 11341.58637412019
+          },
+          {
+            "k": 20,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 11916.398052060009
+          },
+          {
+            "k": 21,
+            "n": 50,
+            "ok": 49,
+            "denied": 0,
+            "err": 1,
+            "fail": 0,
+            "mean_ms": 12082.777499839998
+          },
+          {
+            "k": 22,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 12626.846281320117
+          },
+          {
+            "k": 23,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 11589.389764300025
+          },
+          {
+            "k": 24,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 10589.622271800004
+          }
+        ]
+      }
+    },
+    {
+      "offered_tps": 400,
+      "flood": {
+        "attempts": 10800,
+        "accepted": 5580,
+        "rejected": 5220,
+        "reasons": {
+          "Transaction nonce is too distant from current sender nonce": 5220
+        },
+        "accepted_tps": 223.2,
+        "committed_total": 5580,
+        "evicted_after_accept": 0
+      },
+      "ledger": {
+        "blocks": 6,
+        "span_s": 29,
+        "txs": 5647,
+        "tps": 194.72413793103448,
+        "tx_per_block": 941.1666666666666,
+        "gas_per_s": 32653114.620689657
+      },
+      "txpool_before": {
+        "max": -1,
+        "local": 0,
+        "remote": 0,
+        "total": 0
+      },
+      "txpool_end_of_window": {
+        "max": -1,
+        "local": 1182,
+        "remote": 0,
+        "total": 1182
+      },
+      "drain_s": 7.307085188999772,
+      "pep": {
+        "tx_sent": 1249,
+        "tx_confirmed": 1249,
+        "anchors_sent": 0,
+        "anchors_confirmed": 0,
+        "deny": {
+          "error:Internal error": 1
+        }
+      },
+      "load": {
+        "devices": 50,
+        "duration_s": 20,
+        "offered_rps": 50,
+        "measured": 1000,
+        "ok": 999,
+        "denied": 1,
+        "failed_or_timeout": 0,
+        "reasons": {
+          "error:Internal error": 1
+        },
+        "goodput_rps": 49.95,
+        "late": 0,
+        "n": 1000,
+        "mean_ms": 15090.996494442987,
+        "p50_ms": 14951.803418999538,
+        "p95_ms": 20026.930527999997,
+        "p99_ms": 20722.737232999876,
+        "max_ms": 21546.547414999455,
+        "series": [
+          {
+            "k": 0,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 2073.995499359928
+          },
+          {
+            "k": 1,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 4232.404180880115
+          },
+          {
+            "k": 2,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 4608.046960799992
+          },
+          {
+            "k": 3,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 9568.702859619892
+          },
+          {
+            "k": 4,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 8569.508698319905
+          },
+          {
+            "k": 5,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 16486.496747919842
+          },
+          {
+            "k": 6,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 19684.78256460011
+          },
+          {
+            "k": 7,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 18683.528727080076
+          },
+          {
+            "k": 8,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 17685.360230540147
+          },
+          {
+            "k": 9,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 16685.235215720124
+          },
+          {
+            "k": 10,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 15686.169279320016
+          },
+          {
+            "k": 11,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 14686.982155279964
+          },
+          {
+            "k": 12,
+            "n": 50,
+            "ok": 49,
+            "denied": 0,
+            "err": 1,
+            "fail": 0,
+            "mean_ms": 14036.256734859906
+          },
+          {
+            "k": 13,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 13182.061331359893
+          },
+          {
+            "k": 14,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 12019.007867460028
+          },
+          {
+            "k": 15,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 14471.173869999908
+          },
+          {
+            "k": 16,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 17917.081165299973
+          },
+          {
+            "k": 17,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 16918.324951959996
+          },
+          {
+            "k": 18,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 15919.604085480012
+          },
+          {
+            "k": 19,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 14919.715108719989
+          },
+          {
+            "k": 20,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 13920.961619019881
+          },
+          {
+            "k": 21,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 12922.047504499928
+          },
+          {
+            "k": 22,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 11922.319471520073
+          },
+          {
+            "k": 23,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 11811.811189119853
+          },
+          {
+            "k": 24,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 12261.0100691
+          }
+        ]
+      }
+    },
+    {
+      "offered_tps": 800,
+      "flood": {
+        "attempts": 21600,
+        "accepted": 6705,
+        "rejected": 14895,
+        "reasons": {
+          "Transaction nonce is too distant from current sender nonce": 14689,
+          "Transaction pool not enabled. (Either txpool explicitly disa": 206
+        },
+        "accepted_tps": 268.2,
+        "committed_total": 5472,
+        "evicted_after_accept": 1233
+      },
+      "ledger": {
+        "blocks": 8,
+        "span_s": 43,
+        "txs": 6721,
+        "tps": 156.30232558139534,
+        "tx_per_block": 840.125,
+        "gas_per_s": 26210068.372093022
+      },
+      "txpool_before": {
+        "max": -1,
+        "local": 0,
+        "remote": 0,
+        "total": 0
+      },
+      "txpool_end_of_window": {
+        "max": 0,
+        "local": 0,
+        "remote": 0,
+        "total": 0
+      },
+      "drain_s": 0.0191681220009923,
+      "pep": {
+        "tx_sent": 1249,
+        "tx_confirmed": 1249,
+        "anchors_sent": 0,
+        "anchors_confirmed": 0,
+        "deny": {
+          "error:Internal error": 1
+        }
+      },
+      "load": {
+        "devices": 50,
+        "duration_s": 20,
+        "offered_rps": 50,
+        "measured": 1000,
+        "ok": 999,
+        "denied": 1,
+        "failed_or_timeout": 0,
+        "reasons": {
+          "error:Internal error": 1
+        },
+        "goodput_rps": 49.95,
+        "late": 0,
+        "n": 1000,
+        "mean_ms": 25088.979557949006,
+        "p50_ms": 24837.002365000546,
+        "p95_ms": 31571.17555099912,
+        "p99_ms": 32403.144535999745,
+        "max_ms": 34832.310628999025,
+        "series": [
+          {
+            "k": 0,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 18394.243934399932
+          },
+          {
+            "k": 1,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 17394.617284579763
+          },
+          {
+            "k": 2,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 16395.005349140094
+          },
+          {
+            "k": 3,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 15395.420102079957
+          },
+          {
+            "k": 4,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 14600.56160016004
+          },
+          {
+            "k": 5,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 23632.289146260024
+          },
+          {
+            "k": 6,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 22632.48769290004
+          },
+          {
+            "k": 7,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 21632.672583039814
+          },
+          {
+            "k": 8,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 20633.876933219955
+          },
+          {
+            "k": 9,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 19633.893658760117
+          },
+          {
+            "k": 10,
+            "n": 50,
+            "ok": 49,
+            "denied": 0,
+            "err": 1,
+            "fail": 0,
+            "mean_ms": 20295.52020178005
+          },
+          {
+            "k": 11,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 27445.360585480183
+          },
+          {
+            "k": 12,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 26445.89894714009
+          },
+          {
+            "k": 13,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 31248.525423379688
+          },
+          {
+            "k": 14,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 31195.396518919915
+          },
+          {
+            "k": 15,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 30195.057854200004
+          },
+          {
+            "k": 16,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 29196.177487399877
+          },
+          {
+            "k": 17,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 28196.231178579965
+          },
+          {
+            "k": 18,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 27197.428930140028
+          },
+          {
+            "k": 19,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 26198.21705081988
+          },
+          {
+            "k": 20,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 25199.688706699944
+          },
+          {
+            "k": 21,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 24200.377390299996
+          },
+          {
+            "k": 22,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 23199.483558620064
+          },
+          {
+            "k": 23,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 22199.041992680206
+          },
+          {
+            "k": 24,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 21201.965318659917
+          }
+        ]
+      }
+    },
+    {
+      "offered_tps": 1200,
+      "flood": {
+        "attempts": 32401,
+        "accepted": 8344,
+        "rejected": 24057,
+        "reasons": {
+          "Transaction nonce is too distant from current sender nonce": 15522,
+          "Transaction pool not enabled. (Either txpool explicitly disa": 8535
+        },
+        "accepted_tps": 333.76,
+        "committed_total": 8344,
+        "evicted_after_accept": 0
+      },
+      "ledger": {
+        "blocks": 12,
+        "span_s": 56,
+        "txs": 8213,
+        "tps": 146.66071428571428,
+        "tx_per_block": 684.4166666666666,
+        "gas_per_s": 24593168.64285714
+      },
+      "txpool_before": {
+        "max": -1,
+        "local": 0,
+        "remote": 0,
+        "total": 0
+      },
+      "txpool_end_of_window": {
+        "max": 0,
+        "local": 0,
+        "remote": 0,
+        "total": 0
+      },
+      "drain_s": 6.510372803999111,
+      "pep": {
+        "tx_sent": 1248,
+        "tx_confirmed": 1235,
+        "anchors_sent": 0,
+        "anchors_confirmed": 0,
+        "deny": {
+          "error:Internal error": 2,
+          "error:timeout": 13
+        }
+      },
+      "load": {
+        "devices": 50,
+        "duration_s": 20,
+        "offered_rps": 50,
+        "measured": 1000,
+        "ok": 985,
+        "denied": 14,
+        "failed_or_timeout": 1,
+        "reasons": {
+          "error:Internal error": 2,
+          "error:timeout": 12
+        },
+        "goodput_rps": 49.25,
+        "late": 0,
+        "n": 999,
+        "mean_ms": 23817.850656958934,
+        "p50_ms": 23562.520301001146,
+        "p95_ms": 30463.854881001636,
+        "p99_ms": 32986.55817000009,
+        "max_ms": 33626.73551299982,
+        "series": [
+          {
+            "k": 0,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 10413.80255099982
+          },
+          {
+            "k": 1,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 9414.241412120015
+          },
+          {
+            "k": 2,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 8414.655395139976
+          },
+          {
+            "k": 3,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 7414.664865559973
+          },
+          {
+            "k": 4,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 6415.94033796005
+          },
+          {
+            "k": 5,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 11357.462165760175
+          },
+          {
+            "k": 6,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 22982.936766260118
+          },
+          {
+            "k": 7,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 21983.27869141992
+          },
+          {
+            "k": 8,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 20983.93560847979
+          },
+          {
+            "k": 9,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 19984.44066390004
+          },
+          {
+            "k": 10,
+            "n": 50,
+            "ok": 47,
+            "denied": 0,
+            "err": 2,
+            "fail": 1,
+            "mean_ms": 21915.077254591662
+          },
+          {
+            "k": 11,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 27954.99096085973
+          },
+          {
+            "k": 12,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 28840.407933080085
+          },
+          {
+            "k": 13,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 30237.741996060053
+          },
+          {
+            "k": 14,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 29240.585085879862
+          },
+          {
+            "k": 15,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 28241.12947604008
+          },
+          {
+            "k": 16,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 27241.945502879993
+          },
+          {
+            "k": 17,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 26241.318500920086
+          },
+          {
+            "k": 18,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 25244.206749920137
+          },
+          {
+            "k": 19,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 24243.921920259967
+          },
+          {
+            "k": 20,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 23243.007595679985
+          },
+          {
+            "k": 21,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 22247.102692420223
+          },
+          {
+            "k": 22,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 21244.3395993999
+          },
+          {
+            "k": 23,
+            "n": 50,
+            "ok": 50,
+            "denied": 0,
+            "err": 0,
+            "fail": 0,
+            "mean_ms": 20248.772069559993
+          },
+          {
+            "k": 24,
+            "n": 50,
+            "ok": 38,
+            "denied": 0,
+            "err": 12,
+            "fail": 0,
+            "mean_ms": 22642.356437759958
+          }
+        ]
+      }
+    }
+  ]
+}
