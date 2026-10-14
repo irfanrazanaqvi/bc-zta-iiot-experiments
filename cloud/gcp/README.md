@@ -32,3 +32,9 @@ nohup ./run_ext.sh > ~/ext.log 2>&1 &                    # ~3 h real run (resuma
 ```
 Aggregate afterwards with `python3 system/make_ext_artifacts.py <extracted ext_output> <outdir>`.
 Note: `SenderPool` now sends one transaction per account at a time and only advances the nonce after the node accepted it (no nonce gaps under overload).
+
+## Extended evaluation 2: robustness experiments (`run_ext2.sh`)
+Adds baseline B6 (central directory + push revocation), a 2-node read quorum, loss of the state source (2xTTL fail-closed bound), a consensus-halt test (2 of 4 validators stopped) and PEP scale-out (1/2/4 PEPs on a 4-vCPU VM).
+`QUICK=1 nohup ./run_ext2.sh > ~/ext2_quick.log 2>&1 &` (shakedown), then `nohup ./run_ext2.sh > ~/ext2.log 2>&1 &` (about 2.5 h); watch with `SUITE=ext2 ./status.sh`; finish with `./cleanup.sh`.
+Aggregate with `python3 system/make_robust_artifacts.py <dir with robust_r*/> <out>`.
+Note: `system/pep.js` gained the serve-stale/fail-closed rule, push mode and read quorum after the first two cloud runs; those runs used the earlier behaviour (deny on failed read after TTL).

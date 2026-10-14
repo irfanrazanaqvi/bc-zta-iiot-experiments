@@ -29,10 +29,10 @@ const stopLocal = (p) => new Promise((r) => { p.once("exit", r); p.kill("SIGTERM
 /** Returns startProc(where, file, env, readyText) -> {stop()}; `where` = "pep" | "dir" selects the agent when AGENT_PEP / AGENT_DIR are set. */
 function makeStarter(config) {
   const AGENT = { pep: process.env.AGENT_PEP, dir: process.env.AGENT_DIR };
-  return async function startProc(where, file, env, ready) {
+  return async function startProc(where, file, env, ready, id) {
     if (!AGENT[where]) { const p = await spawnProc(file, env, ready, config); return { stop: () => stopLocal(p) }; }
-    await agentPost(AGENT[where], "/start", { file, env, ready });
-    return { stop: () => agentPost(AGENT[where], "/stop", { file }) };
+    await agentPost(AGENT[where], "/start", { file, env, ready, id });
+    return { stop: () => agentPost(AGENT[where], "/stop", { file, id }) };
   };
 }
 async function pushConfig(cfg) { for (const w of ["pep", "dir"]) if (process.env["AGENT_" + w.toUpperCase()]) await agentPost(process.env["AGENT_" + w.toUpperCase()], "/config", JSON.stringify(cfg)); }

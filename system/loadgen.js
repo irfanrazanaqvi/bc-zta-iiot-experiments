@@ -26,7 +26,7 @@ async function makeReq(dev, resource, ts, opts = {}) {
   return { did: dev.did, res: resource, ts, nonce, sig, proof: opts.proof ?? dev.proof, cls: dev.cls, token: opts.token ?? dev.token };
 }
 
-async function runLoad({ port, devices, resource, durationS, warmupS, timeoutMs = 30000, onStart = null, rps = 1 }) {
+async function runLoad({ port, ports = null, devices, resource, durationS, warmupS, timeoutMs = 30000, onStart = null, rps = 1 }) {
   const N = devices.length, total = warmupS + durationS;
   const plan = [];
   // calibrate signing speed, then schedule the window after pre-signing is expected to finish (+50% margin)
@@ -51,7 +51,7 @@ async function runLoad({ port, devices, resource, durationS, warmupS, timeoutMs 
   for (const p of plan) {
     const w = p.at - Date.now();
     if (w > 1) await sleep(w);
-    pending.push(post(port, "/access", p.req, timeoutMs).then((r) => {
+    pending.push(post(ports ? ports[p.i % ports.length] : port, "/access", p.req, timeoutMs).then((r) => {
       const sb = series[p.k]; sb.n++;
       if (r.timeout || r.error || !r.out) sb.fail++;
       else { sb.lat_sum += r.ms; if (r.out.ok) sb.ok++; else if (String(r.out.reason).startsWith("error")) sb.err++; else sb.denied++; }

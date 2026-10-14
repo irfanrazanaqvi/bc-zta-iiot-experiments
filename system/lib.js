@@ -18,8 +18,9 @@ for (const n of ["IdentityRegistry", "TrustReputation", "AccessControl", "AuditL
 
 /** Minimal keep-alive JSON-RPC client with batching (one HTTP request per call()). */
 class Rpc {
-  constructor(url) {
+  constructor(url, opts = {}) {
     const u = new URL(url);
+    this.timeoutMs = opts.timeoutMs || 30000;
     this.opts = { host: u.hostname, port: u.port, path: u.pathname, method: "POST", headers: { "content-type": "application/json" },
                   agent: new http.Agent({ keepAlive: true, maxSockets: 256 }) };
     this.id = 1;
@@ -40,6 +41,7 @@ class Rpc {
           } catch (e) { reject(e); }
         });
       });
+      rq.setTimeout(this.timeoutMs, () => rq.destroy(new Error("rpc timeout")));
       rq.on("error", reject);
       rq.end(body);
     });
