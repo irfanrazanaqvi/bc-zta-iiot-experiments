@@ -6,6 +6,7 @@
 #   P5     horizontal scaling: 1, 2 and 4 PEP processes on one 4-vCPU VM
 # usage:   QUICK=1 nohup ./run_ext2.sh > ~/ext2_quick.log 2>&1 &     (about 30 min shakedown, results kept apart)
 #          nohup ./run_ext2.sh > ~/ext2.log 2>&1 &                    (about 2.5 h, about US$2-3)            watch with ./status.sh
+#          P4ONLY=1 nohup ./run_ext2.sh > ~/ext2_p4.log 2>&1 &        (only the consensus-halt experiment, 3 repetitions, about 30 min)
 # Safe to start again after an interruption: finished runs are skipped. Only one instance can run (lock).
 # When it prints DONE, download the archive it names and run ./cleanup.sh.
 set -euo pipefail
@@ -29,6 +30,9 @@ QUICK="${QUICK:-0}"
 # remote paths are relative to the home directory of the VM user
 if [ "$QUICK" = "1" ]; then ROBUST_REPS=1; OUTD="ext2_output_quick"; QENV=" QUICK=1"; ARCHIVE_NAME="e2e-ext2-quick.tar.gz"
 else OUTD="ext2_output"; QENV=""; ARCHIVE_NAME="e2e-ext2-results.tar.gz"; fi
+# P4ONLY=1: repeat only the consensus-halt experiment (P4) ROBUST_REPS times, results kept apart (ext2_p4_output, e2e-ext2-p4.tar.gz)
+P4ONLY="${P4ONLY:-0}"; JOBENV=""
+if [ "$P4ONLY" = "1" ]; then OUTD="ext2_p4_output"; ARCHIVE_NAME="e2e-ext2-p4.tar.gz"; JOBENV="PARTS=p4"; fi
 VMS="val1 val2 val3 val4 pep dir ctl"
 SSH="gcloud compute ssh --tunnel-through-iap --zone $ZONE --quiet --ssh-flag=-oServerAliveInterval=30 --ssh-flag=-oStrictHostKeyChecking=no"
 SCP="gcloud compute scp --tunnel-through-iap --zone $ZONE --quiet"
@@ -144,7 +148,7 @@ run_job() {
 
 echo "== 6/7 experiments"
 for r in $(seq 1 "$ROBUST_REPS"); do
-  run_job "robust_r$r" robust_results.json "" run_robust.js
+  run_job "robust_r$r" robust_results.json "$JOBENV" run_robust.js
 done
 
 echo "== 7/7 collecting results"
