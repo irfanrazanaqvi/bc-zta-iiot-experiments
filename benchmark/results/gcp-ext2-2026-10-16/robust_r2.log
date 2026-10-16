@@ -1,0 +1,32 @@
+deployed {"IR":"0x5FbDB2315678afecb367f032d93F642f64180aa3","TR":"0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512","AC":"0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0","AL":"0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"}
+onboarded 222 devices, epoch 0, root 0x45c1d2e57f…
+P1 push N=25: mean 4.6 ms p95 5.0 ms goodput 25.0/s fail 0 denied 0
+P1 push N=100: mean 4.0 ms p95 4.6 ms goodput 100.0/s fail 0 denied 0
+P1 push N=200: mean 3.6 ms p95 4.3 ms goodput 200.0/s fail 0 denied 0
+P1 bczta-q2 N=25: mean 4.6 ms p95 5.2 ms goodput 25.0/s fail 0 denied 0
+P1 bczta-q2 N=100: mean 4.3 ms p95 4.9 ms goodput 100.0/s fail 0 denied 0
+P1 bczta-q2 N=200: mean 3.9 ms p95 4.6 ms goodput 200.0/s fail 0 denied 0
+P1 bczta N=25: mean 4.3 ms p95 4.8 ms goodput 25.0/s fail 0 denied 0
+P1 bczta N=100: mean 4.0 ms p95 4.6 ms goodput 100.0/s fail 0 denied 0
+P1 bczta N=200: mean 3.9 ms p95 4.6 ms goodput 200.0/s fail 0 denied 0
+P2 push {"n":8,"mean":108.62222424999345,"p95":153.31822299957275,"max":153.31822299957275}
+P2 bczta-q2 {"n":8,"mean":1111.9195481250063,"p95":2006.5937840007246,"max":2006.5937840007246}
+P3 bczta {"granted_before":1,"granted_cut_0_to_ttl":0.8888888888888888,"granted_ttl_to_2ttl":0.146,"granted_after_2ttl":0,"granted_after_restore":1,"seconds_until_denials":9,"seconds_to_recover":1} {"stale_served":423,"unavailable":1984,"deny":{"unavailable":1984}}  
+P3 push {"granted_before":1,"granted_cut_0_to_ttl":1,"granted_ttl_to_2ttl":0.2,"granted_after_2ttl":0,"granted_after_restore":1,"seconds_until_denials":12,"seconds_to_recover":1} {"stale_served":500,"unavailable":1922,"deny":{"unavailable":1922}}  
+P5 k=1 offered 200/s: goodput 200/s mean 5 p95 7 ms fail 0 late 0
+P5 k=1 offered 400/s: goodput 374/s mean 647 p95 4265 ms fail 107 late 200
+P5 k=1 offered 800/s: goodput 459/s mean 2583 p95 8624 ms fail 2549 late 1543
+P5 k=1 offered 1200/s: goodput 178/s mean 5274 p95 12152 ms fail 3425 late 4920
+P5 k=1 offered 1600/s: goodput 263/s mean 5217 p95 12468 ms fail 3156 late 10238
+P5 k=2 offered 200/s: goodput 200/s mean 6 p95 8 ms fail 0 late 0
+P5 k=2 offered 400/s: goodput 400/s mean 6 p95 8 ms fail 0 late 0
+P5 k=2 offered 800/s: goodput 719/s mean 809 p95 7167 ms fail 322 late 645
+P5 k=2 offered 1200/s: goodput 290/s mean 1790 p95 7460 ms fail 2587 late 2142
+P5 k=2 offered 1600/s: goodput 445/s mean 2647 p95 8556 ms fail 5618 late 3186
+P5 k=4 offered 200/s: goodput 200/s mean 5 p95 7 ms fail 0 late 0
+P5 k=4 offered 400/s: goodput 400/s mean 6 p95 8 ms fail 0 late 0
+P5 k=4 offered 800/s: goodput 770/s mean 421 p95 420 ms fail 162 late 198
+P5 k=4 offered 1200/s: goodput 320/s mean 1448 p95 7272 ms fail 2384 late 1629
+P5 k=4 offered 1600/s: goodput 491/s mean 2456 p95 8023 ms fail 4583 late 3437
+P4 {"halt_at_s":20,"halt_s":40,"revoke_submitted_at_s":25,"halt_done_s":22.212,"second_restart_at_s":60.1,"restart_done_s":60.269,"blocks":{"at_halt":638,"before_restore":638,"after":639},"block_series":[{"t":0,"block":628},{"t":5,"block":630},{"t":10,"block":633},{"t":15,"block":635},{"t":20,"block":638},{"t":25,"block":638},{"t":30,"block":638},{"t":35,"block":638},{"t":40.1,"block":638},{"t":45.1,"block":638},{"t":50.1,"block":638},{"t":55.1,"block":638},{"t":60.1,"block":638},{"t":75.9,"block":638},{"t":80.9,"block":638},{"t":85.9,"block":638},{"t":90.9,"block":638},{"t":95.9,"block":638},{"t":100.9,"block":638},{"t":105.9,"block":638},{"t":110.9,"block":638},{"t":115.9,"block":638},{"t":120.9,"block":638},{"t":125.9,"block":638},{"t":130.9,"block":638},{"t":136,"block":638},{"t":141,"block":638}],"chain_resumed_after_restart_s":null,"decisions_granted":{"before_halt":1,"during_halt":1,"after":1},"revocation_enforced_after_submit_ms":117960.8872659998,"revocation_enforced_after_restart_ms":83030.57878699992}
+wrote /home/irfanrazanaqvi9/ext2_output/robust_r2

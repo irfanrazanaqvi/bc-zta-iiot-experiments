@@ -1,0 +1,1 @@
+gcp 7 VMs (val e2-medium, pep e2-standard-4, ctl e2-standard-2, dir e2-small), zone us-central1-a, besu 26.9.0, run_robust.js, netem validators 5ms, directory/IAM 40ms, quick=0

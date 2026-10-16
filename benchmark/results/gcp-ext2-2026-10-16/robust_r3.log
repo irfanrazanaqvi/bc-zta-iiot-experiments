@@ -1,0 +1,32 @@
+deployed {"IR":"0x5FbDB2315678afecb367f032d93F642f64180aa3","TR":"0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512","AC":"0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0","AL":"0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"}
+onboarded 222 devices, epoch 0, root 0x45c1d2e57f…
+P1 push N=25: mean 4.6 ms p95 5.3 ms goodput 25.0/s fail 0 denied 0
+P1 push N=100: mean 3.7 ms p95 4.3 ms goodput 100.0/s fail 0 denied 0
+P1 push N=200: mean 3.5 ms p95 4.1 ms goodput 200.0/s fail 0 denied 0
+P1 bczta-q2 N=25: mean 4.7 ms p95 5.1 ms goodput 25.0/s fail 0 denied 0
+P1 bczta-q2 N=100: mean 4.3 ms p95 5.2 ms goodput 100.0/s fail 0 denied 0
+P1 bczta-q2 N=200: mean 3.9 ms p95 4.6 ms goodput 200.0/s fail 0 denied 0
+P1 bczta N=25: mean 4.6 ms p95 5.1 ms goodput 25.0/s fail 0 denied 0
+P1 bczta N=100: mean 4.1 ms p95 4.8 ms goodput 100.0/s fail 0 denied 0
+P1 bczta N=200: mean 3.9 ms p95 4.6 ms goodput 200.0/s fail 0 denied 0
+P2 push {"n":8,"mean":108.6620381247485,"p95":153.84889699984342,"max":153.84889699984342}
+P2 bczta-q2 {"n":8,"mean":1249.018968500197,"p95":2124.0301510002464,"max":2124.0301510002464}
+P3 bczta {"granted_before":1,"granted_cut_0_to_ttl":0.8888888888888888,"granted_ttl_to_2ttl":0.146,"granted_after_2ttl":0,"granted_after_restore":1,"seconds_until_denials":9,"seconds_to_recover":1} {"stale_served":423,"unavailable":1985,"deny":{"unavailable":1985}}  
+P3 push {"granted_before":1,"granted_cut_0_to_ttl":1,"granted_ttl_to_2ttl":0.2,"granted_after_2ttl":0,"granted_after_restore":1,"seconds_until_denials":12,"seconds_to_recover":1} {"stale_served":500,"unavailable":1916,"deny":{"unavailable":1916}}  
+P5 k=1 offered 200/s: goodput 200/s mean 5 p95 8 ms fail 0 late 0
+P5 k=1 offered 400/s: goodput 375/s mean 622 p95 4143 ms fail 96 late 199
+P5 k=1 offered 800/s: goodput 450/s mean 2595 p95 8428 ms fail 2625 late 1579
+P5 k=1 offered 1200/s: goodput 176/s mean 5030 p95 11537 ms fail 3781 late 4597
+P5 k=1 offered 1600/s: goodput 258/s mean 5278 p95 12488 ms fail 3084 late 10383
+P5 k=2 offered 200/s: goodput 200/s mean 6 p95 9 ms fail 0 late 0
+P5 k=2 offered 400/s: goodput 400/s mean 6 p95 10 ms fail 0 late 0
+P5 k=2 offered 800/s: goodput 696/s mean 869 p95 7182 ms fail 546 late 698
+P5 k=2 offered 1200/s: goodput 291/s mean 1822 p95 7585 ms fail 2668 late 2115
+P5 k=2 offered 1600/s: goodput 443/s mean 2739 p95 8666 ms fail 5473 late 3280
+P5 k=4 offered 200/s: goodput 200/s mean 5 p95 7 ms fail 0 late 0
+P5 k=4 offered 400/s: goodput 400/s mean 6 p95 8 ms fail 0 late 0
+P5 k=4 offered 800/s: goodput 764/s mean 524 p95 533 ms fail 122 late 314
+P5 k=4 offered 1200/s: goodput 319/s mean 1450 p95 7273 ms fail 2325 late 1642
+P5 k=4 offered 1600/s: goodput 495/s mean 2404 p95 7929 ms fail 4405 late 3432
+P4 {"halt_at_s":20,"halt_s":40,"revoke_submitted_at_s":25,"halt_done_s":22.235,"second_restart_at_s":60.1,"restart_done_s":60.21,"blocks":{"at_halt":641,"before_restore":641,"after":642},"block_series":[{"t":0,"block":631},{"t":5,"block":633},{"t":10,"block":636},{"t":15,"block":638},{"t":20,"block":641},{"t":25,"block":641},{"t":30,"block":641},{"t":35,"block":641},{"t":40.1,"block":641},{"t":45.1,"block":641},{"t":50.1,"block":641},{"t":55.1,"block":641},{"t":60.1,"block":641},{"t":75.9,"block":641},{"t":80.9,"block":641},{"t":85.9,"block":641},{"t":90.9,"block":641},{"t":96,"block":641},{"t":101,"block":641},{"t":106,"block":641},{"t":111,"block":641},{"t":116,"block":641},{"t":121,"block":641},{"t":126,"block":641},{"t":131,"block":641},{"t":136,"block":641},{"t":141,"block":641},{"t":146,"block":641},{"t":151,"block":641},{"t":156,"block":641},{"t":161,"block":641},{"t":166.1,"block":641},{"t":171.1,"block":641},{"t":176.1,"block":641},{"t":181.1,"block":641},{"t":186.1,"block":641},{"t":191.1,"block":641},{"t":196.1,"block":641},{"t":201.1,"block":641},{"t":206.1,"block":641}],"chain_resumed_after_restart_s":null,"decisions_granted":{"before_halt":1,"during_halt":1,"after":1},"revocation_enforced_after_submit_ms":182934.078156,"revocation_enforced_after_restart_ms":147934.22912500054}
+wrote /home/irfanrazanaqvi9/ext2_output/robust_r3
