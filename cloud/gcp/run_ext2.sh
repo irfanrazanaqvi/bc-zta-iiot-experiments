@@ -138,7 +138,7 @@ run_job() {
   sh ctl "tail -4 ~/$OUTD/$name.log | cut -c1-220" || true
   if ! sh ctl "test -s ~/$OUTD/$name/$resf" >/dev/null 2>&1; then
     echo "ERROR: $name produced no result file; log tail:" >&2; sh ctl "tail -25 ~/$OUTD/$name.log | cut -c1-250" >&2 || true
-    echo "Fix the cause, then start run_ext.sh again (finished runs are skipped)." >&2; exit 1
+    echo "Fix the cause, then start run_ext2.sh again (finished runs are skipped)." >&2; exit 1
   fi
 }
 
@@ -153,5 +153,5 @@ sh ctl "test -s ~/$ARCHIVE_NAME" || { echo "ERROR: archive was not created" >&2;
 $SCP "ctl:~/$ARCHIVE_NAME" "$HOME/$ARCHIVE_NAME"
 echo
 echo "DONE. Results: ~/$ARCHIVE_NAME   (Cloud Shell menu -> Download -> that path), then attach it in the chat."
-if [ "$QUICK" = "1" ]; then echo "This was the QUICK shakedown. If it ended with DONE and no errors, start the real run:  nohup ./run_ext.sh > ~/ext.log 2>&1 &   (the VMs are reused)"; fi
+if [ "$QUICK" = "1" ]; then echo "This was the QUICK shakedown. If it ended with DONE and no errors, start the real run:  nohup ./run_ext2.sh > ~/ext2.log 2>&1 &   (the VMs are reused)"; fi
 echo "IMPORTANT: when everything is finished run ./cleanup.sh to delete the VMs and stop all charges."

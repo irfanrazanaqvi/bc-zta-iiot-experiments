@@ -185,7 +185,9 @@ const watcher = new BlockWatcher(rpc);
 let sender = null, auditBuf = [];
 async function startChain() {
   if (MODE !== "bczta" && MODE !== "bcsync") return;
-  sender = new SenderPool(rpc, cfg.senderKeys, cfg.chainId, fee);
+  // several PEP processes on one host (scale-out test) use disjoint sender wallets so that their audit anchors do not collide on nonces
+  const SN = Number(process.env.SENDER_N || 1), SI = Number(process.env.SENDER_IDX || 0);
+  sender = new SenderPool(rpc, cfg.senderKeys.filter((_, j) => j % SN === SI), cfg.chainId, fee);
   await sender.init();
   await watcher.start();
   if (MODE === "bczta") {

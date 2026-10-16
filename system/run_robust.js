@@ -5,7 +5,7 @@
  *  P2  revocation enforcement delay of B6 and of BC-ZTA with read quorum (same method as run_iam.js X2).
  *  P3  loss of the state source: BC-ZTA PEP is cut off from its ledger node (iptables DROP) / B6 directory stopped, TTL 10 s, so the fail-closed
  *      bound is 2 x TTL = 20 s: requests are granted from cache, then from stale state, then denied, and recover after the source returns.
- *  P4  consensus halt: two of four validators stopped (IBFT needs 3 of 4): decisions continue, but a revocation submitted during the halt can only
+ *  P4  consensus halt (runs last): two of four validators stopped (IBFT needs 3 of 4): decisions continue, but a revocation submitted during the halt can only
  *      be enforced after consensus resumes.
  *  P5  horizontal scaling: k PEP processes (k = 1, 2, 4) on one VM behind a device-sharding load generator, offered rate sweep.
  * Env: RPC_URL, RPC_URLS (comma list of validator RPCs, >= 2), AGENT_PEP, AGENT_DIR, AGENT_VAL3, AGENT_VAL4, DIR_HOST, PEP_HOST, LEDGER_IP (RPC node IP seen by the PEP),
@@ -149,6 +149,29 @@ async function main() {
     save();
   }
 
+  // ---------------- P5 horizontal scaling ----------------
+  if (PARTS.includes("p5")) {
+    result.P5 = {};
+    for (const k of PEP_COUNTS) {
+      result.P5[k] = [];
+      for (const rate of PEP_RATES) {
+        const N = Math.min(100, rate), rps = Math.round(rate / N);
+        const procs = [], ports = [];
+        for (let i = 0; i < k; i++) { const port = 9000 + i; ports.push(port); procs.push(await startProc("pep", "pep.js", envFor("bczta", { PORT: String(port), SENDER_N: String(k), SENDER_IDX: String(i) }), "pep ready", `pep-${i}`)); }
+        const t0 = now();
+        const r = await runLoad({ ports, devices: devices.slice(0, N), resource: config.resource, durationS: PF_DUR, warmupS: PF_WARM, timeoutMs: 10000, rps });
+        const sts = await Promise.all(ports.map((p) => getStats(p).catch(() => null)));
+        r.pep = { cpu_cores_total: sts.every(Boolean) ? sts.reduce((a, st) => a + (st.cpu.user + st.cpu.system) / 1e6, 0) / ((now() - t0) / 1000) : null };
+        delete r.series; result.P5[k].push({ offered_rps: N * rps, ...r });
+        console.log(`P5 k=${k} offered ${N * rps}/s: goodput ${r.goodput_rps.toFixed(0)}/s mean ${r.mean_ms?.toFixed(0)} p95 ${r.p95_ms?.toFixed(0)} ms fail ${r.failed_or_timeout} late ${r.late}`);
+        for (const p of procs) await p.stop();
+        await sleep(1500);
+      }
+      await drain(rpc, pepAddrs);
+    }
+    save();
+  }
+
   // ---------------- P4 consensus halt (2 of 4 validators stopped) ----------------
   if (PARTS.includes("p4")) {
     if (!AG.val3 || !AG.val4) console.warn("AGENT_VAL3/AGENT_VAL4 missing: skipping P4");
@@ -187,29 +210,6 @@ async function main() {
       await pep.stop(); await sleep(3000); await drain(rpc, pepAddrs, 120000);
       save();
     }
-  }
-
-  // ---------------- P5 horizontal scaling ----------------
-  if (PARTS.includes("p5")) {
-    result.P5 = {};
-    for (const k of PEP_COUNTS) {
-      result.P5[k] = [];
-      for (const rate of PEP_RATES) {
-        const N = Math.min(100, rate), rps = Math.round(rate / N);
-        const procs = [], ports = [];
-        for (let i = 0; i < k; i++) { const port = 9000 + i; ports.push(port); procs.push(await startProc("pep", "pep.js", envFor("bczta", { PORT: String(port) }), "pep ready", `pep-${i}`)); }
-        const t0 = now();
-        const r = await runLoad({ ports, devices: devices.slice(0, N), resource: config.resource, durationS: PF_DUR, warmupS: PF_WARM, timeoutMs: 10000, rps });
-        const sts = await Promise.all(ports.map((p) => getStats(p).catch(() => null)));
-        r.pep = { cpu_cores_total: sts.every(Boolean) ? sts.reduce((a, st) => a + (st.cpu.user + st.cpu.system) / 1e6, 0) / ((now() - t0) / 1000) : null };
-        delete r.series; result.P5[k].push({ offered_rps: N * rps, ...r });
-        console.log(`P5 k=${k} offered ${N * rps}/s: goodput ${r.goodput_rps.toFixed(0)}/s mean ${r.mean_ms?.toFixed(0)} p95 ${r.p95_ms?.toFixed(0)} ms fail ${r.failed_or_timeout} late ${r.late}`);
-        for (const p of procs) await p.stop();
-        await sleep(1500);
-      }
-      await drain(rpc, pepAddrs);
-    }
-    save();
   }
 
   fs.writeFileSync(path.join(OUT, "robust_results.json"), JSON.stringify(result, null, 2));
