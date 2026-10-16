@@ -182,7 +182,7 @@ async function main() {
       const SECOND_RESTART_AFTER = 600;                                   // if still no new block 600 s after the restart, restart the two validators once more
       const victim = dev("atk-revoked");
       const ev = { halt_at_s: HALT_AT, halt_s: HALT_S, revoke_submitted_at_s: REVOKE_AT };
-      let tw = null, T0 = null, tDeny = null, tRestart = null, bnAtHalt = null, bnBeforeRestore = null, bnAfter = null;
+      let tw = null, T0 = null, tDeny = null, tRestart = null, tRestartWall = null, bnAtHalt = null, bnBeforeRestore = null, bnAfter = null;
       const probes = []; const timers = []; const blockSeries = [];
       const probeLoop = async () => {
         while (tw === null) await sleep(50);
@@ -203,7 +203,7 @@ async function main() {
               const el = (Date.now() - tw) / 1000; let h = null;
               try { h = await bn(); } catch (e) { /* node unreachable */ }
               blockSeries.push({ t: Math.round(el * 10) / 10, block: h });
-              if (tRestart !== null && !secondDone && bnBeforeRestore !== null && (Date.now() - tRestart) / 1000 > SECOND_RESTART_AFTER && h !== null && h <= bnBeforeRestore + 1) {
+              if (tRestart !== null && !secondDone && bnBeforeRestore !== null && (now() - tRestart) / 1000 > SECOND_RESTART_AFTER && h !== null && h <= bnBeforeRestore + 1) {
                 secondDone = true; ev.second_restart_at_s = Math.round(el * 10) / 10;
                 await Promise.all([agentPost(AG.val3, "/svc", { name: "besu", action: "stop" }), agentPost(AG.val4, "/svc", { name: "besu", action: "stop" })].map((q) => q.catch(() => {})));
                 await Promise.all([agentPost(AG.val3, "/svc", { name: "besu", action: "start" }), agentPost(AG.val4, "/svc", { name: "besu", action: "start" })].map((q) => q.catch(() => {})));
@@ -212,14 +212,14 @@ async function main() {
             }
           })();
           timers.push(setTimeout(async () => { try { bnAtHalt = await bn(); await Promise.all([agentPost(AG.val3, "/svc", { name: "besu", action: "stop" }), agentPost(AG.val4, "/svc", { name: "besu", action: "stop" })]); ev.halt_done_s = (Date.now() - tw) / 1000; } catch (e) { ev.halt_error = String(e.message); } }, HALT_AT * 1000));
-          timers.push(setTimeout(async () => { try { bnBeforeRestore = await bn(); tRestart = now(); await Promise.all([agentPost(AG.val3, "/svc", { name: "besu", action: "start" }), agentPost(AG.val4, "/svc", { name: "besu", action: "start" })]); ev.restart_done_s = (Date.now() - tw) / 1000; } catch (e) { ev.restart_error = String(e.message); } }, (HALT_AT + HALT_S) * 1000)); } });
+          timers.push(setTimeout(async () => { try { bnBeforeRestore = await bn(); tRestart = now(); tRestartWall = Date.now(); await Promise.all([agentPost(AG.val3, "/svc", { name: "besu", action: "start" }), agentPost(AG.val4, "/svc", { name: "besu", action: "start" })]); ev.restart_done_s = (Date.now() - tw) / 1000; } catch (e) { ev.restart_error = String(e.message); } }, (HALT_AT + HALT_S) * 1000)); } });
       await probing; await Promise.allSettled(probes);
       await Promise.all([agentPost(AG.val3, "/svc", { name: "besu", action: "start" }).catch(() => {}), agentPost(AG.val4, "/svc", { name: "besu", action: "start" }).catch(() => {})]);
       try { bnAfter = await bn(); } catch (e) { /* ignore */ }
       const S = r.series, frac = (a, b) => { const x = S.filter((s) => s.k >= a && s.k < b); const n = x.reduce((u, s) => u + s.n, 0); return n ? x.reduce((u, s) => u + s.ok, 0) / n : null; };
       ev.blocks = { at_halt: bnAtHalt, before_restore: bnBeforeRestore, after: bnAfter };
       ev.block_series = blockSeries;
-      { const rs = tRestart !== null ? (tRestart - tw) / 1000 : null; const r0 = rs === null ? null : blockSeries.find((x) => x.t >= rs && x.block !== null && bnBeforeRestore !== null && x.block > bnBeforeRestore + 1); ev.chain_resumed_after_restart_s = r0 ? Math.round((r0.t - rs) * 10) / 10 : null; }
+      { const rs = tRestartWall !== null ? (tRestartWall - tw) / 1000 : null; const r0 = rs === null ? null : blockSeries.find((x) => x.t >= rs && x.block !== null && bnBeforeRestore !== null && x.block > bnBeforeRestore + 1); ev.chain_resumed_after_restart_s = r0 ? Math.round((r0.t - rs) * 10) / 10 : null; }
       ev.decisions_granted = { before_halt: frac(0, HALT_AT), during_halt: frac(HALT_AT + 2, HALT_AT + HALT_S), after: frac(HALT_AT + HALT_S + 10, DUR) };
       ev.revocation_enforced_after_submit_ms = tDeny && T0 ? tDeny - T0 : null;
       ev.revocation_enforced_after_restart_ms = tDeny && tRestart ? tDeny - tRestart : null;
