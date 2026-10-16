@@ -101,7 +101,8 @@ function central(did) {
     const rq = http.request({ host: CENTRAL.hostname, port: CENTRAL.port, path: "/lookup", method: "POST", agent: centralAgent, headers: { "content-type": "application/json" } }, (res) => {
       const ch = []; res.on("data", (c) => ch.push(c)); res.on("end", () => { const j = JSON.parse(Buffer.concat(ch).toString()); resolve(j ? { known: true, revoked: j.revoked, pkh: j.pkh, cls: j.cls, trust: j.trust, policy } : { known: false }); });
     });
-    rq.on("error", reject); rq.setTimeout(3000, () => rq.destroy(new Error("central timeout"))); rq.end(body);
+    const timer = setTimeout(() => rq.destroy(new Error("central timeout")), 3000);   // hard deadline (rq.setTimeout only starts after connect)
+    rq.on("error", (e) => { clearTimeout(timer); reject(e); }); rq.on("close", () => clearTimeout(timer)); rq.end(body);
   });
 }
 const centralAgent = new http.Agent({ keepAlive: true, maxSockets: 512 });

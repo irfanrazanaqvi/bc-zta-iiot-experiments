@@ -28,7 +28,11 @@ class Rpc {
   call(reqs) {
     const body = JSON.stringify(reqs.map(([m, p]) => ({ jsonrpc: "2.0", id: this.id++, method: m, params: p || [] })));
     const ids = JSON.parse(body).map((x) => x.id);
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve0, reject0) => {
+      // Hard deadline for the whole call. rq.setTimeout() alone is NOT enough: Node starts it only after the TCP connection is established, so
+      // when packets are silently dropped (network partition) a new connection attempt would hang for minutes.
+      let timer = null;
+      const resolve = (v) => { clearTimeout(timer); resolve0(v); }, reject = (e) => { clearTimeout(timer); reject0(e); };
       const rq = http.request(this.opts, (res) => {
         const ch = [];
         res.on("data", (c) => ch.push(c));
@@ -41,7 +45,7 @@ class Rpc {
           } catch (e) { reject(e); }
         });
       });
-      rq.setTimeout(this.timeoutMs, () => rq.destroy(new Error("rpc timeout")));
+      timer = setTimeout(() => rq.destroy(new Error("rpc timeout")), this.timeoutMs);
       rq.on("error", reject);
       rq.end(body);
     });
