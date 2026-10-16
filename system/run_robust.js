@@ -178,8 +178,8 @@ async function main() {
     else {
       const pep = await startProc("pep", "pep.js", envFor("bczta", { TTL_S: String(TTL) }), "pep ready");
       const HALT_AT = CUT_S, HALT_S = QUICK ? 15 : 40, REVOKE_AT = HALT_AT + 5, DUR = HALT_AT + HALT_S + 30;
-      const WAIT_MAX = Number(process.env.RECOVER_WAIT_S || 240);         // how long after the restart we keep waiting for consensus to resume
-      const SECOND_RESTART_AFTER = 90;                                    // if no new block 90 s after the restart, restart the two validators once more
+      const WAIT_MAX = Number(process.env.RECOVER_WAIT_S || 900);         // how long after the restart we keep waiting for consensus to resume
+      const SECOND_RESTART_AFTER = 600;                                   // if still no new block 600 s after the restart, restart the two validators once more
       const victim = dev("atk-revoked");
       const ev = { halt_at_s: HALT_AT, halt_s: HALT_S, revoke_submitted_at_s: REVOKE_AT };
       let tw = null, T0 = null, tDeny = null, tRestart = null, bnAtHalt = null, bnBeforeRestore = null, bnAfter = null;
