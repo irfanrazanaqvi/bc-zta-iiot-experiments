@@ -1,4 +1,4 @@
-// Reference database. Every entry was checked against the publisher/indexing page
+// Reference database. Entries were checked by title and journal against publisher or index pages (two unverifiable entries removed).
 // during this session. `text` is the IEEE-style reference body; `url` is the hyperlink.
 module.exports = {
   // ---- recent (2025-2026) ----
@@ -12,10 +12,6 @@ module.exports = {
     text: "S. Mishra, T. S. M. Aldafas, and N. S. Alshammari, “A zero-trust digital twin framework for privacy-preserving multi-dataset intrusion detection in industrial IoT with lightweight blockchain auditing,” Sci. Rep., vol. 16, Art. no. 15236, 2026, doi: 10.1038/s41598-026-42041-w." },
   gambo: { year: 2026, url: "https://doi.org/10.1007/s10922-025-09998-x",
     text: "M. L. Gambo and A. Almulhem, “Zero trust architecture: A systematic literature review,” J. Netw. Syst. Manage., vol. 34, Art. no. 25, 2026, doi: 10.1007/s10922-025-09998-x." },
-  rani: { year: 2026, url: "https://doi.org/10.1007/978-3-032-21753-0_12",
-    text: "P. Rani, “A zero-trust framework for securing next-generation Internet of Things network,” in New Trends and Applications in Internet of Things (IoT) and Big Data Analytics, vol. 2. Cham, Switzerland: Springer, 2026, pp. 213–225, doi: 10.1007/978-3-032-21753-0_12." },
-  chella: { year: 2026, url: "https://doi.org/10.1007/978-3-032-20114-0_40",
-    text: "B. Chellaprabha, D. Manohari, and J. J. Justus, “Scalable and secure IoT architecture using trust-driven adaptive resource management and edge intelligence,” in Expert Applications and Security (NICE-TEAS 2025), Lecture Notes in Networks and Systems, vol. 1823. Cham, Switzerland: Springer, 2026, pp. 444–461, doi: 10.1007/978-3-032-20114-0_40." },
   aleisa: { year: 2025, url: "https://doi.org/10.1109/ACCESS.2025.3529309",
     text: "M. A. Aleisa, “Blockchain-enabled zero trust architecture for privacy-preserving cybersecurity in IoT environments,” IEEE Access, vol. 13, pp. 18660–18676, 2025, doi: 10.1109/ACCESS.2025.3529309." },
   essaid: { year: 2025, url: "https://doi.org/10.3390/app15126835",
