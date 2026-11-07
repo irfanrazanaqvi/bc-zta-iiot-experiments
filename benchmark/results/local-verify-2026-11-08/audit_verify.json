@@ -1,0 +1,236 @@
+{
+ "host": {
+  "cpus": 2,
+  "model": "Intel(R) Xeon(R) Processor",
+  "node": "v22.23.4"
+ },
+ "date": "2026-11-07T21:03:46.427Z",
+ "A": [
+  {
+   "batch": 50,
+   "proof_bytes": 192,
+   "proof_len": 6,
+   "modify_record": {
+    "detected": 100,
+    "trials": 100,
+    "full_verify_ms_mean": 1.4429875900007028
+   },
+   "delete_record": {
+    "detected": 100,
+    "trials": 100,
+    "full_verify_ms_mean": 1.2910185099999945
+   },
+   "insert_record": {
+    "detected": 100,
+    "trials": 100,
+    "full_verify_ms_mean": 1.305207680000749
+   },
+   "reorder_records": {
+    "detected": 50,
+    "trials": 100,
+    "full_verify_ms_mean": 1.268492489999626
+   },
+   "proof_verify": {
+    "honest_accepted": 100,
+    "forged_accepted": 0,
+    "trials": 100,
+    "ms_mean": 0.10575720000080764
+   },
+   "central_log_no_anchor": {
+    "rewrite_detectable_by_third_party": 0,
+    "trials": 100,
+    "note": "no external commitment exists; detection needs the operator’s cooperation"
+   }
+  },
+  {
+   "batch": 100,
+   "proof_bytes": 224,
+   "proof_len": 7,
+   "modify_record": {
+    "detected": 100,
+    "trials": 100,
+    "full_verify_ms_mean": 2.6161487300002775
+   },
+   "delete_record": {
+    "detected": 100,
+    "trials": 100,
+    "full_verify_ms_mean": 2.6157668100000593
+   },
+   "insert_record": {
+    "detected": 100,
+    "trials": 100,
+    "full_verify_ms_mean": 2.727043760000088
+   },
+   "reorder_records": {
+    "detected": 61,
+    "trials": 100,
+    "full_verify_ms_mean": 2.6166137999999046
+   },
+   "proof_verify": {
+    "honest_accepted": 100,
+    "forged_accepted": 0,
+    "trials": 100,
+    "ms_mean": 0.12554497000048287
+   },
+   "central_log_no_anchor": {
+    "rewrite_detectable_by_third_party": 0,
+    "trials": 100,
+    "note": "no external commitment exists; detection needs the operator’s cooperation"
+   }
+  },
+  {
+   "batch": 500,
+   "proof_bytes": 288,
+   "proof_len": 9,
+   "modify_record": {
+    "detected": 100,
+    "trials": 100,
+    "full_verify_ms_mean": 14.14030504999988
+   },
+   "delete_record": {
+    "detected": 100,
+    "trials": 100,
+    "full_verify_ms_mean": 13.436336250000167
+   },
+   "insert_record": {
+    "detected": 100,
+    "trials": 100,
+    "full_verify_ms_mean": 13.918310139999813
+   },
+   "reorder_records": {
+    "detected": 48,
+    "trials": 100,
+    "full_verify_ms_mean": 13.675306940000446
+   },
+   "proof_verify": {
+    "honest_accepted": 100,
+    "forged_accepted": 0,
+    "trials": 100,
+    "ms_mean": 0.16798998999991455
+   },
+   "central_log_no_anchor": {
+    "rewrite_detectable_by_third_party": 0,
+    "trials": 100,
+    "note": "no external commitment exists; detection needs the operator’s cooperation"
+   }
+  },
+  {
+   "batch": 1000,
+   "proof_bytes": 320,
+   "proof_len": 10,
+   "modify_record": {
+    "detected": 100,
+    "trials": 100,
+    "full_verify_ms_mean": 29.253296379999956
+   },
+   "delete_record": {
+    "detected": 100,
+    "trials": 100,
+    "full_verify_ms_mean": 27.938049049999098
+   },
+   "insert_record": {
+    "detected": 100,
+    "trials": 100,
+    "full_verify_ms_mean": 28.82946280000062
+   },
+   "reorder_records": {
+    "detected": 52,
+    "trials": 100,
+    "full_verify_ms_mean": 29.01422284999964
+   },
+   "proof_verify": {
+    "honest_accepted": 100,
+    "forged_accepted": 0,
+    "trials": 100,
+    "ms_mean": 0.1882002499999362
+   },
+   "central_log_no_anchor": {
+    "rewrite_detectable_by_third_party": 0,
+    "trials": 100,
+    "note": "no external commitment exists; detection needs the operator’s cooperation"
+   }
+  },
+  {
+   "batch": 5000,
+   "proof_bytes": 416,
+   "proof_len": 13,
+   "modify_record": {
+    "detected": 100,
+    "trials": 100,
+    "full_verify_ms_mean": 155.09091169999985
+   },
+   "delete_record": {
+    "detected": 100,
+    "trials": 100,
+    "full_verify_ms_mean": 152.10212624000022
+   },
+   "insert_record": {
+    "detected": 100,
+    "trials": 100,
+    "full_verify_ms_mean": 151.97795686000217
+   },
+   "reorder_records": {
+    "detected": 42,
+    "trials": 100,
+    "full_verify_ms_mean": 152.97251121000096
+   },
+   "proof_verify": {
+    "honest_accepted": 100,
+    "forged_accepted": 0,
+    "trials": 100,
+    "ms_mean": 0.2461232799993013
+   },
+   "central_log_no_anchor": {
+    "rewrite_detectable_by_third_party": 0,
+    "trials": 100,
+    "note": "no external commitment exists; detection needs the operator’s cooperation"
+   }
+  }
+ ],
+ "A_limits": {
+  "tamper_before_anchor": "not detectable: the root commits to whatever the operator hashed",
+  "note": "the anchor binds the log from the batch close; records forged earlier are outside what the ledger can prove"
+ },
+ "B": [
+  {
+   "devices": 1000,
+   "depth": 10,
+   "proof_bytes": 320,
+   "build_ms": 20.08764899999369,
+   "verify_us_per_proof": 182.6852152000007,
+   "verify_per_s_one_core": 5473.89671849042,
+   "cache_mb_100pct": 0.096,
+   "rss_mb": 0
+  },
+  {
+   "devices": 10000,
+   "depth": 14,
+   "proof_bytes": 448,
+   "build_ms": 218.43472999997903,
+   "verify_us_per_proof": 260.6609743999987,
+   "verify_per_s_one_core": 3836.400912341579,
+   "cache_mb_100pct": 0.96,
+   "rss_mb": 0
+  },
+  {
+   "devices": 100000,
+   "depth": 17,
+   "proof_bytes": 544,
+   "build_ms": 2254.596446999989,
+   "verify_us_per_proof": 327.8914276000025,
+   "verify_per_s_one_core": 3049.79000920972,
+   "cache_mb_100pct": 9.6,
+   "rss_mb": 185.46688
+  },
+  {
+   "devices": 1000000,
+   "depth": 20,
+   "proof_bytes": 640,
+   "build_ms": 27456.846044999984,
+   "verify_us_per_proof": 433.46752489999926,
+   "verify_per_s_one_core": 2306.977899280227,
+   "cache_mb_100pct": 96,
+   "rss_mb": 313.171968
+  }
+ ]
+}
