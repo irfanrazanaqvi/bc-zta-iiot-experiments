@@ -74,33 +74,36 @@ for mode in ("bczta", "bcsync"):
 agg["FLOOD"] = FL; agg["FLOOD_NODE_FAILED_AT_OFFERED_TPS"] = FAILED
 json.dump(agg, open(os.path.join(out, "aggregate_ext.json"), "w"), indent=1)
 
-plt.rcParams.update({"font.size": 8, "axes.grid": True, "grid.alpha": .3})
+plt.rcParams.update({"font.size": 9, "axes.grid": True, "grid.alpha": .3})
 COL = {"keycloak": "#c0504d", "keycloak-cached": "#e6a09d", "ldap": "#4f81bd", "ldap-cached": "#a3bde0", "bczta": "#2e7d32", "bcsync": "#7b4b9a"}
+HATCH = {"keycloak": "//", "keycloak-cached": "xx", "ldap": "\\\\", "ldap-cached": "..", "bczta": ""}
+LS = {"keycloak": "-", "keycloak-cached": "--", "ldap": "-.", "ldap-cached": ":", "bczta": "-", "bcsync": "--"}
+MKR = {"keycloak": "s", "keycloak-cached": "^", "ldap": "v", "ldap-cached": "D", "bczta": "o"}
 # fig6: X1 latency
 if any(E1[l] for l in E1):
     fig, ax = plt.subplots(1, 2, figsize=(7, 2.6))
     ns = sorted({int(n) for l in E1 for n in E1[l]}); w = 0.16
     for j, lab in enumerate(LABEL):
         for a, key in zip(ax, ("mean_ms", "p95_ms")):
-            a.bar([i + (j - 2) * w for i in range(len(ns))], [E1[lab].get(str(n), {}).get(key, (0, 0))[0] or 0 for n in ns], w, label=LABEL[lab], color=COL[lab])
+            a.bar([i + (j - 2) * w for i in range(len(ns))], [E1[lab].get(str(n), {}).get(key, (0, 0))[0] or 0 for n in ns], w, label=LABEL[lab], color=COL[lab], hatch=HATCH[lab], edgecolor="k", linewidth=.4)
     for a, t in zip(ax, ("mean latency (ms)", "p95 latency (ms)")): a.set_xticks(range(len(ns))); a.set_xticklabels(ns); a.set_xlabel("devices"); a.set_ylabel(t)
-    ax[0].legend(fontsize=6); fig.tight_layout(); fig.savefig(os.path.join(out, "fig6_iam_latency.png"), dpi=200); plt.close(fig)
+    ax[0].legend(fontsize=7.5); fig.tight_layout(); fig.savefig(os.path.join(out, "fig6_iam_latency.png"), dpi=600); plt.close(fig)
 # fig7: X3 outage timeline
 if E6:
     fig, ax = plt.subplots(figsize=(3.5, 2.6))
-    for lab, e in E6.items(): ax.plot(range(len(e["ok_fraction_series"])), [100 * x for x in e["ok_fraction_series"]], label=LABEL[lab], color=COL[lab], lw=1.2)
+    for lab, e in E6.items(): ax.plot(range(len(e["ok_fraction_series"])), [100 * x for x in e["ok_fraction_series"]], label=LABEL[lab], color=COL[lab], lw=1.6, ls=LS[lab], marker=MKR[lab], markevery=8, ms=4)
     e0 = next(iter(E6.values())); ax.axvspan(e0["stop_at_s"], e0["start_at_s"], color="grey", alpha=.15, label="central service stopped")
-    ax.set_xlabel("time (s)"); ax.set_ylabel("requests granted (%)"); ax.set_ylim(-3, 103); ax.legend(fontsize=5.5, loc="lower right"); fig.tight_layout(); fig.savefig(os.path.join(out, "fig7_iam_outage.png"), dpi=200); plt.close(fig)
+    ax.set_xlabel("time (s)"); ax.set_ylabel("requests granted (%)"); ax.set_ylim(-3, 103); ax.legend(fontsize=7, loc="upper center", bbox_to_anchor=(0.5, -0.3), ncol=2, frameon=False); fig.tight_layout(); fig.savefig(os.path.join(out, "fig7_iam_outage.png"), dpi=600, bbox_inches="tight"); plt.close(fig)
 # fig8: flood
 if any(FL[m] for m in FL):
     fig, ax = plt.subplots(1, 2, figsize=(7, 2.6))
     for m in FL:
         if not FL[m]: continue
         rs = sorted(FL[m], key=float)
-        ax[0].errorbar([float(r) for r in rs], [FL[m][r]["committed_tps"][0] or 0 for r in rs], yerr=[FL[m][r]["committed_tps"][1] or 0 for r in rs], marker="o", ms=3, label=f"ledger committed ({m} run)", color=COL[m])
-        ax[1].errorbar([float(r) for r in rs], [FL[m][r]["p95_ms"][0] or 0 for r in rs], yerr=[FL[m][r]["p95_ms"][1] or 0 for r in rs], marker="o", ms=3, label={"bczta": "BC-ZTA", "bcsync": "synchronous ledger"}[m], color=COL[m])
+        ax[0].errorbar([float(r) for r in rs], [FL[m][r]["committed_tps"][0] or 0 for r in rs], yerr=[FL[m][r]["committed_tps"][1] or 0 for r in rs], marker="os"[m=="bcsync"], ls=LS[m], ms=4, label=f"ledger committed ({m} run)", color=COL[m])
+        ax[1].errorbar([float(r) for r in rs], [FL[m][r]["p95_ms"][0] or 0 for r in rs], yerr=[FL[m][r]["p95_ms"][1] or 0 for r in rs], marker="os"[m=="bcsync"], ls=LS[m], ms=4, label={"bczta": "BC-ZTA", "bcsync": "synchronous ledger"}[m], color=COL[m])
     mx = max(float(r) for m in FL for r in FL[m]) if any(FL.values()) else 1
-    ax[0].plot([0, mx], [0, mx], "k:", lw=.8, label="offered"); ax[0].set_xlabel("offered flood rate (tx/s)"); ax[0].set_ylabel("committed (tx/s)"); ax[0].legend(fontsize=6)
-    ax[1].set_yscale("log"); ax[1].set_xlabel("offered flood rate (tx/s)"); ax[1].set_ylabel("access p95 latency (ms)"); ax[1].legend(fontsize=6)
-    fig.tight_layout(); fig.savefig(os.path.join(out, "fig8_flood.png"), dpi=200); plt.close(fig)
+    ax[0].plot([0, mx], [0, mx], "k:", lw=.8, label="offered"); ax[0].set_xlabel("offered flood rate (tx/s)"); ax[0].set_ylabel("committed (tx/s)"); ax[0].legend(fontsize=7.5)
+    ax[1].set_yscale("log"); ax[1].set_xlabel("offered flood rate (tx/s)"); ax[1].set_ylabel("access p95 latency (ms)"); ax[1].legend(fontsize=7.5)
+    fig.tight_layout(); fig.savefig(os.path.join(out, "fig8_flood.png"), dpi=600); plt.close(fig)
 print("wrote", out, "| iam runs:", agg["n_iam_runs"], "flood runs:", agg["n_flood_runs"])

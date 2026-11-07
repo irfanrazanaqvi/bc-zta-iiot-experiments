@@ -1,6 +1,18 @@
 const fs = require('fs');
 const path = require('path');
 const docx = require('docx');
+const ALT = {
+ "fig1_architecture.png": "Three-layer diagram. Bottom: IIoT devices (PLC, sensor, edge gateway, fog node, SDN switch). Middle: the edge zero-trust layer with PEP, PDP/ABAC, trust engine, Merkle-verified state cache and micro-segmentation. Top: the permissioned Besu blockchain with identity registry, trust reputation, access control, audit log and IBFT 2.0 validators.",
+ "fig2_workflow.png": "Six-step flow of one request: the device sends a signed request, the PEP checks time window and nonce, the PDP reads the cached DID entry with a Merkle proof, applies trust score and ABAC policy, and then allows or denies. A side branch batches audit votes to the blockchain asynchronously, off the request path.",
+ "fig3_latency.png": "Line chart, log scale. BC-ZTA and ABAC stay near 5 ms from 10 to 200 devices, the central directory near 49 ms, and the synchronous blockchain rises from about 1 s to over 10 s.",
+ "fig4_scalability.png": "Two panels. Top: BC-ZTA, ABAC and the central directory serve the full offered load up to 200 devices; the synchronous blockchain peaks near 100 requests per second and falls at 200 devices. Bottom: on-chain writes stay near zero for BC-ZTA and reach about 100 per second for the synchronous design.",
+ "fig5_revocation.png": "Bar chart, log scale, of mean revocation delay. Central PKI-IAM about 0.06 s, ABAC about 0.02 s, blockchain-only synchronous about 1.4 s, BC-ZTA with events about 1.3 s, BC-ZTA with a 10 s TTL about 6.6 s; markers show worst cases.",
+ "fig6_iam_latency.png": "Grouped bars for 25, 100 and 200 devices. Uncached Keycloak and OpenLDAP take about 47 to 50 ms mean at 25 and 100 devices; their cached variants and BC-ZTA take 6 to 10 ms. At 200 devices Keycloak is near 120 ms, OpenLDAP near 77 ms and BC-ZTA near 117 ms; P95 follows the same pattern.",
+ "fig7_iam_outage.png": "Timeline of requests granted. When the central IAM service stops at 20 s, Keycloak, OpenLDAP and their cached variants fall to 0 percent until the service restarts; BC-ZTA stays at 100 percent throughout.",
+ "fig8_flood.png": "Two panels versus offered flood rate up to 1,200 transactions per second. Left: committed rate for both designs levels off near 200. Right: access P95 latency stays under about 8 ms for BC-ZTA and rises from about 2 s to about 30 s for the synchronous ledger.",
+ "fig9_failclosed.png": "Timeline of requests granted when the state source is lost from 20 s to 70 s. BC-ZTA and the central directory with push revocation both keep granting until about 30 s, then deny all requests until the source returns.",
+ "fig10_scaling.png": "Two panels versus offered request rate for one, two and four PEP processes. Goodput follows the offered load up to about 800 requests per second, then drops; with one PEP it peaks near 450 and with four near 750. P95 latency rises sharply after saturation, later with more PEPs."
+};
 const { Document, Packer, Paragraph, TextRun, ImageRun, Table, TableRow, TableCell, WidthType, AlignmentType,
   BorderStyle, ShadingType, ExternalHyperlink, SectionType, Footer, PageNumber, VerticalAlign, TableLayoutType } = docx;
 const REFS = require('./refs.js');
@@ -86,9 +98,9 @@ const P = (t, o = {}) => new Paragraph({
   indent: o.indent, keepNext: o.keepNext, keepLines: o.keepLines,
   children: runs(t, o),
 });
-const H1 = t => ELS ? new Paragraph({ alignment: AlignmentType.LEFT, keepNext: true, spacing: { before: 280, after: 120 }, children: [new TextRun({ text: t, font: FONT, size: 26, bold: true })] }) : new Paragraph({ alignment: AlignmentType.CENTER, keepNext: true, spacing: { before: 120, after: 60 },
+const H1 = t => ELS ? new Paragraph({ heading: docx.HeadingLevel.HEADING_1, alignment: AlignmentType.LEFT, keepNext: true, spacing: { before: 280, after: 120 }, children: [new TextRun({ text: t, font: FONT, size: 26, bold: true, color: '000000' })] }) : new Paragraph({ alignment: AlignmentType.CENTER, keepNext: true, spacing: { before: 120, after: 60 },
   children: [new TextRun({ text: t.replace(/^(\d+)\.\s*/, (m,a)=>ROM[+a]+'. ').toUpperCase(), font: FONT, size: 18 })] });
-const H2 = t => ELS ? new Paragraph({ alignment: AlignmentType.LEFT, keepNext: true, spacing: { before: 180, after: 80 }, children: [new TextRun({ text: t.replace(/^(\d+\.\d+)\s*/, '$1. '), font: FONT, size: 22, bold: true })] }) : new Paragraph({ alignment: AlignmentType.LEFT, keepNext: true, spacing: { before: 60, after: 30 },
+const H2 = t => ELS ? new Paragraph({ heading: docx.HeadingLevel.HEADING_2, alignment: AlignmentType.LEFT, keepNext: true, spacing: { before: 180, after: 80 }, children: [new TextRun({ text: t.replace(/^(\d+\.\d+)\s*/, '$1. '), font: FONT, size: 22, bold: true, color: '000000' })] }) : new Paragraph({ alignment: AlignmentType.LEFT, keepNext: true, spacing: { before: 60, after: 30 },
   children: [new TextRun({ text: t.replace(/^(\d+)\.(\d+)\s*/, (m,a,b)=>LET[+b-1]+'. '), font: FONT, size: BODY, italics: true })] });
 const BUL = (t) => P(t, { indent: { left: 200, hanging: 200 }, after: 30 });
 
@@ -100,7 +112,7 @@ function fig(file, caption, wPx) {
   return [
     new Paragraph({ alignment: AlignmentType.CENTER, keepNext: true, spacing: { before: 40, after: 20 },
       children: [new ImageRun({ type: 'png', data: fs.readFileSync(FIG + file), transformation: { width: wPx, height: h },
-        altText: { title: caption, description: caption, name: file } })] }),
+        altText: { title: caption, description: ALT[file] || caption, name: file } })] }),
     new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 80 }, children: runs(caption, { size: ELS ? 19 : 16 }) }),
   ];
 }
@@ -340,7 +352,7 @@ push(table('TABLE @outage. CENTRAL-SERVICE OUTAGE (25 s, 100 DEVICES, 3 RUNS)', 
     ...[['keycloak', 'Keycloak'], ['keycloak-cached', 'Keycloak, cached'], ['ldap', 'OpenLDAP'], ['ldap-cached', 'OpenLDAP, cached']].map(([k, n]) => [n, f0(100 * mean(x6(k).ok_fraction_during_outage)), f0(mean(x6(k).seconds_to_recover_after_start))]),
     ['BC-ZTA', '**' + f0(100 * mean(x6('bczta').ok_fraction_during_outage)) + '**', '**0**'],
   ], { left: true, note: 'Service stopped at 20 s and restarted at 45 s of a 100 s run; BC-ZTA has no central service (Keycloak was stopped on the directory VM, but BC-ZTA does not use it).' }));
-push(fig('fig7_iam_outage.png', 'Fig. 7. Fraction of requests granted over time while the central IAM service is stopped (shaded) and restarted.', 322));
+push(fig('fig7_iam_outage.png', 'Fig. 7. Fraction of requests granted over time while the central IAM service is stopped (shaded) and restarted.', 230));
 
 push(H2('6.9 Ledger Flood Sweep'));
 const FB = X.FLOOD.bczta, FS = X.FLOOD.bcsync;
@@ -373,7 +385,7 @@ if (XR) {
       ['BC-ZTA (ledger node)', pc(c3, 'granted_before'), pc(c3, 'granted_cut_0_to_ttl'), pc(c3, 'granted_ttl_to_2ttl'), pc(c3, 'granted_after_2ttl'), pc(c3, 'granted_after_restore')],
       ['B6 (directory)', pc(c3p, 'granted_before'), pc(c3p, 'granted_cut_0_to_ttl'), pc(c3p, 'granted_ttl_to_2ttl'), pc(c3p, 'granted_after_2ttl'), pc(c3p, 'granted_after_restore')],
     ], { left: true, note: 'Requests granted (%) in the windows after the loss of the state source; windows are relative to the time of the loss.' }));
-  push(fig('fig9_failclosed.png', 'Fig. 9. Requests granted while the state source is lost (shaded); dotted lines: TTL and 2·TTL after the loss.', 322));
+  push(fig('fig9_failclosed.png', 'Fig. 9. Requests granted while the state source is lost (shaded); dotted lines: TTL and 2·TTL after the loss.', 230));
   const h4 = P4 && P4.length ? P4 : null;
   if (h4) {
     const hm = k => avg(h4.map(r => r[k]).filter(x => x != null));
@@ -386,7 +398,7 @@ if (XR) {
   if (kk.length) {
     chk(kk.every(k => isFinite(clean(k))), 'every PEP count needs one clean rate');
     push(P(`Finally, per-PEP capacity is not a limit of the architecture if gateways are replicated. We ran k = ${kk.join(', ')} PEP processes on one ${process.env.PEP_VM_DESC || '4-vCPU'} VM, with devices sharded across them, and raised the offered rate (Fig. 10, Table @scale). The highest offered rate served without any failed request and with a P95 below 50 ms was ${kk.map(k => f0(clean(k)) + ' req/s for k = ' + k).join(', ')}. At ${hiR} req/s offered, ${kk.slice(0, -1).map(k => 'k = ' + k + ' is overloaded (goodput ' + f0(P5[k][String(hiR)].goodput[0]) + ' req/s, P95 ' + f1(P5[k][String(hiR)].p95_ms[0] / 1000) + ' s)').join(' and ')}, whereas k = ${kk[kk.length - 1]} delivers ${f0(P5[kk[kk.length - 1]][String(hiR)].goodput[0])} req/s (${f0(100 * P5[kk[kk.length - 1]][String(hiR)].goodput[0] / hiR)}% of the offered rate) at a P95 of ${f0(P5[kk[kk.length - 1]][String(hiR)].p95_ms[0])} ms while using ${f1(P5[kk[kk.length - 1]][String(hiR)].cpu[0])} cores of the ${process.env.PEP_VM_DESC || '4-vCPU'} VM. Beyond that the goodput of every configuration falls as the offered rate rises (overload collapse: requests queue behind signature verification and time out), so a deployment must keep the rate per gateway below its knee, which an admission limit or load balancer would enforce. Scale-out was measured on one host; across hosts the shared state is the ledger, which is read once per device per TTL.`, { keepNext: true }));
-    push(table(`TABLE @scale. PEP SCALE-OUT (BC-ZTA, ${nR} RUNS)`, [1100, 1500, 1200, 1200, 1000],
+    push(table(`TABLE @scale. PEP SCALE-OUT (BC-ZTA, ${nR} RUNS)`, [900, 1400, 1400, 1200, 1400],
       ['PEPs', 'Clean rate (req/s)', `Goodput at ${hiR} (req/s)`, `P95 at ${hiR} (ms)`, `CPU cores at ${hiR}`], kk.map(k => {
         const v = P5[k][String(hiR)];
         return [String(k), f0(clean(k)), f0(v.goodput[0]), f0(v.p95_ms[0]), v.cpu[0] != null ? f1(v.cpu[0]) : 'n/a'];
@@ -477,7 +489,7 @@ const elsFront = () => [
   new Paragraph({ spacing: { after: 240 }, children: [new TextRun({ text: '* Corresponding author. E-mail: [address]', font: FONT, size: 20 })] }),
   new Paragraph({ spacing: { before: 120, after: 80 }, border: { top: { style: BorderStyle.SINGLE, size: 6, color: '000000', space: 6 } }, children: [new TextRun({ text: 'Abstract', font: FONT, size: 24, bold: true })] }),
   new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 160, line: 312 }, children: runs(ABSTRACT, { size: 22 }) }),
-  new Paragraph({ spacing: { after: 240 }, border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '000000', space: 6 } }, children: [new TextRun({ text: 'Keywords: ', font: FONT, size: 22, bold: true }), new TextRun({ text: 'Zero trust; Blockchain; Industrial Internet of Things; Access control; Hyperledger Besu; Smart contracts; Scalability', font: FONT, size: 22 })] }),
+  new Paragraph({ spacing: { after: 240 }, border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '000000', space: 6 } }, children: [new TextRun({ text: 'Keywords: ', font: FONT, size: 22, bold: true, color: '000000' }), new TextRun({ text: 'Zero trust; Blockchain; Industrial Internet of Things; Access control; Hyperledger Besu; Smart contracts; Scalability', font: FONT, size: 22 })] }),
 ];
 const elsBack = () => [
   H1('Declaration of competing interest'),
@@ -498,8 +510,8 @@ if (ELS) {
   const elsPage = { page: { size: { width: 11906, height: 16838 }, margin: { top: 1440, bottom: 1440, left: 1440, right: 1440 } } };
   const elsFooter = new Footer({ children: [new Paragraph({ suppressLineNumbers: true, alignment: AlignmentType.CENTER, children: [new TextRun({ children: [PageNumber.CURRENT], font: FONT, size: 20 })] })] });
   const elsDoc = new Document({
-    creator: 'Author', title: 'Blockchain-Assisted Zero-Trust Architecture for Secure and Scalable IIoT',
-    styles: { default: { document: { run: { font: FONT, size: BODY } } } },
+    creator: 'Syed Irfan Raza Naqvi', title: 'Blockchain-Assisted Zero-Trust Architecture for Secure and Scalable IIoT',
+    styles: { default: { document: { run: { font: FONT, size: BODY, language: { value: 'en-US' } } } } },
     sections: [
       { properties: { ...elsPage, lineNumbers: { countBy: 1, restart: docx.LineNumberRestartFormat.CONTINUOUS } }, footers: { default: elsFooter }, children: [...elsFront(), ...body, ...elsBack()] },
     ],
@@ -514,8 +526,8 @@ if (ELS) {
   Packer.toBuffer(hiDoc).then(b => { const p = OUT.replace(/\.docx$/, '_highlights.docx'); fs.writeFileSync(p, b); console.log('written', p); });
 } else {
 const doc = new Document({
-  creator: 'Author', title: 'Blockchain-Assisted Zero-Trust Architecture for Secure and Scalable IIoT',
-  styles: { default: { document: { run: { font: FONT, size: BODY } } } },
+  creator: 'Syed Irfan Raza Naqvi', title: 'Blockchain-Assisted Zero-Trust Architecture for Secure and Scalable IIoT',
+  styles: { default: { document: { run: { font: FONT, size: BODY, language: { value: 'en-US' } } } } },
   sections: [
     { properties: { ...pageProps, type: SectionType.CONTINUOUS }, footers: { default: footer }, children: front },
     { properties: { ...pageProps, type: SectionType.CONTINUOUS, column: { count: 2, space: 360, equalWidth: true } }, footers: { default: footer },

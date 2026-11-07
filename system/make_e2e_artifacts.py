@@ -81,7 +81,8 @@ order = ["central", "abac", "bcsync", "bczta-events", "bczta-ttl"]
 nm = {"central": "Central\nPKI-IAM", "abac": "ABAC\n(no BC)", "bcsync": "BC-only\n(sync)", "bczta-events": "BC-ZTA\nevents", "bczta-ttl": "BC-ZTA\nTTL 10 s"}
 cl = [COL["central"], COL["abac"], COL["bcsync"], COL["bczta"], "#7fa6c4"]
 m = [agg["E2"][v]["mean_ms"] / 1000 for v in order]; mx = [agg["E2"][v]["max_ms"] / 1000 for v in order]
-ax.bar(range(5), m, color=cl, width=0.62)
+bars = ax.bar(range(5), m, color=cl, width=0.62, edgecolor="k", linewidth=.5)
+for b_, h_ in zip(bars, ["//", "xx", "\\\\", "", ".."]): b_.set_hatch(h_)
 ax.scatter(range(5), mx, marker="_", s=140, color="k", zorder=3, label="worst case observed")
 ax.set_yscale("log"); ax.set_xticks(range(5)); ax.set_xticklabels([nm[v] for v in order], fontsize=6.5)
 ax.set_ylabel("Revocation enforcement\ndelay (s, mean)"); ax.legend(fontsize=6.5, loc="upper left")
