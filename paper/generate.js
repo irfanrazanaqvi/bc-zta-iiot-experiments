@@ -9,8 +9,11 @@ const FIG = '/tmp/claude-0/work/figs/';
 const OUT = process.argv[2] || '/tmp/claude-0/work/out/paper.docx';
 
 const FONT = 'Times New Roman';
-const BODY = 20;        // half-points (9.5 pt)
-const SMALL = 15;       // 7.5 pt
+const ELS = process.env.FORMAT === 'elsevier';   // Elsevier (FGCS) manuscript layout: single column, A4, 11 pt
+const BODY = ELS ? 22 : 20;        // half-points
+const SMALL = ELS ? 18 : 15;
+const TS = ELS ? 1.85 : 1;         // table width scale (one column -> full text width)
+const FIGSC = ELS ? 1.65 : 1;         // figure width scale
 const COLW = 4860;      // one column in dxa (3.375")
 
 // ---------------- citation engine (numbers = order of first appearance) -------------
@@ -23,6 +26,11 @@ function num(k) {
 }
 function cite(keys) {
   const ns = keys.map(num).sort((a, b) => a - b);
+  if (ELS) {   // Elsevier numeric style: [1], [2,5], [3–6]
+    const g = []; let a = 0;
+    while (a < ns.length) { let b = a; while (b + 1 < ns.length && ns[b + 1] === ns[b] + 1) b++; if (b - a >= 2) g.push(`${ns[a]}–${ns[b]}`); else for (let k = a; k <= b; k++) g.push(String(ns[k])); a = b + 1; }
+    return '[' + g.join(', ') + ']';
+  }
   // IEEE: collapse runs of >=3 consecutive numbers
   const parts = [];
   let i = 0;
@@ -41,7 +49,7 @@ const ROM=['','I','II','III','IV','V','VI','VII','VIII','IX','X'];
 const LET='ABCDEFGHIJKL';
 const TORDER=['related','iface','threat','params','lat','besu','gas','sec','fault','iam','outage','flood','push','cut','scale'];
 function fixTab(t){return t.replace(/(TABLE|Table) @(\w+)/g,(m,w,k)=>w+' '+(TORDER.indexOf(k)+1));}
-function fixSec(t){return t.replace(/Section (\d+)(?:\.(\d+))?/g,(m,a,b)=>'Section '+ROM[+a]+(b?'-'+LET[+b-1]:''));}
+function fixSec(t){if(ELS)return t;return t.replace(/Section (\d+)(?:\.(\d+))?/g,(m,a,b)=>'Section '+ROM[+a]+(b?'-'+LET[+b-1]:''));}
 // ---------------- inline markup: **bold**, *italic*, {{ref1,ref2}} -----------------------
 const HAVE_XR = !!XR_EXISTS();
 function XR_EXISTS() { try { return require('fs').existsSync(process.env.ROBUST_JSON || '/tmp/claude-0/full/agg2/aggregate_robust.json'); } catch (e) { return false; } }
@@ -74,30 +82,32 @@ function runs(text, o = {}) {
 }
 const P = (t, o = {}) => new Paragraph({
   alignment: o.align || AlignmentType.JUSTIFIED,
-  spacing: { after: o.after ?? 60, before: o.before ?? 0, line: o.line || 228 },
+  spacing: { after: o.after ?? (ELS ? 120 : 60), before: o.before ?? 0, line: o.line || (ELS ? 312 : 228) },
   indent: o.indent, keepNext: o.keepNext, keepLines: o.keepLines,
   children: runs(t, o),
 });
-const H1 = t => new Paragraph({ alignment: AlignmentType.CENTER, keepNext: true, spacing: { before: 120, after: 60 },
+const H1 = t => ELS ? new Paragraph({ alignment: AlignmentType.LEFT, keepNext: true, spacing: { before: 280, after: 120 }, children: [new TextRun({ text: t, font: FONT, size: 26, bold: true })] }) : new Paragraph({ alignment: AlignmentType.CENTER, keepNext: true, spacing: { before: 120, after: 60 },
   children: [new TextRun({ text: t.replace(/^(\d+)\.\s*/, (m,a)=>ROM[+a]+'. ').toUpperCase(), font: FONT, size: 18 })] });
-const H2 = t => new Paragraph({ alignment: AlignmentType.LEFT, keepNext: true, spacing: { before: 60, after: 30 },
+const H2 = t => ELS ? new Paragraph({ alignment: AlignmentType.LEFT, keepNext: true, spacing: { before: 180, after: 80 }, children: [new TextRun({ text: t.replace(/^(\d+\.\d+)\s*/, '$1. '), font: FONT, size: 22, bold: true })] }) : new Paragraph({ alignment: AlignmentType.LEFT, keepNext: true, spacing: { before: 60, after: 30 },
   children: [new TextRun({ text: t.replace(/^(\d+)\.(\d+)\s*/, (m,a,b)=>LET[+b-1]+'. '), font: FONT, size: BODY, italics: true })] });
 const BUL = (t) => P(t, { indent: { left: 200, hanging: 200 }, after: 30 });
 
 // ---------------- figures & tables -----------------------------------------------------
 function fig(file, caption, wPx) {
+  wPx = Math.round(wPx * FIGSC);
   const sz = require('child_process').execSync(`python3 -c "from PIL import Image;im=Image.open('${FIG + file}');print(im.size[0],im.size[1])"`).toString().trim().split(' ').map(Number);
   const h = Math.round(wPx * sz[1] / sz[0]);
   return [
     new Paragraph({ alignment: AlignmentType.CENTER, keepNext: true, spacing: { before: 40, after: 20 },
       children: [new ImageRun({ type: 'png', data: fs.readFileSync(FIG + file), transformation: { width: wPx, height: h },
         altText: { title: caption, description: caption, name: file } })] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 80 }, children: runs(caption, { size: 16 }) }),
+    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 80 }, children: runs(caption, { size: ELS ? 19 : 16 }) }),
   ];
 }
 const bd = { style: BorderStyle.SINGLE, size: 4, color: '000000' };
 const nb = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
 function table(caption, widths, header, rows, o = {}) {
+  widths = widths.map(w => Math.round(w * TS));
   const total = widths.reduce((a, b) => a + b, 0);
   const cell = (t, w, hdr, i, last) => new TableCell({
     width: { size: w, type: WidthType.DXA }, verticalAlign: VerticalAlign.CENTER,
@@ -478,6 +488,7 @@ order.forEach((k, i) => {
 });
 
 // ================================ FRONT MATTER =======================================
+const ABSTRACT = HAVE_XR ? `Industrial IoT (IIoT) networks need per-request verification, but a blockchain on the authentication path adds seconds of latency and saturates ledger capacity. We propose BC-ZTA, a three-tier blockchain-assisted zero-trust architecture in which edge policy enforcement points decide from cached, Merkle-verified ledger state, while identity, trust and audit updates are written asynchronously to a permissioned Hyperledger Besu (IBFT 2.0) network. We implemented the enforcement point and six baselines, including real Keycloak and OpenLDAP services and a central directory with pushed revocations, and measured them on a four-validator network of seven cloud VMs. At 50 devices BC-ZTA answers in ${f1(e('bczta', 50).mean_ms)} ms, against ${f1(e('central', 50).mean_ms)} ms for a centralised directory with a 40 ms network delay and ${f0(e('bcsync', 50).mean_ms)} ms when every request is an on-chain transaction; that synchronous design answers only ${f0(100 * e('bcsync', 200).success_ratio)}% of requests at 200 devices, whereas BC-ZTA served 200 devices without failures. Event-driven invalidation enforces a revocation in ${f1(E.E2['bczta-events'].mean_ms / 1000)} s, and all ${f0(Object.entries(E.E3).filter(([k]) => k !== 'revoked_device' && k !== 'legitimate_requests (control)').reduce((a, [, v]) => a + v.attempts, 0))} attack requests were rejected. Batch anchoring cuts audit gas per record ${f0(gasRatio(50))}- to ${f0(gasRatio(1000))}-fold. Keycloak and OpenLDAP revoke in about ${f0(x2('keycloak').mean_ms)} ms but decide ${f0(xe('keycloak', 100).mean_ms[0] / xe('bczta', 100).mean_ms[0])}× slower at 100 devices. A central directory with pushed revocations and no blockchain matches the latency of BC-ZTA and revokes in ${f0(XR.P2.push.mean_ms)} ms, so the ledger buys trust distribution and verifiable audit, not speed. Both designs fail closed after twice the cache lifetime when their state source is lost, and a consensus halt delays revocations by minutes. Limitations are a single cloud zone, emulated devices and single-node IAM products.` : `Industrial IoT (IIoT) networks need continuous, per-request verification, but placing a blockchain on the authentication path adds seconds of latency and saturates ledger capacity. We propose BC-ZTA, a three-tier blockchain-assisted zero-trust architecture in which edge policy enforcement points decide from cached, Merkle-verified ledger state, while identity, trust and audit updates are written asynchronously to a permissioned Hyperledger Besu (IBFT 2.0) network through four Solidity contracts. We implemented the policy enforcement point and five baselines, including real Keycloak and OpenLDAP services, and measured them end to end on a four-validator Besu network (five repetitions, seven cloud VMs). At 50 devices BC-ZTA answers in ${f1(e('bczta', 50).mean_ms)} ms on average, compared with ${f1(e('central', 50).mean_ms)} ms for a centralised directory with an injected 40 ms network delay and ${f0(e('bcsync', 50).mean_ms)} ms when every request is an on-chain transaction; the synchronous design answers only ${f0(100 * e('bcsync', 200).success_ratio)}% of the requests at 200 devices, whereas BC-ZTA served 200 devices with no failures and about one on-chain write per second, and kept deciding while one of the four validators was stopped. Event-driven cache invalidation enforces a revocation in ${f1(E.E2['bczta-events'].mean_ms / 1000)} s on average, and all ${f0(Object.entries(E.E3).filter(([k]) => k !== 'revoked_device' && k !== 'legitimate_requests (control)').reduce((a, [, v]) => a + v.attempts, 0))} forged, replayed, stale, unregistered, tampered or policy-violating requests were rejected. Merkle batch anchoring cuts audit gas per record by ${f0(gasRatio(50))}× to ${f0(gasRatio(1000))}× for batches of 50 to 1,000 records. Against real Keycloak and OpenLDAP services, BC-ZTA decides ${f0(xe('keycloak', 100).mean_ms[0] / xe('bczta', 100).mean_ms[0])}× faster at 100 devices but revokes in ${f1(E.E2['bczta-events'].mean_ms / 1000)} s rather than about ${f0(x2('keycloak').mean_ms)} ms, and its latency (P95 ≤ 8 ms) holds when the ledger is flooded up to 1,200 tx/s. ${XR ? `A central directory that pushes revocations without a blockchain matches its latency and revokes in ${f0(XR.P2.push.mean_ms)} ms, so the ledger buys trust distribution and independently verifiable audit, not speed; both designs fail closed after twice the cache lifetime when their state source is lost, and a consensus halt delays revocations by minutes.` : ''} Limitations are the single cloud zone with injected network delay, single-node IAM products, a single-process PEP and the emulated device population.`;
 const front = [
   new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 160 }, children: [new TextRun({ text: 'Date of publication xxxx 00, 0000, date of current version xxxx 00, 0000. Digital Object Identifier 10.1109/ACCESS.2026.0000000', font: FONT, size: 15, italics: true })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 100 },
@@ -489,7 +500,7 @@ const front = [
   new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 100 }, indent: { left: 360, right: 360 }, children: [new TextRun({ text: 'Corresponding author: [Name] (e-mail: [address]). This work was supported in part by [funding source and grant number].', font: FONT, size: 16 })] }),
   new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 60, line: 228 }, indent: { left: 360, right: 360 }, children: [
     new TextRun({ text: 'ABSTRACT ', font: FONT, size: 18, bold: true }),
-    ...runs(HAVE_XR ? `Industrial IoT (IIoT) networks need per-request verification, but a blockchain on the authentication path adds seconds of latency and saturates ledger capacity. We propose BC-ZTA, a three-tier blockchain-assisted zero-trust architecture in which edge policy enforcement points decide from cached, Merkle-verified ledger state, while identity, trust and audit updates are written asynchronously to a permissioned Hyperledger Besu (IBFT 2.0) network. We implemented the enforcement point and six baselines, including real Keycloak and OpenLDAP services and a central directory with pushed revocations, and measured them on a four-validator network of seven cloud VMs. At 50 devices BC-ZTA answers in ${f1(e('bczta', 50).mean_ms)} ms, against ${f1(e('central', 50).mean_ms)} ms for a centralised directory with a 40 ms network delay and ${f0(e('bcsync', 50).mean_ms)} ms when every request is an on-chain transaction; that synchronous design answers only ${f0(100 * e('bcsync', 200).success_ratio)}% of requests at 200 devices, whereas BC-ZTA served 200 devices without failures. Event-driven invalidation enforces a revocation in ${f1(E.E2['bczta-events'].mean_ms / 1000)} s, and all ${f0(Object.entries(E.E3).filter(([k]) => k !== 'revoked_device' && k !== 'legitimate_requests (control)').reduce((a, [, v]) => a + v.attempts, 0))} attack requests were rejected. Batch anchoring cuts audit gas per record ${f0(gasRatio(50))}- to ${f0(gasRatio(1000))}-fold. Keycloak and OpenLDAP revoke in about ${f0(x2('keycloak').mean_ms)} ms but decide ${f0(xe('keycloak', 100).mean_ms[0] / xe('bczta', 100).mean_ms[0])}× slower at 100 devices. A central directory with pushed revocations and no blockchain matches the latency of BC-ZTA and revokes in ${f0(XR.P2.push.mean_ms)} ms, so the ledger buys trust distribution and verifiable audit, not speed. Both designs fail closed after twice the cache lifetime when their state source is lost, and a consensus halt delays revocations by minutes. Limitations are a single cloud zone, emulated devices and single-node IAM products.` : `Industrial IoT (IIoT) networks need continuous, per-request verification, but placing a blockchain on the authentication path adds seconds of latency and saturates ledger capacity. We propose BC-ZTA, a three-tier blockchain-assisted zero-trust architecture in which edge policy enforcement points decide from cached, Merkle-verified ledger state, while identity, trust and audit updates are written asynchronously to a permissioned Hyperledger Besu (IBFT 2.0) network through four Solidity contracts. We implemented the policy enforcement point and five baselines, including real Keycloak and OpenLDAP services, and measured them end to end on a four-validator Besu network (five repetitions, seven cloud VMs). At 50 devices BC-ZTA answers in ${f1(e('bczta', 50).mean_ms)} ms on average, compared with ${f1(e('central', 50).mean_ms)} ms for a centralised directory with an injected 40 ms network delay and ${f0(e('bcsync', 50).mean_ms)} ms when every request is an on-chain transaction; the synchronous design answers only ${f0(100 * e('bcsync', 200).success_ratio)}% of the requests at 200 devices, whereas BC-ZTA served 200 devices with no failures and about one on-chain write per second, and kept deciding while one of the four validators was stopped. Event-driven cache invalidation enforces a revocation in ${f1(E.E2['bczta-events'].mean_ms / 1000)} s on average, and all ${f0(Object.entries(E.E3).filter(([k]) => k !== 'revoked_device' && k !== 'legitimate_requests (control)').reduce((a, [, v]) => a + v.attempts, 0))} forged, replayed, stale, unregistered, tampered or policy-violating requests were rejected. Merkle batch anchoring cuts audit gas per record by ${f0(gasRatio(50))}× to ${f0(gasRatio(1000))}× for batches of 50 to 1,000 records. Against real Keycloak and OpenLDAP services, BC-ZTA decides ${f0(xe('keycloak', 100).mean_ms[0] / xe('bczta', 100).mean_ms[0])}× faster at 100 devices but revokes in ${f1(E.E2['bczta-events'].mean_ms / 1000)} s rather than about ${f0(x2('keycloak').mean_ms)} ms, and its latency (P95 ≤ 8 ms) holds when the ledger is flooded up to 1,200 tx/s. ${XR ? `A central directory that pushes revocations without a blockchain matches its latency and revokes in ${f0(XR.P2.push.mean_ms)} ms, so the ledger buys trust distribution and independently verifiable audit, not speed; both designs fail closed after twice the cache lifetime when their state source is lost, and a consensus halt delays revocations by minutes.` : ''} Limitations are the single cloud zone with injected network delay, single-node IAM products, a single-process PEP and the emulated device population.`, { size: 18, bold: false }).map(x => x),
+    ...runs(ABSTRACT, { size: 18, bold: false }).map(x => x),
   ] }),
   new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 100 }, indent: { left: 360, right: 360 }, children: [
     new TextRun({ text: 'INDEX TERMS ', font: FONT, size: 18, bold: true }),
@@ -503,6 +514,58 @@ const footer = new Footer({ children: [new Paragraph({ tabStops: [{ type: docx.T
   children: [new TextRun({ text: 'AUTHOR et al.: Blockchain-Assisted Zero-Trust Architecture for Secure and Scalable IIoT', font: FONT, size: 15, italics: true }),
     new TextRun({ text: '\tVOLUME XX, 2026  |  ', font: FONT, size: 15 }), new TextRun({ children: [PageNumber.CURRENT], font: FONT, size: 15 })] })] });
 
+// ---------------- Elsevier (FGCS) manuscript: single column, A4, line numbers, declarations -------------
+const hiText = [
+  'Edge enforcement point decides from Merkle-verified cached ledger state',
+  'Consensus stays off the request path; audit is anchored in batches',
+  'Tested on seven cloud VMs with a four-validator Besu IBFT network',
+  'Compared with Keycloak, OpenLDAP and a ledger-free push-revocation baseline',
+  'Bounded staleness: fail-closed after twice the cache lifetime',
+];
+if (ELS) hiText.forEach(h => { if (h.length > 85) throw new Error('highlight too long: ' + h); });
+const elsFront = () => [
+  new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 200 }, children: [new TextRun({ text: 'Blockchain-Assisted Zero-Trust Architecture for Secure and Scalable Industrial Internet of Things (IIoT)', font: FONT, size: 36, bold: true })] }),
+  new Paragraph({ spacing: { after: 40 }, children: [new TextRun({ text: '[Author Name(s)]', font: FONT, size: 24 }), new TextRun({ text: 'a,*', font: FONT, size: 24, superScript: true })] }),
+  new Paragraph({ spacing: { after: 40 }, children: [new TextRun({ text: 'a', font: FONT, size: 20, superScript: true }), new TextRun({ text: ' [Department, Institution, City, Country]', font: FONT, size: 20, italics: true })] }),
+  new Paragraph({ spacing: { after: 240 }, children: [new TextRun({ text: '* Corresponding author. E-mail: [address]', font: FONT, size: 20 })] }),
+  new Paragraph({ spacing: { before: 120, after: 80 }, border: { top: { style: BorderStyle.SINGLE, size: 6, color: '000000', space: 6 } }, children: [new TextRun({ text: 'Abstract', font: FONT, size: 24, bold: true })] }),
+  new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 160, line: 312 }, children: runs(ABSTRACT, { size: 22 }) }),
+  new Paragraph({ spacing: { after: 240 }, border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '000000', space: 6 } }, children: [new TextRun({ text: 'Keywords: ', font: FONT, size: 22, bold: true }), new TextRun({ text: 'Zero trust; Blockchain; Industrial Internet of Things; Access control; Hyperledger Besu; Smart contracts; Scalability', font: FONT, size: 22 })] }),
+];
+const elsBack = () => [
+  H1('Declaration of competing interest'),
+  P('The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper. [Authors: please confirm.]'),
+  H1('CRediT authorship contribution statement'),
+  P('**[Author Name]:** Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Writing – original draft, Writing – review & editing, Visualization. **[Supervisor name]:** Supervision, Writing – review & editing. [Authors: please adjust to your actual roles.]'),
+  H1('Funding'),
+  P('[Funding source and grant number, or: This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.]'),
+  H1('Data availability'),
+  P('The Solidity contracts, the PEP and load-generator code, the Google Cloud deployment scripts and all raw results used in this paper are available at https://github.com/irfanrazanaqvi/bc-zta-iiot-experiments (archived release with DOI: [to be added by the authors before submission]).'),
+  H1('Declaration of generative AI and AI-assisted technologies in the writing process'),
+  P('During the preparation of this work the authors used Claude (Anthropic) to assist with writing experiment code and automation scripts, data analysis, and language editing of the manuscript. After using this tool, the authors reviewed and edited the content as needed and take full responsibility for the content of the published article. [Authors: please confirm this statement is accurate.]'),
+  H1('Acknowledgements'),
+  P('[Acknowledgements to be added by the authors.]'),
+  H1('References'), ...refParas,
+];
+if (ELS) {
+  const elsPage = { page: { size: { width: 11906, height: 16838 }, margin: { top: 1440, bottom: 1440, left: 1440, right: 1440 } } };
+  const elsFooter = new Footer({ children: [new Paragraph({ suppressLineNumbers: true, alignment: AlignmentType.CENTER, children: [new TextRun({ children: [PageNumber.CURRENT], font: FONT, size: 20 })] })] });
+  const elsDoc = new Document({
+    creator: 'Author', title: 'Blockchain-Assisted Zero-Trust Architecture for Secure and Scalable IIoT',
+    styles: { default: { document: { run: { font: FONT, size: BODY } } } },
+    sections: [
+      { properties: { ...elsPage, lineNumbers: { countBy: 1, restart: docx.LineNumberRestartFormat.CONTINUOUS } }, footers: { default: elsFooter }, children: [...elsFront(), ...body, ...elsBack()] },
+    ],
+  });
+  const hiDoc = new Document({ styles: { default: { document: { run: { font: FONT, size: 24 } } } },
+    sections: [{ properties: { ...elsPage }, children: [
+      new Paragraph({ spacing: { after: 200 }, children: [new TextRun({ text: 'Highlights', font: FONT, size: 32, bold: true })] }),
+      ...hiText.map(h => new Paragraph({ bullet: { level: 0 }, spacing: { after: 100 }, children: [new TextRun({ text: h, font: FONT, size: 24 })] })),
+    ] }] });
+  fs.mkdirSync(path.dirname(OUT), { recursive: true });
+  Packer.toBuffer(elsDoc).then(b => { fs.writeFileSync(OUT, b); console.log('written', OUT, 'refs', order.length); });
+  Packer.toBuffer(hiDoc).then(b => { const p = OUT.replace(/\.docx$/, '_highlights.docx'); fs.writeFileSync(p, b); console.log('written', p); });
+} else {
 const doc = new Document({
   creator: 'Author', title: 'Blockchain-Assisted Zero-Trust Architecture for Secure and Scalable IIoT',
   styles: { default: { document: { run: { font: FONT, size: BODY } } } },
@@ -514,3 +577,4 @@ const doc = new Document({
 });
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 Packer.toBuffer(doc).then(b => { fs.writeFileSync(OUT, b); console.log('written', OUT, 'refs', order.length); });
+}
