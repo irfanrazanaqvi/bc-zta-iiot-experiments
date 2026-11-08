@@ -1,6 +1,10 @@
 // Reference database. Entries were checked by title and journal against publisher or index pages (two unverifiable entries removed).
 // during this session. `text` is the IEEE-style reference body; `url` is the hyperlink.
 module.exports = {
+  panahi26: { year: 2026, url: "https://doi.org/10.1016/j.ijcip.2026.100917",
+    text: "U. Panahi, “ZT-IIoT: An integration-centric zero trust architecture for secure IT/OT convergence in industrial information systems,” Int. J. Crit. Infrastruct. Prot., vol. 55, Art. no. 100917, 2026, doi: 10.1016/j.ijcip.2026.100917." },
+  yagiz26: { year: 2026, url: "https://arxiv.org/abs/2605.00065",
+    text: "M. A. Yağız, F. Horasan, and A. H. Yurttakal, “Lightweight tamper-evident log integrity verification for IoT edge environments: A Merkle-tree pipeline with adaptive chunking,” arXiv:2605.00065, 2026." },
   wan25: { year: 2025, url: "https://doi.org/10.1016/j.aej.2025.03.012",
     text: "T. Wan, B. Shi, and H. Wang, “A continuous authentication scheme for zero-trust architecture in industrial internet of things,” Alexandria Eng. J., vol. 122, pp. 555–563, 2025, doi: 10.1016/j.aej.2025.03.012." },
   ding25: { year: 2025, url: "https://doi.org/10.1016/j.sysarc.2025.103391",
@@ -11,14 +15,6 @@ module.exports = {
     text: "F. A. Ruambo, D. Zou, I. O. Lopes, B. Yuan, A. Muthanna, M. Zakarya, and M. S. A. Muthanna, “Trust scoring algorithms for zero trust-based software-defined perimeter architectures: A systematic literature review of advancements, challenges, and future directions,” Comput. Electr. Eng., vol. 132, Art. no. 111002, 2026, doi: 10.1016/j.compeleceng.2026.111002." },
   hari26: { year: 2026, url: "https://doi.org/10.1016/j.aej.2026.03.014",
     text: "N. N. Hari, P. Krishnan, K. Jain, A. K. J. Saudagar, P. Prabu, and R. C. Poonia, “A three-tier microsegmentation framework for enterprise networks under Zero Trust Architecture,” Alexandria Eng. J., vol. 141, pp. 150–164, 2026, doi: 10.1016/j.aej.2026.03.014." },
-  schneier99: { year: 1999, url: "https://www.schneier.com/academic/archives/1999/05/secure_audit_logs_to.html",
-    text: "B. Schneier and J. Kelsey, “Secure audit logs to support computer forensics,” ACM Trans. Inf. Syst. Secur., vol. 2, no. 2, pp. 159–176, 1999." },
-  crosby09: { year: 2009, url: "https://www.usenix.org/conference/usenixsecurity09/technical-sessions/presentation/efficient-data-structures-tamper-evident",
-    text: "S. A. Crosby and D. S. Wallach, “Efficient data structures for tamper-evident logging,” in Proc. 18th USENIX Security Symp., Montreal, Canada, 2009, pp. 317–334." },
-  haber91: { year: 1991, url: "https://doi.org/10.1007/BF00196791",
-    text: "S. Haber and W. S. Stornetta, “How to time-stamp a digital document,” J. Cryptol., vol. 3, no. 2, pp. 99–111, 1991, doi: 10.1007/BF00196791." },
-  zhang19: { year: 2019, url: "https://arxiv.org/abs/1802.04410",
-    text: "Y. Zhang, S. Kasahara, Y. Shen, X. Jiang, and J. Wan, “Smart contract-based access control for the Internet of Things,” IEEE Internet Things J., vol. 6, no. 2, pp. 1594–1605, Apr. 2019." },
   syed22: { year: 2022, url: "https://ieeexplore.ieee.org/document/9773102",
     text: "N. F. Syed, S. W. Shah, A. Shaghaghi, A. Anwar, Z. Baig, and R. Doss, “Zero trust architecture (ZTA): A comprehensive survey,” IEEE Access, vol. 10, pp. 57143–57179, 2022." },
   // ---- recent (2025-2026) ----
