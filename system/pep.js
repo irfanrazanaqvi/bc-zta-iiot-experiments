@@ -184,6 +184,11 @@ if (MODE === "push") {
 // ---------- audit ----------
 const watcher = new BlockWatcher(rpc);
 let sender = null, auditBuf = [];
+// Optional hardening, OFF by default so the measured configuration is unchanged:
+//  AUDIT_V2=1    audit leaf also commits gateway id, sequence number, decision and hash of the device signature
+//  GATEWAY_BIND=1 the device signs the target gateway id, so a request captured at one gateway is rejected at another
+const AUDIT_V2 = process.env.AUDIT_V2 === "1", GATEWAY_BIND = process.env.GATEWAY_BIND === "1", GW_ID = process.env.GW_ID || "gw0";
+let auditSeq = 0;
 async function startChain() {
   if (MODE !== "bczta" && MODE !== "bcsync") return;
   // several PEP processes on one host (scale-out test) use disjoint sender wallets so that their audit anchors do not collide on nonces
@@ -215,7 +220,7 @@ async function decide(b) {
   if (seen.has(key)) return deny("replay");
   seen.set(key, Date.now());
   let addr;
-  try { addr = ethers.verifyMessage(`${did}|${res}|${ts}|${nonce}`, sig); } catch (e) { return deny("badsig"); }
+  try { addr = ethers.verifyMessage(`${did}|${res}|${ts}|${nonce}` + (GATEWAY_BIND ? `|${GW_ID}` : ""), sig); } catch (e) { return deny("badsig"); }
   let st;
   try { st = await getState(did, token); } catch (e) { if (e.message === "unavailable" || e.message === "inconsistent") return deny(e.message); throw e; }
   if (!st.known) return deny("unknown");
@@ -235,7 +240,10 @@ async function decide(b) {
     await Promise.race([watcher.watch(hash), sleep(30000).then(() => { throw new Error("timeout"); })]);
     S.txConfirmed++;
   } else if (MODE === "bczta") {
-    auditBuf.push(ethers.solidityPackedKeccak256(["bytes32", "bytes32", "uint256", "bool"], [did, res, ts, true]));
+    auditBuf.push(AUDIT_V2
+      ? ethers.solidityPackedKeccak256(["bytes32", "bytes32", "uint256", "bytes32", "uint64", "bool", "bytes32"],
+          [did, res, ts, ethers.id(GW_ID), auditSeq++, true, ethers.keccak256(sig)])
+      : ethers.solidityPackedKeccak256(["bytes32", "bytes32", "uint256", "bool"], [did, res, ts, true]));
   }
   return { ok: true };
 }

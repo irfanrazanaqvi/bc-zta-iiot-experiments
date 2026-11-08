@@ -24,6 +24,30 @@ contract AuditLog {
         address reporter;
     }
 
+    /// @dev Access control (added after the cloud measurements): only an
+    ///      authorised gateway may write. The deployer is admin and the first gateway.
+    address public admin;
+    mapping(address => bool) public isGateway;
+
+    event GatewaySet(address indexed gateway, bool allowed);
+
+    modifier onlyGateway() {
+        require(isGateway[msg.sender], "AuditLog: not gateway");
+        _;
+    }
+
+    constructor() {
+        admin = msg.sender;
+        isGateway[msg.sender] = true;
+        emit GatewaySet(msg.sender, true);
+    }
+
+    function setGateway(address gw, bool allowed) external {
+        require(msg.sender == admin, "AuditLog: not admin");
+        isGateway[gw] = allowed;
+        emit GatewaySet(gw, allowed);
+    }
+
     Entry[] private entries;
     Anchor[] private anchors;
     mapping(bytes32 => uint256[]) private entriesByDID;
@@ -36,7 +60,7 @@ contract AuditLog {
         bytes32 did,
         bytes32 resourceId,
         uint8 eventType
-    ) external returns (uint256 index) {
+    ) external onlyGateway returns (uint256 index) {
         entries.push(Entry(did, resourceId, eventType, block.timestamp, msg.sender));
         index = entries.length - 1;
         entriesByDID[did].push(index);
@@ -56,7 +80,7 @@ contract AuditLog {
     }
 
     /// @notice Anchor the Merkle root of an off-chain batch of audit records.
-    function anchorBatch(bytes32 root, uint256 count) external returns (uint256 index) {
+    function anchorBatch(bytes32 root, uint256 count) external onlyGateway returns (uint256 index) {
         require(count > 0, "AuditLog: empty batch");
         anchors.push(Anchor(root, count, block.timestamp, msg.sender));
         index = anchors.length - 1;

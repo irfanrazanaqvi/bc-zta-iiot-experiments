@@ -94,6 +94,7 @@ async function main() {
   // ---- worker wallets (deterministic), funded once ----------------------------------------------------
   const workers = Array.from({ length: WORKERS }, (_, i) => new ethers.Wallet(h(`bc-zta-worker-${i}`), provider));
   for (const w of workers) { const tx = await deployer.sendTransaction({ to: w.address, value: ethers.parseEther("10"), ...feeOpts }); await tx.wait(); }
+  for (const w of workers) { try { await (await AL.setGateway(w.address, true, feeOpts)).wait(); } catch (e) { break; } }
   const nonces = await Promise.all(workers.map((w) => provider.getTransactionCount(w.address, "pending")));
   const alIface = AL.interface, alAddr = await AL.getAddress();
 

@@ -54,6 +54,11 @@ async function onboard({ rpcUrl, nLoad, variants, nRev, log = console.log }) {
   // fund PEP sender wallets
   const senders = Array.from({ length: 8 }, (_, i) => new ethers.Wallet(senderKey(i)));
   for (const s of senders) await (await deployer.sendTransaction({ to: s.address, value: ethers.parseEther("10"), ...feeSend })).wait();
+  // authorise the PEP sender wallets as gateways (hardened contracts only)
+  for (const s of senders) {
+    try { await (await AL.setGateway(s.address, true, feeSend)).wait(); await (await AC.setGateway(s.address, true, feeSend)).wait(); }
+    catch (e) { log("setGateway skipped (contracts without access control)"); break; }
+  }
   const spam = Array.from({ length: 16 }, (_, i) => new ethers.Wallet(h("bc-zta-spam-" + i)));
   for (const s of spam) await (await deployer.sendTransaction({ to: s.address, value: ethers.parseEther("10"), ...feeSend })).wait();
   const authorityKey = DEPLOYER_KEY;

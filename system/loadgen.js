@@ -20,7 +20,7 @@ function post(port, path, body, timeoutMs = 30000, host = HOST) {
 let nonceCtr = 0;
 async function makeReq(dev, resource, ts, opts = {}) {
   const nonce = opts.nonce ?? `${Date.now().toString(36)}-${++nonceCtr}`;
-  const msg = `${dev.did}|${resource}|${ts}|${nonce}`;
+  const msg = `${dev.did}|${resource}|${ts}|${nonce}` + (process.env.GATEWAY_BIND === "1" ? `|${process.env.GW_ID || "gw0"}` : "");
   const signer = opts.signer || dev.wallet;
   const sig = await signer.signMessage(msg);
   return { did: dev.did, res: resource, ts, nonce, sig, proof: opts.proof ?? dev.proof, cls: dev.cls, token: opts.token ?? dev.token };

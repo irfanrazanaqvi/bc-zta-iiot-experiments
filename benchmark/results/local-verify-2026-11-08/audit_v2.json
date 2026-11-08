@@ -1,0 +1,125 @@
+{
+ "date": "2026-11-08T09:20:28.617Z",
+ "rows": [
+  {
+   "batch": 50,
+   "modify": {
+    "detected": 100,
+    "trials": 100
+   },
+   "delete": {
+    "detected": 100,
+    "trials": 100
+   },
+   "insert": {
+    "detected": 100,
+    "trials": 100
+   },
+   "swap_adjacent": {
+    "detected": 100,
+    "trials": 100
+   },
+   "swap_and_renumber": {
+    "detected": 100,
+    "trials": 100
+   },
+   "honest_false_positive": 0
+  },
+  {
+   "batch": 100,
+   "modify": {
+    "detected": 100,
+    "trials": 100
+   },
+   "delete": {
+    "detected": 100,
+    "trials": 100
+   },
+   "insert": {
+    "detected": 100,
+    "trials": 100
+   },
+   "swap_adjacent": {
+    "detected": 100,
+    "trials": 100
+   },
+   "swap_and_renumber": {
+    "detected": 100,
+    "trials": 100
+   },
+   "honest_false_positive": 0
+  },
+  {
+   "batch": 500,
+   "modify": {
+    "detected": 100,
+    "trials": 100
+   },
+   "delete": {
+    "detected": 100,
+    "trials": 100
+   },
+   "insert": {
+    "detected": 100,
+    "trials": 100
+   },
+   "swap_adjacent": {
+    "detected": 100,
+    "trials": 100
+   },
+   "swap_and_renumber": {
+    "detected": 100,
+    "trials": 100
+   },
+   "honest_false_positive": 0
+  },
+  {
+   "batch": 1000,
+   "modify": {
+    "detected": 100,
+    "trials": 100
+   },
+   "delete": {
+    "detected": 100,
+    "trials": 100
+   },
+   "insert": {
+    "detected": 100,
+    "trials": 100
+   },
+   "swap_adjacent": {
+    "detected": 100,
+    "trials": 100
+   },
+   "swap_and_renumber": {
+    "detected": 100,
+    "trials": 100
+   },
+   "honest_false_positive": 0
+  },
+  {
+   "batch": 5000,
+   "modify": {
+    "detected": 100,
+    "trials": 100
+   },
+   "delete": {
+    "detected": 100,
+    "trials": 100
+   },
+   "insert": {
+    "detected": 100,
+    "trials": 100
+   },
+   "swap_adjacent": {
+    "detected": 100,
+    "trials": 100
+   },
+   "swap_and_renumber": {
+    "detected": 100,
+    "trials": 100
+   },
+   "honest_false_positive": 0
+  }
+ ]
+}

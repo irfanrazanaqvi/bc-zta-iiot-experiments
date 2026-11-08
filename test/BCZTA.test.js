@@ -156,4 +156,26 @@ describe("BC-ZTA smart-contract suite", function () {
     expect(await auditLog.verifyInBatch(forged, 0, [b])).to.equal(false);
     await expect(auditLog.anchorBatch(root, 0)).to.be.revertedWith("AuditLog: empty batch");
   });
+
+  it("restricts audit writes to authorised gateways", async function () {
+    const root = ethers.keccak256(ethers.toUtf8Bytes("r"));
+    await expect(auditLog.connect(device1).anchorBatch(root, 1)).to.be.revertedWith("AuditLog: not gateway");
+    await expect(auditLog.connect(device1).logEvent(DID, RESOURCE, 1)).to.be.revertedWith("AuditLog: not gateway");
+    await expect(auditLog.connect(device1).setGateway(device1.address, true)).to.be.revertedWith("AuditLog: not admin");
+    await auditLog.setGateway(device1.address, true);
+    await auditLog.connect(device1).anchorBatch(root, 1);
+    expect(await auditLog.totalAnchors()).to.equal(1);
+    await auditLog.setGateway(device1.address, false);
+    await expect(auditLog.connect(device1).anchorBatch(root, 1)).to.be.revertedWith("AuditLog: not gateway");
+  });
+
+  it("restricts session grants to authorised gateways", async function () {
+    const pk = ethers.keccak256(ethers.toUtf8Bytes("pk"));
+    await identityRegistry.registerDID(DID, pk, 0);
+    await accessControl.setPolicy(RESOURCE, 0, 3, 0, 600);
+    await expect(accessControl.connect(device1).grantSession(DID, RESOURCE, 0)).to.be.revertedWith("AccessControl: not gateway");
+    await expect(accessControl.connect(device1).setGateway(device1.address, true)).to.be.revertedWith("AccessControl: not admin");
+    await accessControl.setGateway(device1.address, true);
+    await accessControl.connect(device1).grantSession(DID, RESOURCE, 0);
+  });
 });

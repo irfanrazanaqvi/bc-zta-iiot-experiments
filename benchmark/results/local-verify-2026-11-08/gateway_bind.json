@@ -1,0 +1,5 @@
+{
+ "bound_accepted_at_own_gateway": true,
+ "bound_replayed_at_other_gateway_accepted": false,
+ "unbound_replayed_at_other_gateway_accepted": true
+}

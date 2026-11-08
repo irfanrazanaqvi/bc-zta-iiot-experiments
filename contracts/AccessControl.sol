@@ -32,6 +32,16 @@ contract AccessControl {
     event SessionGranted(bytes32 indexed sessionId, bytes32 indexed did, bytes32 indexed resourceId, uint256 expiry);
     event SessionRevoked(bytes32 indexed sessionId);
 
+    /// @dev Gateways allowed to open sessions (added after the cloud measurements).
+    mapping(address => bool) public isGateway;
+    event GatewaySet(address indexed gateway, bool allowed);
+
+    function setGateway(address gw, bool allowed) external {
+        require(msg.sender == policyAdmin, "AccessControl: not admin");
+        isGateway[gw] = allowed;
+        emit GatewaySet(gw, allowed);
+    }
+
     modifier onlyAdmin() {
         require(msg.sender == policyAdmin, "AccessControl: not admin");
         _;
@@ -74,6 +84,7 @@ contract AccessControl {
         bytes32 resourceId,
         uint8 deviceClass
     ) external returns (bytes32 sessionId) {
+        require(msg.sender == policyAdmin || isGateway[msg.sender], "AccessControl: not gateway");
         bool granted = evaluateRequest(did, resourceId, deviceClass);
         emit AccessEvaluated(did, resourceId, granted);
         require(granted, "AccessControl: access denied");
