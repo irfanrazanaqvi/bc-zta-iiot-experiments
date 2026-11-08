@@ -2,15 +2,15 @@
 // during this session. `text` is the IEEE-style reference body; `url` is the hyperlink.
 module.exports = {
   schneier99: { year: 1999, url: "https://www.schneier.com/academic/archives/1999/05/secure_audit_logs_to.html",
-    text: "B. Schneier and J. Kelsey, “Secure audit logs to support computer forensics,” ACM Trans. Inf. Syst. Secur., vol. 2, no. 2, pp. 159–176, 1999. [Online]. Available: https://www.schneier.com/academic/archives/1999/05/secure_audit_logs_to.html" },
+    text: "B. Schneier and J. Kelsey, “Secure audit logs to support computer forensics,” ACM Trans. Inf. Syst. Secur., vol. 2, no. 2, pp. 159–176, 1999." },
   crosby09: { year: 2009, url: "https://www.usenix.org/conference/usenixsecurity09/technical-sessions/presentation/efficient-data-structures-tamper-evident",
-    text: "S. A. Crosby and D. S. Wallach, “Efficient data structures for tamper-evident logging,” in Proc. 18th USENIX Security Symp., Montreal, Canada, 2009, pp. 317–334. [Online]. Available: https://www.usenix.org/conference/usenixsecurity09/technical-sessions/presentation/efficient-data-structures-tamper-evident" },
+    text: "S. A. Crosby and D. S. Wallach, “Efficient data structures for tamper-evident logging,” in Proc. 18th USENIX Security Symp., Montreal, Canada, 2009, pp. 317–334." },
   haber91: { year: 1991, url: "https://doi.org/10.1007/BF00196791",
     text: "S. Haber and W. S. Stornetta, “How to time-stamp a digital document,” J. Cryptol., vol. 3, no. 2, pp. 99–111, 1991, doi: 10.1007/BF00196791." },
   zhang19: { year: 2019, url: "https://arxiv.org/abs/1802.04410",
-    text: "Y. Zhang, S. Kasahara, Y. Shen, X. Jiang, and J. Wan, “Smart contract-based access control for the Internet of Things,” IEEE Internet Things J., vol. 6, no. 2, pp. 1594–1605, Apr. 2019. [Online]. Available: https://arxiv.org/abs/1802.04410" },
+    text: "Y. Zhang, S. Kasahara, Y. Shen, X. Jiang, and J. Wan, “Smart contract-based access control for the Internet of Things,” IEEE Internet Things J., vol. 6, no. 2, pp. 1594–1605, Apr. 2019." },
   syed22: { year: 2022, url: "https://ieeexplore.ieee.org/document/9773102",
-    text: "N. F. Syed, S. W. Shah, A. Shaghaghi, A. Anwar, Z. Baig, and R. Doss, “Zero trust architecture (ZTA): A comprehensive survey,” IEEE Access, vol. 10, pp. 57143–57179, 2022. [Online]. Available: https://ieeexplore.ieee.org/document/9773102" },
+    text: "N. F. Syed, S. W. Shah, A. Shaghaghi, A. Anwar, Z. Baig, and R. Doss, “Zero trust architecture (ZTA): A comprehensive survey,” IEEE Access, vol. 10, pp. 57143–57179, 2022." },
   // ---- recent (2025-2026) ----
   salim: { year: 2026, url: "https://doi.org/10.1016/j.future.2025.108093",
     text: "M. M. Salim, M. Kim, S. K. Singh, and J. H. Park, “Zero-trust blockchain-enabled framework for scalable and secure IoT networks,” Future Gener. Comput. Syst., vol. 175, Art. no. 108093, 2026, doi: 10.1016/j.future.2025.108093." },
