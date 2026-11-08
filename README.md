@@ -8,7 +8,7 @@ latency, scalability and revocation results, and (4) the figure scripts.
 | Item in paper | Source | Nature |
 |---|---|---|
 | Table 6 (gas per operation) | `scripts/measure_gas.js` -> `simulation/output/gas_measurements.json` | **Measured** (Hardhat EVM, london, optimizer 200) |
-| Section 5.2 / 15 passing tests | `test/BCZTA.test.js` | **Executed** |
+| Section 5.2 / 17 passing tests | `test/BCZTA.test.js` | **Executed** |
 | Tables 4-5, Figs. 3-5 (incl. sensitivity), revocation delay, audit growth | `simulation/simulate_experiment.py` | **Model** with explicit assumed parameters (`PARAMS`) |
 | Live Besu consensus timing, device CPU/memory | - | **Not measured**; replace the model with Besu + Hyperledger Caliper runs before publication |
 
@@ -21,7 +21,7 @@ pip install -r requirements.txt
 ## Run
 ```bash
 npx hardhat compile
-npx hardhat test                    # 15 tests
+npx hardhat test                    # 17 tests (USE_SOLCJS=1 if the solc binary download is blocked)
 npx hardhat run scripts/measure_gas.js
 python3 simulation/simulate_experiment.py   # writes simulation/output/*
 python3 figures/fig1_architecture.py <outdir>
@@ -64,3 +64,13 @@ Headline: ~1.5 s confirmation at 10 tx/s, 5.4 ms reads, ledger saturation near 6
 
 ## Extended cloud evaluation (2026-10-14)
 Raw results of the second GCP run (real Keycloak 26.4 and OpenLDAP baselines, cached variants, revocation, outage and PEP-capacity tests, ledger flood sweep) are in `benchmark/results/gcp-ext-2026-10-14/` together with `aggregate_ext.json` and figures 6–8. Reproduce with `cloud/gcp/run_ext.sh` (see `cloud/gcp/README.md`).
+
+## Local verification and hardening (added after the cloud runs)
+
+| What | Where |
+|---|---|
+| Audit tamper detection, record v1 / v2 (sequence numbers) | `system/run_audit_verify.js`, `system/run_audit_v2.js`, `benchmark/results/local-verify-2026-11-08/` |
+| Gateway binding check | `system/test_gateway_bind.js` (`GATEWAY_BIND=1` in `pep.js`/`loadgen.js`, off by default) |
+| Gateway allow-list on `AuditLog` / `AccessControl.grantSession` | `contracts/`, gas in `benchmark/results/local-verify-2026-11-08/gas_hardened.json` |
+
+The cloud measurements in the paper used the earlier contracts (no allow-list), the v1 audit leaf and unbound signatures.
