@@ -484,10 +484,10 @@ const front = [
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 100 },
     children: [new TextRun({ text: 'Blockchain-Assisted Zero-Trust Architecture for Secure and Scalable Industrial Internet of Things (IIoT)', font: FONT, size: 36 })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 20 },
-    children: [new TextRun({ text: 'Syed Irfan Raza Naqvi', font: FONT, size: 22 })] }),
+    children: [new TextRun({ text: 'Syed Irfan Raza Naqvi and Muhammad Umar Aftab', font: FONT, size: 22 })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 140 },
     children: [new TextRun({ text: 'FAST School of Computing, Department of Computer Science, National University of Computer and Emerging Sciences (FAST-NUCES), Lahore, Pakistan', font: FONT, size: 18, italics: true })] }),
-  new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 100 }, indent: { left: 360, right: 360 }, children: [new TextRun({ text: 'Corresponding author: Syed Irfan Raza Naqvi (e-mail: l259000@lhr.nu.edu.pk; irfanrazanaqvi9@gmail.com). This work was supported in part by [funding source and grant number].', font: FONT, size: 16 })] }),
+  new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 100 }, indent: { left: 360, right: 360 }, children: [new TextRun({ text: 'Corresponding author: Syed Irfan Raza Naqvi (e-mail: l259000@lhr.nu.edu.pk; irfanrazanaqvi9@gmail.com). Co-author e-mail: umar.aftab@nu.edu.pk. This work was supported in part by [funding source and grant number].', font: FONT, size: 16 })] }),
   new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 60, line: 228 }, indent: { left: 360, right: 360 }, children: [
     new TextRun({ text: 'ABSTRACT ', font: FONT, size: 18, bold: true }),
     ...runs(ABSTRACT, { size: 18, bold: false }).map(x => x),
@@ -515,9 +515,9 @@ const hiText = [
 if (ELS) hiText.forEach(h => { if (h.length > 85) throw new Error('highlight too long: ' + h); });
 const elsFront = () => [
   new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 200 }, children: [new TextRun({ text: 'Blockchain-Assisted Zero-Trust Architecture for Low-Latency Access Control and Verifiable Audit in Industrial Internet of Things (IIoT)', font: FONT, size: 36, bold: true })] }),
-  new Paragraph({ spacing: { after: 40 }, children: [new TextRun({ text: 'Syed Irfan Raza Naqvi', font: FONT, size: 24 }), new TextRun({ text: 'a,*', font: FONT, size: 24, superScript: true })] }),
+  new Paragraph({ spacing: { after: 40 }, children: [new TextRun({ text: 'Syed Irfan Raza Naqvi', font: FONT, size: 24 }), new TextRun({ text: 'a,*', font: FONT, size: 24, superScript: true }), new TextRun({ text: ', Muhammad Umar Aftab', font: FONT, size: 24 }), new TextRun({ text: 'a', font: FONT, size: 24, superScript: true })] }),
   new Paragraph({ spacing: { after: 40 }, children: [new TextRun({ text: 'a', font: FONT, size: 20, superScript: true }), new TextRun({ text: ' FAST School of Computing, Department of Computer Science, National University of Computer and Emerging Sciences (FAST-NUCES), Lahore, Pakistan', font: FONT, size: 20, italics: true })] }),
-  new Paragraph({ spacing: { after: 240 }, children: [new TextRun({ text: '* Corresponding author. E-mail: l259000@lhr.nu.edu.pk; irfanrazanaqvi9@gmail.com', font: FONT, size: 20 })] }),
+  new Paragraph({ spacing: { after: 240 }, children: [new TextRun({ text: '* Corresponding author. E-mail: l259000@lhr.nu.edu.pk; irfanrazanaqvi9@gmail.com. Co-author: umar.aftab@nu.edu.pk', font: FONT, size: 20 })] }),
   new Paragraph({ spacing: { before: 120, after: 80 }, border: { top: { style: BorderStyle.SINGLE, size: 6, color: '000000', space: 6 } }, children: [new TextRun({ text: 'Abstract', font: FONT, size: 24, bold: true })] }),
   new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 160, line: 312 }, children: runs(ABSTRACT, { size: 22 }) }),
   new Paragraph({ spacing: { after: 240 }, border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '000000', space: 6 } }, children: [new TextRun({ text: 'Keywords: ', font: FONT, size: 22, bold: true, color: '000000' }), new TextRun({ text: 'Zero trust; Blockchain; Industrial Internet of Things; Access control; Hyperledger Besu; Smart contracts; Audit', font: FONT, size: 22 })] }),
@@ -526,7 +526,7 @@ const elsBack = () => [
   H1('Declaration of competing interest'),
   P('The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper. [Authors: please confirm.]'),
   H1('CRediT authorship contribution statement'),
-  P('**Syed Irfan Raza Naqvi:** Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Writing – original draft, Writing – review & editing, Visualization. **[Supervisor name]:** Supervision, Writing – review & editing. [Authors: please adjust to your actual roles.]'),
+  P('**Syed Irfan Raza Naqvi:** Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Writing – original draft, Writing – review & editing, Visualization. **Muhammad Umar Aftab:** Conceptualization, Supervision, Writing – review & editing.'),
   H1('Funding'),
   P('[Funding source and grant number, or: This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.]'),
   H1('Data availability'),
