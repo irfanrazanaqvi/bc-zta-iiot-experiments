@@ -1,6 +1,16 @@
 // Reference database. Entries were checked by title and journal against publisher or index pages (two unverifiable entries removed).
 // during this session. `text` is the IEEE-style reference body; `url` is the hyperlink.
 module.exports = {
+  wan25: { year: 2025, url: "https://doi.org/10.1016/j.aej.2025.03.012",
+    text: "T. Wan, B. Shi, and H. Wang, “A continuous authentication scheme for zero-trust architecture in industrial internet of things,” Alexandria Eng. J., vol. 122, pp. 555–563, 2025, doi: 10.1016/j.aej.2025.03.012." },
+  ding25: { year: 2025, url: "https://doi.org/10.1016/j.sysarc.2025.103391",
+    text: "K. Ding, T. Xie, K. Gai, C. Guo, L. Lei, D. Wang, J. Yu, L. Zhu, and W. Meng, “Verifiable decentralized identity-based meta-computing in Industrial Internet of Things (IIoT),” J. Syst. Archit., vol. 162, Art. no. 103391, 2025, doi: 10.1016/j.sysarc.2025.103391." },
+  xu25: { year: 2025, url: "https://doi.org/10.1109/JIOT.2025.3576735",
+    text: "W. Xu, J. Deng, J. Yu, S. Mao, Y. Li, Z. Peng, and B. Xiao, “Blockchain-based verifiable decentralized identity for intelligent flexible manufacturing,” IEEE Internet Things J., vol. 12, no. 16, pp. 32366–32378, 2025, doi: 10.1109/JIOT.2025.3576735." },
+  ruambo26: { year: 2026, url: "https://doi.org/10.1016/j.compeleceng.2026.111002",
+    text: "F. A. Ruambo, D. Zou, I. O. Lopes, B. Yuan, A. Muthanna, M. Zakarya, and M. S. A. Muthanna, “Trust scoring algorithms for zero trust-based software-defined perimeter architectures: A systematic literature review of advancements, challenges, and future directions,” Comput. Electr. Eng., vol. 132, Art. no. 111002, 2026, doi: 10.1016/j.compeleceng.2026.111002." },
+  hari26: { year: 2026, url: "https://doi.org/10.1016/j.aej.2026.03.014",
+    text: "N. N. Hari, P. Krishnan, K. Jain, A. K. J. Saudagar, P. Prabu, and R. C. Poonia, “A three-tier microsegmentation framework for enterprise networks under Zero Trust Architecture,” Alexandria Eng. J., vol. 141, pp. 150–164, 2026, doi: 10.1016/j.aej.2026.03.014." },
   schneier99: { year: 1999, url: "https://www.schneier.com/academic/archives/1999/05/secure_audit_logs_to.html",
     text: "B. Schneier and J. Kelsey, “Secure audit logs to support computer forensics,” ACM Trans. Inf. Syst. Secur., vol. 2, no. 2, pp. 159–176, 1999." },
   crosby09: { year: 2009, url: "https://www.usenix.org/conference/usenixsecurity09/technical-sessions/presentation/efficient-data-structures-tamper-evident",
