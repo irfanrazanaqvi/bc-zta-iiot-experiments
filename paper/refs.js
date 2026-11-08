@@ -16,7 +16,7 @@ module.exports = {
   hari26: { year: 2026, url: "https://doi.org/10.1016/j.aej.2026.03.014",
     text: "N. N. Hari, P. Krishnan, K. Jain, A. K. J. Saudagar, P. Prabu, and R. C. Poonia, “A three-tier microsegmentation framework for enterprise networks under Zero Trust Architecture,” Alexandria Eng. J., vol. 141, pp. 150–164, 2026, doi: 10.1016/j.aej.2026.03.014." },
   syed22: { year: 2022, url: "https://ieeexplore.ieee.org/document/9773102",
-    text: "N. F. Syed, S. W. Shah, A. Shaghaghi, A. Anwar, Z. Baig, and R. Doss, “Zero trust architecture (ZTA): A comprehensive survey,” IEEE Access, vol. 10, pp. 57143–57179, 2022." },
+    text: "N. F. Syed, S. W. Shah, A. Shaghaghi, A. Anwar, Z. Baig, and R. Doss, “Zero trust architecture (ZTA): A comprehensive survey,” IEEE Access, vol. 10, pp. 57143–57179, 2022, doi: 10.1109/ACCESS.2022.3174679." },
   // ---- recent (2025-2026) ----
   salim: { year: 2026, url: "https://doi.org/10.1016/j.future.2025.108093",
     text: "M. M. Salim, M. Kim, S. K. Singh, and J. H. Park, “Zero-trust blockchain-enabled framework for scalable and secure IoT networks,” Future Gener. Comput. Syst., vol. 175, Art. no. 108093, 2026, doi: 10.1016/j.future.2025.108093." },
