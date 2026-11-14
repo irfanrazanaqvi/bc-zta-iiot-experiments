@@ -178,4 +178,29 @@ describe("BC-ZTA smart-contract suite", function () {
     await accessControl.setGateway(device1.address, true);
     await accessControl.connect(device1).grantSession(DID, RESOURCE, 0);
   });
+
+  it("lets a 2-of-3 multisig replace the single admin key", async function () {
+    const [, o1, o2, o3, stranger] = await ethers.getSigners();
+    const MS = await ethers.getContractFactory("MultiSigAdmin");
+    const ms = await MS.deploy([o1.address, o2.address, o3.address], 2);
+    await accessControl.transferAdmin(await ms.getAddress());
+    await auditLog.transferAdmin(await ms.getAddress());
+    const res = ethers.keccak256(ethers.toUtf8Bytes("res-ms"));
+    // the old admin key no longer works
+    await expect(accessControl.setPolicy(res, 0, 3, 0, 600)).to.be.revertedWith("AccessControl: not admin");
+    const data = accessControl.interface.encodeFunctionData("setPolicy", [res, 0, 3, 0, 600]);
+    await expect(ms.connect(stranger).propose(await accessControl.getAddress(), data)).to.be.revertedWith("MultiSig: not owner");
+    await ms.connect(o1).propose(await accessControl.getAddress(), data);
+    await expect(ms.connect(o1).execute(0)).to.be.revertedWith("MultiSig: not enough confirmations");
+    await expect(ms.connect(o1).confirm(0)).to.be.revertedWith("MultiSig: already confirmed");
+    await ms.connect(o2).confirm(0);
+    await ms.connect(o3).execute(0);
+    expect((await accessControl.policies(res)).active).to.equal(true);
+    // same for the audit-log gateway list
+    const d2 = auditLog.interface.encodeFunctionData("setGateway", [stranger.address, true]);
+    await ms.connect(o2).propose(await auditLog.getAddress(), d2);
+    await ms.connect(o3).confirm(1);
+    await ms.connect(o1).execute(1);
+    expect(await auditLog.isGateway(stranger.address)).to.equal(true);
+  });
 });

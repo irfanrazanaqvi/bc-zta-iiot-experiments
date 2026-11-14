@@ -40,6 +40,7 @@ contract IdentityRegistry {
     }
 
     constructor(address _plantAuthority) {
+        require(_plantAuthority != address(0), "IdentityRegistry: zero authority");
         plantAuthority = _plantAuthority;
         epochStart = block.timestamp;
         currentEpoch = 0;

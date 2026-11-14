@@ -1,0 +1,37 @@
+{
+ "date": "2026-11-14T07:01:38.250Z",
+ "records": 1000,
+ "batch": 100,
+ "attacks": {
+  "modify_record": {
+   "central": false,
+   "hashchain": true,
+   "anchored": true
+  },
+  "delete_record": {
+   "central": false,
+   "hashchain": true,
+   "anchored": true
+  },
+  "insert_record": {
+   "central": false,
+   "hashchain": true,
+   "anchored": true
+  },
+  "rewrite_whole_log": {
+   "central": false,
+   "hashchain": false,
+   "anchored": true
+  },
+  "reanchor_new_root": {
+   "central": false,
+   "hashchain": true,
+   "anchored": true
+  },
+  "gateway_omits_record": {
+   "central": false,
+   "hashchain": false,
+   "anchored": false
+  }
+ }
+}

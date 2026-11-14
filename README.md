@@ -8,7 +8,7 @@ latency, scalability and revocation results, and (4) the figure scripts.
 | Item in paper | Source | Nature |
 |---|---|---|
 | Table 6 (gas per operation) | `scripts/measure_gas.js` -> `simulation/output/gas_measurements.json` | **Measured** (Hardhat EVM, london, optimizer 200) |
-| Section 5.2 / 17 passing tests | `test/BCZTA.test.js` | **Executed** |
+| Section 5.2 / 18 passing tests | `test/BCZTA.test.js` | **Executed** |
 | Tables 4-5, Figs. 3-5 (incl. sensitivity), revocation delay, audit growth | `simulation/simulate_experiment.py` | **Model** with explicit assumed parameters (`PARAMS`) |
 | Live Besu consensus timing, device CPU/memory | - | **Not measured**; replace the model with Besu + Hyperledger Caliper runs before publication |
 
@@ -21,7 +21,7 @@ pip install -r requirements.txt
 ## Run
 ```bash
 npx hardhat compile
-npx hardhat test                    # 17 tests (USE_SOLCJS=1 if the solc binary download is blocked)
+npx hardhat test                    # 18 tests (USE_SOLCJS=1 if the solc binary download is blocked)
 npx hardhat run scripts/measure_gas.js
 python3 simulation/simulate_experiment.py   # writes simulation/output/*
 python3 figures/fig1_architecture.py <outdir>
@@ -74,3 +74,5 @@ Raw results of the second GCP run (real Keycloak 26.4 and OpenLDAP baselines, ca
 | Gateway allow-list on `AuditLog` / `AccessControl.grantSession` | `contracts/`, gas in `benchmark/results/local-verify-2026-11-08/gas_hardened.json` |
 
 The cloud measurements in the paper used the earlier contracts (no allow-list), the v1 audit leaf and unbound signatures.
+
+Added in the second review round: `scripts/operator_tamper.js` (what an operator can change in the audit trail and who notices; results in `operator_tamper.json`), `contracts/MultiSigAdmin.sol` (optional M-of-N admin, unit-tested, not used in the cloud runs) and `benchmark/results/local-verify-2026-11-08/slither.json` (static analysis, 0 high-impact findings). Build the Computers & Security variant of the paper with `JOURNAL=cose FORMAT=elsevier node paper/generate.js out.docx`.

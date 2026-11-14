@@ -35,11 +35,19 @@ contract AccessControl {
     /// @dev Gateways allowed to open sessions (added after the cloud measurements).
     mapping(address => bool) public isGateway;
     event GatewaySet(address indexed gateway, bool allowed);
+    event AdminTransferred(address indexed newAdmin);
 
     function setGateway(address gw, bool allowed) external {
         require(msg.sender == policyAdmin, "AccessControl: not admin");
         isGateway[gw] = allowed;
         emit GatewaySet(gw, allowed);
+    }
+
+    /// @notice Hand the admin role to another account, for example a MultiSigAdmin contract.
+    function transferAdmin(address newAdmin) external {
+        require(msg.sender == policyAdmin && newAdmin != address(0), "AccessControl: not admin");
+        policyAdmin = newAdmin;
+        emit AdminTransferred(newAdmin);
     }
 
     modifier onlyAdmin() {

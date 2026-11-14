@@ -30,6 +30,7 @@ contract AuditLog {
     mapping(address => bool) public isGateway;
 
     event GatewaySet(address indexed gateway, bool allowed);
+    event AdminTransferred(address indexed newAdmin);
 
     modifier onlyGateway() {
         require(isGateway[msg.sender], "AuditLog: not gateway");
@@ -40,6 +41,12 @@ contract AuditLog {
         admin = msg.sender;
         isGateway[msg.sender] = true;
         emit GatewaySet(msg.sender, true);
+    }
+
+    function transferAdmin(address newAdmin) external {
+        require(msg.sender == admin && newAdmin != address(0), "AuditLog: not admin");
+        admin = newAdmin;
+        emit AdminTransferred(newAdmin);
     }
 
     function setGateway(address gw, bool allowed) external {
