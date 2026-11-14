@@ -551,7 +551,7 @@ const elsFront = () => [
     new TextRun({ text: ', Rana Asif Rehman', font: FONT, size: 24 }), new TextRun({ text: 'd', font: FONT, size: 24, superScript: true }),
     new TextRun({ text: ', Sayed Qaiser Ali Shah', font: FONT, size: 24 }), new TextRun({ text: 'e', font: FONT, size: 24, superScript: true })] }),
   ...[['a', ' FAST School of Computing, Department of Computer Science, National University of Computer and Emerging Sciences (FAST-NUCES), 852-B Milaad Street, Block B, Faisal Town, Lahore 54770, Pakistan'],
-      ['b', ' National University of Computer and Emerging Sciences (FAST-NUCES), Chiniot-Faisalabad Campus, FAST Square, Chiniot 38000, Pakistan'],
+      ['b', ' Department of Computer Science, National University of Computer and Emerging Sciences (FAST-NUCES), Chiniot-Faisalabad Campus, FAST Square, Chiniot 38000, Pakistan'],
       ['c', ' School of Science, Edith Cowan University, 270 Joondalup Drive, Joondalup WA 6027, Australia'],
       ['d', ' Faculty of Engineering and Technology, Muscat University, Building 2089, Al Ghubra North, P.O. Box 550, PC 130, Muscat, Oman'],
       ['e', ' Department of Computer Science, Faculty of Computing and Information Technology, International Islamic University, New Campus, Sector H-10, Islamabad 44000, Pakistan']].map(([k, t]) =>
