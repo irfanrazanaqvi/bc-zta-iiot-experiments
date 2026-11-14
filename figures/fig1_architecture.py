@@ -36,7 +36,7 @@ tier(0.1, 3.95, "Layer I: IIoT devices", "#fdf3e7", "#b5651d",
      [["PLC /\nactuator", "Sensor", "Edge\ngateway"],
       ["Fog / MEC\nnode", "SDN\nswitch"]])
 for xi in (2.0, 5.0, 8.0):
-    for (y1, y2) in ((4.05, 4.35), (8.3, 8.65)):
-        ax.add_patch(FancyArrowPatch((xi, y1), (xi, y2), arrowstyle="<|-|>", mutation_scale=7, color="#333333", lw=0.8))
+    for (y1, y2) in ((3.7, 4.65), (8.0, 8.95)):
+        ax.add_patch(FancyArrowPatch((xi, y1), (xi, y2), arrowstyle="<|-|>", mutation_scale=10, color="#222222", lw=1.3, shrinkA=0, shrinkB=0))
 plt.subplots_adjust(left=0.01, right=0.99, top=0.995, bottom=0.005)
 plt.savefig(os.path.join(out, "fig1_architecture.png"), dpi=600)
