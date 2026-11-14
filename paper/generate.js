@@ -561,7 +561,7 @@ const elsBack = () => [
   H1('Data availability'),
   P('The Solidity contracts, the PEP and load-generator code, the Google Cloud deployment scripts and all raw results used in this paper are available at https://github.com/irfanrazanaqvi/bc-zta-iiot-experiments (archived release with DOI: [to be added by the authors before submission]).'),
   H1('Declaration of generative AI and AI-assisted technologies in the writing process'),
-  P('During the preparation of this work the authors used Claude (Anthropic) to assist with writing experiment code and automation scripts, data analysis, and language editing of the manuscript. After using this tool, the authors reviewed and edited the content as needed and take full responsibility for the content of the published article. [Authors: please confirm this statement is accurate.]'),
+  P('During the preparation of this work the authors used an AI tool (Claude, Anthropic) for writing code, data analysis and language editing. The authors reviewed and edited all output and take full responsibility for the content of the publication.'),
   H1('Acknowledgements'),
   P('This work is part of the first author’s PhD research at FAST-NUCES. He thanks his supervisor, Dr Muhammad Umar Aftab, for his guidance and patience throughout the project, and for insisting that the results be reported as they came out. He is grateful to his co-supervisors, Dr Ahmad Mohsin and Dr Rana Asif Rehman, for their advice and for their critical questions on the design and the evaluation. He also thanks Dr Sayed Qaiser Ali Shah, his mentor in blockchain, for sharing his knowledge and time.'),
   H1('References'), ...refParas,
