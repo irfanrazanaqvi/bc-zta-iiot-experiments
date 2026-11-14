@@ -543,7 +543,7 @@ const hiText = COSE ? [
 ];
 if (ELS) hiText.forEach(h => { if (h.length > 85) throw new Error('highlight too long: ' + h); });
 const elsFront = () => [
-  new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 200 }, children: [new TextRun({ text: COSE ? 'Blockchain-Assisted Zero-Trust Access Control for Industrial IoT: Edge Enforcement and Audit' : 'Blockchain-Assisted Zero-Trust Access Control and Verifiable Audit for Industrial IoT', font: FONT, size: 36, bold: true })] }),
+  new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 200 }, children: [new TextRun({ text: COSE ? 'Blockchain-Assisted Zero-Trust Access Control and Verifiable Audit for Industrial IoT' : 'Blockchain-Assisted Zero-Trust Access Control and Verifiable Audit for Industrial IoT', font: FONT, size: 36, bold: true })] }),
   new Paragraph({ spacing: { after: 40 }, children: [new TextRun({ text: 'Syed Irfan Raza Naqvi', font: FONT, size: 24 }), new TextRun({ text: 'a,*', font: FONT, size: 24, superScript: true }), new TextRun({ text: ', Muhammad Umar Aftab', font: FONT, size: 24 }), new TextRun({ text: 'a', font: FONT, size: 24, superScript: true })] }),
   new Paragraph({ spacing: { after: 40 }, children: [new TextRun({ text: 'a', font: FONT, size: 20, superScript: true }), new TextRun({ text: ' FAST School of Computing, Department of Computer Science, National University of Computer and Emerging Sciences (FAST-NUCES), ' + (CSI ? '[street address and postal code], ' : '') + 'Lahore, Pakistan', font: FONT, size: 20, italics: true })] }),
   new Paragraph({ spacing: { after: 240 }, children: [new TextRun({ text: '* Corresponding author. E-mail: l259000@lhr.nu.edu.pk; irfanrazanaqvi9@gmail.com. Co-author: umar.aftab@nu.edu.pk', font: FONT, size: 20 })] }),
@@ -570,7 +570,7 @@ if (ELS) {
   const elsPage = { page: { size: { width: 11906, height: 16838 }, margin: { top: 1440, bottom: 1440, left: 1440, right: 1440 } } };
   const elsFooter = new Footer({ children: [new Paragraph({ suppressLineNumbers: true, alignment: AlignmentType.CENTER, children: [new TextRun({ children: [PageNumber.CURRENT], font: FONT, size: 20 })] })] });
   const elsDoc = new Document({
-    creator: 'Syed Irfan Raza Naqvi', title: COSE ? 'Blockchain-Assisted Zero-Trust Access Control for Industrial IoT: Edge Enforcement and Audit' : 'Blockchain-Assisted Zero-Trust Access Control and Verifiable Audit for Industrial IoT',
+    creator: 'Syed Irfan Raza Naqvi', title: COSE ? 'Blockchain-Assisted Zero-Trust Access Control and Verifiable Audit for Industrial IoT' : 'Blockchain-Assisted Zero-Trust Access Control and Verifiable Audit for Industrial IoT',
     styles: { default: { document: { run: { font: FONT, size: BODY, language: { value: 'en-US' } } } } },
     sections: [
       { properties: { ...elsPage, lineNumbers: { countBy: 1, restart: docx.LineNumberRestartFormat.CONTINUOUS } }, footers: { default: elsFooter }, children: [...elsFront(), ...body, ...elsBack()] },
