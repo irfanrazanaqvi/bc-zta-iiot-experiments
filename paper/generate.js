@@ -510,7 +510,7 @@ const front = [
     children: [new TextRun({ text: 'Syed Irfan Raza Naqvi, Muhammad Umar Aftab, Ahmad Mohsin, Rana Asif Rehman and Sayed Qaiser Ali Shah', font: FONT, size: 22 })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 140 },
     children: [new TextRun({ text: 'FAST-NUCES, Lahore and Chiniot-Faisalabad, Pakistan (Naqvi, Aftab); Edith Cowan University, Australia (Mohsin); Muscat University, Oman (Rehman); International Islamic University, Islamabad, Pakistan (Shah)', font: FONT, size: 18, italics: true })] }),
-  new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 100 }, indent: { left: 360, right: 360 }, children: [new TextRun({ text: 'Corresponding author: Syed Irfan Raza Naqvi (e-mail: l259000@lhr.nu.edu.pk; irfanrazanaqvi9@gmail.com). Co-author e-mails: umar.aftab@nu.edu.pk; a.mohsin@ecu.edu.au; rasif@muscatuniversity.edu.om; qaiser.ali@iiu.edu.pk. This work was supported in part by [funding source and grant number].', font: FONT, size: 16 })] }),
+  new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 100 }, indent: { left: 360, right: 360 }, children: [new TextRun({ text: 'Corresponding author: Syed Irfan Raza Naqvi (e-mail: l259000@lhr.nu.edu.pk; irfanrazanaqvi9@gmail.com). Co-author e-mails: umar.aftab@nu.edu.pk; a.mohsin@ecu.edu.au; rasif@muscatuniversity.edu.om; qaiser.ali@iiu.edu.pk. This research received no specific grant from any funding agency.', font: FONT, size: 16 })] }),
   new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 60, line: 228 }, indent: { left: 360, right: 360 }, children: [
     new TextRun({ text: 'ABSTRACT ', font: FONT, size: 18, bold: true }),
     ...runs(ABSTRACT, { size: 18, bold: false }).map(x => x),
@@ -565,15 +565,15 @@ const elsBack = () => [
   H1('Declaration of competing interest'),
   P('The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper. [Authors: please confirm.]'),
   H1('CRediT authorship contribution statement'),
-  P('**Syed Irfan Raza Naqvi:** Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Writing – original draft, Writing – review and editing, Visualization. **Muhammad Umar Aftab:** Conceptualization, Supervision, Writing – review and editing. **Ahmad Mohsin:** [roles to be confirmed by the author]. **Rana Asif Rehman:** [roles to be confirmed by the author]. **Sayed Qaiser Ali Shah:** [roles to be confirmed by the author].'),
+  P('**Syed Irfan Raza Naqvi:** Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Writing – original draft, Writing – review and editing, Visualization. **Muhammad Umar Aftab:** Conceptualization, Supervision, Writing – review and editing. **Ahmad Mohsin:** Supervision. **Rana Asif Rehman:** Supervision. **Sayed Qaiser Ali Shah:** Supervision.'),
   H1('Funding'),
-  P('[Funding source and grant number, or: This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.]'),
+  P('This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.'),
   H1('Data availability'),
   P('The Solidity contracts, the PEP and load-generator code, the Google Cloud deployment scripts and all raw results used in this paper are available at https://github.com/irfanrazanaqvi/bc-zta-iiot-experiments (archived release with DOI: [to be added by the authors before submission]).'),
   H1('Declaration of generative AI and AI-assisted technologies in the writing process'),
   P('During the preparation of this work the authors used Claude (Anthropic) to assist with writing experiment code and automation scripts, data analysis, and language editing of the manuscript. After using this tool, the authors reviewed and edited the content as needed and take full responsibility for the content of the published article. [Authors: please confirm this statement is accurate.]'),
   H1('Acknowledgements'),
-  P('[Acknowledgements to be added by the authors.]'),
+  P('This work is part of the first author’s PhD research at FAST-NUCES. He thanks his supervisor, Dr Muhammad Umar Aftab, for his guidance and patience throughout the project, and for insisting that the results be reported as they came out. He is grateful to his co-supervisors, Dr Ahmad Mohsin and Dr Rana Asif Rehman, for their advice and for their critical questions on the design and the evaluation. He also thanks Dr Sayed Qaiser Ali Shah, his mentor in blockchain, for sharing his knowledge and time.'),
   H1('References'), ...refParas,
 ];
 if (ELS) {
@@ -601,7 +601,7 @@ const doc = new Document({
   sections: [
     { properties: { ...pageProps, type: SectionType.CONTINUOUS }, footers: { default: footer }, children: front },
     { properties: { ...pageProps, type: SectionType.CONTINUOUS, column: { count: 2, space: 360, equalWidth: true } }, footers: { default: footer },
-      children: [...body, H1('Acknowledgment'), P('[Funding sources and acknowledgments to be added by the authors.]'), H1('Data and Code Availability'), P('The Solidity contracts, the PEP and load-generator code, the Google Cloud deployment scripts and all raw results used in this paper are available at https://github.com/irfanrazanaqvi/bc-zta-iiot-experiments (archived release with DOI: [to be added by the authors before submission]).'), H1('References'), ...refParas, H1('Author Biographies'), P('**[AUTHOR NAME]** [Short biography, degrees, current position and research interests to be added; IEEE Access also requires a photo.]', {})] },
+      children: [...body, H1('Acknowledgment'), P('This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors. This work is part of the first author’s PhD research at FAST-NUCES. He thanks his supervisor, Dr Muhammad Umar Aftab, for his guidance and patience throughout the project, and for insisting that the results be reported as they came out. He is grateful to his co-supervisors, Dr Ahmad Mohsin and Dr Rana Asif Rehman, for their advice and for their critical questions on the design and the evaluation. He also thanks Dr Sayed Qaiser Ali Shah, his mentor in blockchain, for sharing his knowledge and time.'), H1('Data and Code Availability'), P('The Solidity contracts, the PEP and load-generator code, the Google Cloud deployment scripts and all raw results used in this paper are available at https://github.com/irfanrazanaqvi/bc-zta-iiot-experiments (archived release with DOI: [to be added by the authors before submission]).'), H1('References'), ...refParas, H1('Author Biographies'), P('**[AUTHOR NAME]** [Short biography, degrees, current position and research interests to be added; IEEE Access also requires a photo.]', {})] },
   ],
 });
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
