@@ -25,6 +25,7 @@ const FONT = 'Times New Roman';
 const CSI = process.env.JOURNAL === 'csi';      // Computer Standards & Interfaces variant (as COSE plus standards paragraph and postal address)
 const COSE = process.env.JOURNAL === 'cose' || CSI;   // Computers & Security variant (security-led title, abstract, highlights)
 const AY = process.env.JOURNAL === 'cose' && process.env.FORMAT === 'elsevier' && process.env.CITE !== 'num';   // Computers & Security: author-year citations
+const FG2 = process.env.JOURNAL === 'fgcs';   // FGCS two-column submission (<=18 pages incl. references)
 const ELS = process.env.FORMAT === 'elsevier';   // Elsevier (FGCS) manuscript layout: single column, A4, 11 pt
 const BODY = ELS ? 22 : 20;        // half-points
 const SMALL = ELS ? 18 : 15;
@@ -525,7 +526,7 @@ const ABSTRACT = HAVE_XR ? `Industrial IoT (IIoT) networks need per-request veri
 const ATK_N = Object.entries(E.E3).filter(([k]) => k !== 'revoked_device' && k !== 'legitimate_requests (control)').reduce((a, [, v]) => a + v.attempts, 0);
 const ABSTRACT_COSE = HAVE_XR ? `Zero-trust access control for the industrial Internet of Things means checking every request, yet putting a blockchain on the authentication path adds seconds of delay and exhausts ledger capacity. We describe BC-ZTA, in which edge enforcement points decide from cached ledger state verified against a Merkle root, while identity, trust and audit updates reach a permissioned Hyperledger Besu network asynchronously. We built it with six baselines (including Keycloak and a central directory with pushed revocation) and tested it on seven cloud virtual machines with four validators. None of ${f0(ATK_N)} forged, replayed, stale, unregistered, tampered or policy-violating requests was accepted; these are negative tests, not attacks by a compromised gateway. A revoked device was refused after ${f1(E.E2['bczta-events'].mean_ms / 1000)} s, and access stops once the state source has been lost for twice the cache lifetime. Decisions took ${f1(e('bczta', 50).mean_ms)} ms at 50 devices, against ${f1(e('central', 50).mean_ms)} ms for a central directory behind an injected 40 ms delay. That gap is one wide-area round trip, not a general speed-up: a central directory with pushed revocation matches the latency and revokes faster (${f0(XR.P2.push.mean_ms)} ms). The ledger adds trust and audit that third parties can verify: in local tests, anchoring exposed five kinds of operator edit, one of which a hash-chained log misses, and Merkle proofs stay below ${f0(Math.ceil(avB(1000000).proof_bytes / 100) * 100)} bytes and ${f1(Math.ceil(avB(1000000).verify_us_per_proof / 100) / 10)} ms at one million devices. A consensus halt delays revocation by minutes. Up to 200 devices were emulated, all machines sat in one zone, and trust scoring and micro-segmentation are design-level only.` : '';
 const front = [
-  new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 160 }, children: [new TextRun({ text: 'Date of publication xxxx 00, 0000, date of current version xxxx 00, 0000. Digital Object Identifier 10.1109/ACCESS.2026.0000000', font: FONT, size: 15, italics: true })] }),
+  new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 160 }, children: [new TextRun({ text: FG2 ? 'Manuscript submitted to Future Generation Computer Systems' : 'Date of publication xxxx 00, 0000, date of current version xxxx 00, 0000. Digital Object Identifier 10.1109/ACCESS.2026.0000000', font: FONT, size: 15, italics: true })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 100 },
     children: [new TextRun({ text: 'Blockchain-Assisted Zero-Trust Architecture for Secure and Scalable Industrial Internet of Things (IIoT)', font: FONT, size: 36 })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 20 },
@@ -538,16 +539,16 @@ const front = [
     ...runs(ABSTRACT, { size: 18, bold: false }).map(x => x),
   ] }),
   new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 100 }, indent: { left: 360, right: 360 }, children: [
-    new TextRun({ text: 'INDEX TERMS ', font: FONT, size: 18, bold: true }),
+    new TextRun({ text: FG2 ? 'Keywords: ' : 'INDEX TERMS ', font: FONT, size: 18, bold: true }),
     new TextRun({ text: 'Access control, blockchain, Hyperledger Besu, industrial Internet of Things, scalability, smart contracts, zero trust.', font: FONT, size: 18 }),
   ] }),
 ];
 
 // ================================ DOCUMENT ==========================================
-const pageProps = { page: { size: { width: 12240, height: 15840 }, margin: { top: 1000, bottom: 1000, left: 1080, right: 1080 } } };
+const pageProps = { page: { size: FG2 ? { width: 11906, height: 16838 } : { width: 12240, height: 15840 }, margin: { top: 1000, bottom: 1000, left: 1080, right: 1080 } } };
 const footer = new Footer({ children: [new Paragraph({ tabStops: [{ type: docx.TabStopType.RIGHT, position: 10080 }],
   children: [new TextRun({ text: 'NAQVI et al.: Blockchain-Assisted Zero-Trust Architecture for Secure and Scalable IIoT', font: FONT, size: 15, italics: true }),
-    new TextRun({ text: '\tVOLUME XX, 2026  |  ', font: FONT, size: 15 }), new TextRun({ children: [PageNumber.CURRENT], font: FONT, size: 15 })] })] });
+    new TextRun({ text: FG2 ? '\t' : '\tVOLUME XX, 2026  |  ', font: FONT, size: 15 }), new TextRun({ children: [PageNumber.CURRENT], font: FONT, size: 15 })] })] });
 
 // ---------------- Elsevier (FGCS) manuscript: single column, A4, line numbers, declarations -------------
 const hiText = COSE ? [
@@ -623,7 +624,7 @@ const doc = new Document({
   sections: [
     { properties: { ...pageProps, type: SectionType.CONTINUOUS }, footers: { default: footer }, children: front },
     { properties: { ...pageProps, type: SectionType.CONTINUOUS, column: { count: 2, space: 360, equalWidth: true } }, footers: { default: footer },
-      children: [...body, H1('Acknowledgment'), P('This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors. This work is part of the first author’s PhD research at FAST-NUCES. He thanks his supervisor, Dr Muhammad Umar Aftab, for his guidance and patience throughout the project, and for insisting that the results be reported as they came out. He is grateful to his co-supervisors, Dr Ahmad Mohsin and Dr Rana Asif Rehman, for their advice and for their critical questions on the design and the evaluation. He also thanks Dr Sayed Qaiser Ali Shah, his mentor in blockchain, for sharing his knowledge and time.'), H1('Data and Code Availability'), P('The Solidity contracts, the PEP and load-generator code, the Google Cloud deployment scripts and all raw results used in this paper are available at https://github.com/irfanrazanaqvi/bc-zta-iiot-experiments (archived release with DOI: [to be added by the authors before submission]).'), H1('References'), ...refParas, H1('Author Biographies'), P('**[AUTHOR NAME]** [Short biography, degrees, current position and research interests to be added; IEEE Access also requires a photo.]', {})] },
+      children: FG2 ? [...body, ...elsBack()] : [...body, H1('Acknowledgment'), P('This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors. This work is part of the first author’s PhD research at FAST-NUCES. He thanks his supervisor, Dr Muhammad Umar Aftab, for his guidance and patience throughout the project, and for insisting that the results be reported as they came out. He is grateful to his co-supervisors, Dr Ahmad Mohsin and Dr Rana Asif Rehman, for their advice and for their critical questions on the design and the evaluation. He also thanks Dr Sayed Qaiser Ali Shah, his mentor in blockchain, for sharing his knowledge and time.'), H1('Data and Code Availability'), P('The Solidity contracts, the PEP and load-generator code, the Google Cloud deployment scripts and all raw results used in this paper are available at https://github.com/irfanrazanaqvi/bc-zta-iiot-experiments (archived release with DOI: [to be added by the authors before submission]).'), H1('References'), ...refParas, H1('Author Biographies'), P('**[AUTHOR NAME]** [Short biography, degrees, current position and research interests to be added; IEEE Access also requires a photo.]', {})] },
   ],
 });
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
