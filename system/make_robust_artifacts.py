@@ -48,26 +48,29 @@ for r in runs:
         for e in rows: P5.setdefault(k, {}).setdefault(e["offered_rps"], []).append(e)
 agg["P5"] = {k: {str(o): {"goodput": ms([e["goodput_rps"] for e in v]), "p95_ms": ms([e["p95_ms"] for e in v]), "mean_ms": ms([e["mean_ms"] for e in v]), "fail": sum(e["failed_or_timeout"] for e in v),
                           "late": sum(e["late"] for e in v), "cpu": ms([e["pep"]["cpu_cores_total"] for e in v]), "reps": len(v)} for o, v in sorted(d.items())} for k, d in sorted(P5.items(), key=lambda x: int(x[0]))}
-json.dump(agg, open(os.path.join(out, "aggregate_robust.json"), "w"), indent=1)
+if runs:
+    json.dump(agg, open(os.path.join(out, "aggregate_robust.json"), "w"), indent=1)
+elif os.path.isfile(os.path.join(src, "aggregate_robust.json")):   # raw runs not kept: redraw from the stored aggregate
+    agg = json.load(open(os.path.join(src, "aggregate_robust.json"))); P3 = agg["P3"]
 
 plt.rcParams.update({"font.size": 8, "axes.grid": True, "grid.alpha": .3})
-COL = {"bczta": "#2e7d32", "push": "#c0504d"}
+COL = {"bczta": "#009E73", "push": "#D55E00"}   # colour-blind-safe pair (Okabe-Ito)
 NAME = {"bczta": "BC-ZTA (ledger unreachable)", "push": "central + push (directory stopped)"}
 if P3:
     fig, ax = plt.subplots(figsize=(3.5, 2.6))
     for lab, e in P3.items(): ax.plot(range(len(e["granted_series"])), [100 * x for x in e["granted_series"]], label=NAME[lab], color=COL[lab], lw=1.6, ls=("-" if lab=="bczta" else "--"))
     e0 = next(iter(P3.values())); ax.axvspan(e0["cut_at_s"], e0["restore_at_s"], color="grey", alpha=.15, label="state source lost")
     ax.axvline(e0["cut_at_s"] + e0["ttl_s"], color="k", ls=":", lw=.7); ax.axvline(e0["cut_at_s"] + e0["stale_bound_s"], color="k", ls=":", lw=.7)
-    ax.set_xlabel("time (s)"); ax.set_ylabel("requests granted (%)"); ax.set_ylim(-3, 103); ax.legend(fontsize=7, loc="upper center", bbox_to_anchor=(0.5, -0.3), ncol=1, frameon=False); fig.tight_layout(); fig.savefig(os.path.join(out, "fig9_failclosed.png"), dpi=600, bbox_inches="tight"); plt.close(fig)
+    ax.set_xlabel("time (s)"); ax.set_ylabel("requests granted (%)"); ax.set_ylim(-3, 103); ax.legend(fontsize=8, loc="upper center", bbox_to_anchor=(0.5, -0.3), ncol=1, frameon=False); fig.tight_layout(); fig.savefig(os.path.join(out, "fig9_failclosed.png"), dpi=600, bbox_inches="tight"); plt.close(fig)
 if agg["P5"]:
     fig, ax = plt.subplots(1, 2, figsize=(7, 2.6))
-    cm = plt.get_cmap("Greens"); MK = {"1": "o", "2": "s", "4": "^"}; LSS = {"1": "-", "2": "--", "4": "-."}
+    cm = plt.get_cmap("Blues"); MK = {"1": "o", "2": "s", "4": "^"}; LSS = {"1": "-", "2": "--", "4": "-."}
     for i, (k, d) in enumerate(agg["P5"].items()):
-        offs = sorted(d, key=float); c = cm(0.35 + 0.6 * i / max(1, len(agg["P5"]) - 1))
+        offs = sorted(d, key=float); c = cm(0.55 + 0.4 * i / max(1, len(agg["P5"]) - 1))
         ax[0].errorbar([float(o) for o in offs], [d[o]["goodput"][0] for o in offs], yerr=[d[o]["goodput"][1] for o in offs], marker=MK[k], ls=LSS[k], ms=4, color=c, label=f"{k} PEP")
         ax[1].errorbar([float(o) for o in offs], [d[o]["p95_ms"][0] for o in offs], yerr=[d[o]["p95_ms"][1] for o in offs], marker=MK[k], ls=LSS[k], ms=4, color=c, label=f"{k} PEP")
     mx = max(float(o) for d in agg["P5"].values() for o in d); ax[0].plot([0, mx], [0, mx], "k:", lw=.8, label="offered")
-    ax[0].set_xlabel("offered rate (req/s)"); ax[0].set_ylabel("goodput (req/s)"); ax[0].legend(fontsize=7.5)
-    ax[1].set_yscale("log"); ax[1].set_xlabel("offered rate (req/s)"); ax[1].set_ylabel("p95 latency (ms)"); ax[1].legend(fontsize=7.5)
+    ax[0].set_xlabel("offered rate (req/s)"); ax[0].set_ylabel("goodput (req/s)"); ax[0].legend(fontsize=8.2)
+    ax[1].set_yscale("log"); ax[1].set_xlabel("offered rate (req/s)"); ax[1].set_ylabel("p95 latency (ms)"); ax[1].legend(fontsize=8.2)
     fig.tight_layout(); fig.savefig(os.path.join(out, "fig10_scaling.png"), dpi=600); plt.close(fig)
 print("wrote", out, "runs:", len(runs))

@@ -55,7 +55,7 @@ if fault:
 json.dump(agg, open(os.path.join(out, "aggregate_e2e.json"), "w"), indent=2)
 
 plt.rcParams.update({"font.size": 7.5, "axes.spines.top": False, "axes.spines.right": False, "axes.linewidth": 0.7, "legend.frameon": False, "font.family": "DejaVu Sans"})
-COL = {"central": "#8a6d1d", "abac": "#5b7f3a", "bczta": "#1f5f8b", "bcsync": "#a8322d"}
+COL = {"central": "#8a6d1d", "abac": "#009E73", "bczta": "#0072B2", "bcsync": "#D55E00"}   # colour-blind-safe
 MK = {"central": "^", "abac": "s", "bczta": "o", "bcsync": "D"}
 W = 3.4
 
@@ -64,7 +64,7 @@ for s in SYS:
     y = np.array([r["mean_ms"] for r in agg["E1"][s]]); e = np.array([r["mean_ms_sd"] for r in agg["E1"][s]])
     ax.errorbar(counts, y, yerr=e, marker=MK[s], color=COL[s], ms=3, lw=1.2, capsize=1.5, label=LABEL[s])
 ax.set_yscale("log"); ax.set_xlabel("Number of devices (1 request/s each)"); ax.set_ylabel("Mean end-to-end latency (ms)")
-ax.set_xticks(counts); ax.set_ylim(2, 6e4); ax.legend(fontsize=6.3, loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=2)
+ax.set_xticks(counts); ax.set_ylim(2, 6e4); ax.legend(fontsize=7, loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=2)
 fig.tight_layout(); fig.savefig(os.path.join(out, "fig3_latency.png"), dpi=600); plt.close(fig)
 
 fig, (a1, a2) = plt.subplots(2, 1, figsize=(W, 3.2), sharex=True)
@@ -72,19 +72,19 @@ for s in SYS:
     a1.plot(counts, [r["goodput_rps"] for r in agg["E1"][s]], marker=MK[s], color=COL[s], ms=3, lw=1.2, label=LABEL[s])
     a2.plot(counts, [r["onchain_tx_per_s"] for r in agg["E1"][s]], marker=MK[s], color=COL[s], ms=3, lw=1.2)
 a1.plot(counts, counts, ":", color="#555", lw=0.8)
-a1.set_ylabel("Goodput (accepted req/s)"); a1.legend(fontsize=6.0, loc="upper left", labelspacing=0.25)
+a1.set_ylabel("Goodput (accepted req/s)"); a1.legend(fontsize=7, loc="upper left", labelspacing=0.25)
 a2.set_ylabel("On-chain writes (tx/s)"); a2.set_xlabel("Number of devices (1 request/s each)"); a2.set_xticks(counts)
 fig.tight_layout(); fig.savefig(os.path.join(out, "fig4_scalability.png"), dpi=600); plt.close(fig)
 
 fig, ax = plt.subplots(figsize=(W, 2.5))
 order = ["central", "abac", "bcsync", "bczta-events", "bczta-ttl"]
 nm = {"central": "Central\nPKI-IAM", "abac": "ABAC\n(no BC)", "bcsync": "BC-only\n(sync)", "bczta-events": "BC-ZTA\nevents", "bczta-ttl": "BC-ZTA\nTTL 10 s"}
-cl = [COL["central"], COL["abac"], COL["bcsync"], COL["bczta"], "#7fa6c4"]
+cl = [COL["central"], COL["abac"], COL["bcsync"], COL["bczta"], "#56B4E9"]
 m = [agg["E2"][v]["mean_ms"] / 1000 for v in order]; mx = [agg["E2"][v]["max_ms"] / 1000 for v in order]
 bars = ax.bar(range(5), m, color=cl, width=0.62, edgecolor="k", linewidth=.5)
 for b_, h_ in zip(bars, ["//", "xx", "\\\\", "", ".."]): b_.set_hatch(h_)
 ax.scatter(range(5), mx, marker="_", s=140, color="k", zorder=3, label="worst case observed")
-ax.set_yscale("log"); ax.set_xticks(range(5)); ax.set_xticklabels([nm[v] for v in order], fontsize=6.5)
-ax.set_ylabel("Revocation enforcement\ndelay (s, mean)"); ax.legend(fontsize=6.5, loc="upper left")
+ax.set_yscale("log"); ax.set_xticks(range(5)); ax.set_xticklabels([nm[v] for v in order], fontsize=7)
+ax.set_ylabel("Revocation enforcement\ndelay (s, mean)"); ax.legend(fontsize=7, loc="upper left")
 fig.tight_layout(); fig.savefig(os.path.join(out, "fig5_revocation.png"), dpi=600); plt.close(fig)
 print(json.dumps({"E2": agg["E2"], "E4": agg["E4"]}, indent=1)[:1800])

@@ -10,6 +10,7 @@ out = sys.argv[1] if len(sys.argv) > 1 else os.path.dirname(os.path.abspath(__fi
 fig, ax = plt.subplots(figsize=(3.4, 4.85))
 ax.set_xlim(0, 10); ax.set_ylim(-0.3, 14.1); ax.axis("off")
 FS = 8
+NUMC = {"#b5651d": "#8a4b12"}   # darker brown so the step numbers reach 4.5:1 on the cream fill
 steps = [("1", "Device: signed request\n(DID, resource, time, nonce)", "#fdf3e7", "#b5651d"),
          ("2", "PEP: check time window,\nnonce, signature", "#eaf7ea", "#2e7d32"),
          ("3", "PEP: cached DID entry and\nMerkle proof (chain read on miss)", "#eaf7ea", "#2e7d32"),
@@ -21,7 +22,7 @@ ys = []
 for n, t, fc, ec in steps:
     y -= h
     ax.add_patch(FancyBboxPatch((0.2, y), 6.3, h, boxstyle="round,pad=0.02,rounding_size=0.15", lw=1.0, ec=ec, fc=fc))
-    ax.text(0.55, y + h / 2, n, ha="center", va="center", fontsize=FS, weight="bold", color=ec)
+    ax.text(0.55, y + h / 2, n, ha="center", va="center", fontsize=FS, weight="bold", color=NUMC.get(ec, ec))
     ax.text(3.5, y + h / 2, t, ha="center", va="center", fontsize=FS-0.5, color="#0b2545", linespacing=0.95)
     ys.append(y)
     y -= gap
