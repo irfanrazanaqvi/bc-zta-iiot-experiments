@@ -16,6 +16,7 @@ const ALT = {
 const { Document, Packer, Paragraph, TextRun, ImageRun, Table, TableRow, TableCell, WidthType, AlignmentType,
   BorderStyle, ShadingType, ExternalHyperlink, SectionType, Footer, PageNumber, VerticalAlign, TableLayoutType } = docx;
 const REFS = require('./refs.js');
+const AYR = require('./refs_ay.js')(REFS);
 const RES = JSON.parse(fs.readFileSync('/tmp/claude-0/work/pkg/code_package/simulation/output/raw_results.json'));
 const FIG = '/tmp/claude-0/work/figs/';
 const OUT = process.argv[2] || '/tmp/claude-0/work/out/paper.docx';
@@ -23,6 +24,7 @@ const OUT = process.argv[2] || '/tmp/claude-0/work/out/paper.docx';
 const FONT = 'Times New Roman';
 const CSI = process.env.JOURNAL === 'csi';      // Computer Standards & Interfaces variant (as COSE plus standards paragraph and postal address)
 const COSE = process.env.JOURNAL === 'cose' || CSI;   // Computers & Security variant (security-led title, abstract, highlights)
+const AY = process.env.JOURNAL === 'cose' && process.env.FORMAT === 'elsevier' && process.env.CITE !== 'num';   // Computers & Security: author-year citations
 const ELS = process.env.FORMAT === 'elsevier';   // Elsevier (FGCS) manuscript layout: single column, A4, 11 pt
 const BODY = ELS ? 22 : 20;        // half-points
 const SMALL = ELS ? 18 : 15;
@@ -39,6 +41,11 @@ function num(k) {
   return i + 1;
 }
 function cite(keys) {
+  if (AY) {
+    keys.forEach(num);
+    const L = keys.slice().sort((a, b) => AYR.label(a).localeCompare(AYR.label(b)) || AYR.yr(a).localeCompare(AYR.yr(b)));
+    return '(' + L.map(AYR.label).join('; ') + ')';
+  }
   const ns = keys.map(num).sort((a, b) => a - b);
   if (ELS) {   // Elsevier numeric style: [1], [2,5], [3–6]
     const g = []; let a = 0;
@@ -85,8 +92,24 @@ function tok(t) {
     S12O: HAVE_XR ? '(Section 6.10)' : '(not tested in this version of the paper)',
   }[k] ?? m));
 }
+function narrative(text) {   // author-year: 'Zanasi et al. combine ... {{zanasi}}' -> 'Zanasi et al. (2024) combine ...'
+  let guard = 0, m;
+  const re = /\s?\{\{(\w+)\}\}/g;
+  while ((m = re.exec(text)) && guard++ < 200) {
+    const k = m[1]; if (!REFS[k]) continue;
+    let ss = 0; { const b = /(?<!\bal)\.\s(?=[A-Z])|;\s/g; let x; const pre = text.slice(0, m.index); while ((x = b.exec(pre))) ss = x.index; }
+    const seg = text.slice(ss, m.index), nm = AYR.name(k), at = seg.indexOf(nm);
+    if (at < 0 || seg.slice(at).includes('{{') || /^’s/.test(seg.slice(at + nm.length)) || (at > 0 && /[A-Za-z]/.test(seg[at - 1]))) continue;
+    num(k);
+    const y = AYR.yr(k), pos = ss + at + nm.length;
+    text = text.slice(0, pos) + ' (' + y + ')' + text.slice(pos, m.index) + text.slice(m.index + m[0].length);
+    re.lastIndex = 0;
+  }
+  return text;
+}
 function runs(text, o = {}) {
   text = fixTab(fixSec(tok(text)));
+  if (AY) { text = narrative(text); }
   const out = [];
   const re = /(\{\{[^}]+\}\}|\*\*[^*]+\*\*|\*[^*]+\*)/g;
   const base = { font: FONT, size: o.size || BODY, bold: o.bold, italics: o.italics };
@@ -465,9 +488,16 @@ if (order.length !== Object.keys(REFS).length) {
   console.error('UNCITED REFS:', missing.join(', '));
 }
 const refParas = [];
-order.forEach((k, i) => {
+const listOrder = AY ? order.slice().sort((a, b) => AYR.authors(a).localeCompare(AYR.authors(b)) || AYR.yr(a).localeCompare(AYR.yr(b))) : order;
+listOrder.forEach((k, i) => {
   const r = REFS[k];
   const base = { font: FONT, size: 15 };
+  if (AY) {
+    const e = AYR.entry(k);
+    refParas.push(new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 40, line: 200 }, indent: { left: 280, hanging: 280 },
+      children: [new TextRun({ ...base, text: e.pre }), new ExternalHyperlink({ link: e.link, children: [new TextRun({ ...base, text: e.link, color: '0563C1', underline: {} })] })] }));
+    return;
+  }
   const kids = [new TextRun({ ...base, text: `[${i + 1}]\t` })];
   const t = r.text;
   const mDoi = t.match(/doi: (\S+?)\.?$/);
@@ -553,13 +583,13 @@ const elsFront = () => [
 ];
 const elsBack = () => [
   H1('Declaration of competing interest'),
-  P('The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper. [Authors: please confirm.]'),
+  P('The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.'),
   H1('CRediT authorship contribution statement'),
   P('**Syed Irfan Raza Naqvi:** Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Writing – original draft, Writing – review and editing, Visualization. **Muhammad Umar Aftab:** Conceptualization, Supervision, Writing – review and editing. **Ahmad Mohsin:** Supervision. **Rana Asif Rehman:** Supervision. **Sayed Qaiser Ali Shah:** Supervision.'),
   H1('Funding'),
   P('This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.'),
   H1('Data availability'),
-  P('The Solidity contracts, the PEP and load-generator code, the Google Cloud deployment scripts and all raw results used in this paper are available at https://github.com/irfanrazanaqvi/bc-zta-iiot-experiments (archived release with DOI: [to be added by the authors before submission]).'),
+  P(COSE && !CSI ? 'The Solidity contracts, the PEP and load-generator code, the Google Cloud deployment scripts and all raw results used in this paper are available at https://github.com/irfanrazanaqvi/bc-zta-iiot-experiments.' : 'The Solidity contracts, the PEP and load-generator code, the Google Cloud deployment scripts and all raw results used in this paper are available at https://github.com/irfanrazanaqvi/bc-zta-iiot-experiments (archived release with DOI: [to be added by the authors before submission]).'),
   H1('Declaration of generative AI and AI-assisted technologies in the writing process'),
   P('During the preparation of this work the authors used an AI tool (Claude, Anthropic) for writing code, data analysis and language editing. The authors reviewed and edited all output and take full responsibility for the content of the publication.'),
   H1('Acknowledgements'),
