@@ -591,7 +591,7 @@ const elsBack = () => [
   H1('Funding'),
   P('This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.'),
   H1('Data availability'),
-  P(COSE && !CSI ? 'The Solidity contracts, the PEP and load-generator code, the Google Cloud deployment scripts and all raw results used in this paper are available at https://github.com/irfanrazanaqvi/bc-zta-iiot-experiments.' : 'The Solidity contracts, the PEP and load-generator code, the Google Cloud deployment scripts and all raw results used in this paper are available at https://github.com/irfanrazanaqvi/bc-zta-iiot-experiments (archived release with DOI: [to be added by the authors before submission]).'),
+  P(!CSI ? 'The Solidity contracts, the PEP and load-generator code, the Google Cloud deployment scripts and all raw results used in this paper are available at https://github.com/irfanrazanaqvi/bc-zta-iiot-experiments.' : 'The Solidity contracts, the PEP and load-generator code, the Google Cloud deployment scripts and all raw results used in this paper are available at https://github.com/irfanrazanaqvi/bc-zta-iiot-experiments (archived release with DOI: [to be added by the authors before submission]).'),
   H1('Declaration of generative AI and AI-assisted technologies in the writing process'),
   P('During the preparation of this work the authors used an AI tool (Claude, Anthropic) for writing code, data analysis and language editing. The authors reviewed and edited all output and take full responsibility for the content of the publication.'),
   H1('Acknowledgements'),
