@@ -111,10 +111,10 @@ module.exports = function ({ body, back, ABSTRACT, hiText, order, REFS, tok, num
     return `\\bibitem{${k}} ${body}`;
   }).join('\n\n');
   const ab = tx(ABSTRACT);
-  const kw = 'Zero trust; Blockchain; Industrial Internet of Things; Access control; Hyperledger Besu; Smart contracts; Audit';
+  const kw = 'Zero trust; Blockchain; IIoT; Access control; Hyperledger Besu; Smart contracts; Audit';
   const mainSrc = fs.readFileSync(path.join(__dirname, 'texgen.js'), 'utf8');   // (keywords come from the docx front matter)
   const kwLine = (fs.readFileSync(path.join(__dirname, 'generate.js'), 'utf8').match(/COSE \? '[^']*' : '([^']*)'\)/g) || []).join('');
-  const KW = process.env.KEYWORDS || 'Zero trust; Blockchain; Industrial Internet of Things; Access control; Hyperledger Besu; Smart contracts; Audit';
+  const KW = process.env.KEYWORDS || 'Zero trust; Blockchain; IIoT; Access control; Hyperledger Besu; Smart contracts; Audit';
   const front = String.raw`\documentclass[a4paper,5p,times,twocolumn,number,sort&compress]{elsarticle}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
