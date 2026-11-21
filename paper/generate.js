@@ -623,7 +623,7 @@ const elsBack = () => [
   H1('References'), ...refParas,
 ];
 if (process.env.TEXOUT) {
-  require('./texgen.js')({ body, back: elsBack(), ABSTRACT, hiText, order, REFS, tok, num, E });
+  require('./texgen.js')({ body, back: elsBack(), ABSTRACT, hiText, order, REFS, tok, num, E, ALT });
   process.exit(0);
 }
 if (ELS) {
@@ -631,7 +631,7 @@ if (ELS) {
   const elsFooter = new Footer({ children: [new Paragraph({ suppressLineNumbers: true, alignment: AlignmentType.CENTER, children: [new TextRun({ children: [PageNumber.CURRENT], font: FONT, size: 20 })] })] });
   const elsDoc = new Document({
     creator: 'Syed Irfan Raza Naqvi', title: COSE ? 'Blockchain-Assisted Zero-Trust Access Control and Tamper-Evident Audit for Industrial IoT' : 'Blockchain-Assisted Zero-Trust Access Control and Tamper-Evident Audit for Industrial IoT: An Overhead and Governance Analysis',
-    styles: { default: { document: { run: { font: FONT, size: BODY, language: { value: 'en-US' } } } } },
+    styles: { default: { document: { run: { font: FONT, size: BODY, language: { value: 'en-GB' } } } } },
     sections: [
       { properties: { ...elsPage, lineNumbers: { countBy: 1, restart: docx.LineNumberRestartFormat.CONTINUOUS } }, footers: { default: elsFooter }, children: [...elsFront(), ...body, ...elsBack()] },
     ],
@@ -647,7 +647,7 @@ if (ELS) {
 } else {
 const doc = new Document({
   creator: 'Syed Irfan Raza Naqvi', title: 'Blockchain-Assisted Zero-Trust Architecture for Secure and Scalable IIoT',
-  styles: { default: { document: { run: { font: FONT, size: BODY, language: { value: 'en-US' } } } } },
+  styles: { default: { document: { run: { font: FONT, size: BODY, language: { value: 'en-GB' } } } } },
   sections: [
     { properties: { ...pageProps, type: SectionType.CONTINUOUS }, footers: { default: footer }, children: front },
     { properties: { ...pageProps, type: SectionType.CONTINUOUS, column: { count: 2, space: 360, equalWidth: true } }, footers: { default: footer },

@@ -1,6 +1,6 @@
 // LaTeX (Elsevier elsarticle, two-column) emitter. Used with TEXOUT=<dir>; reads the same content the Word build uses.
 const fs = require('fs'), path = require('path');
-module.exports = function ({ body, back, ABSTRACT, hiText, order, REFS, tok, num, E }) {
+module.exports = function ({ body, back, ABSTRACT, hiText, order, REFS, tok, num, E, ALT }) {
   const OUT = process.env.TEXOUT; fs.mkdirSync(OUT, { recursive: true });
   const U = {   // unicode -> LaTeX
     '–': '--', '—': '---', '‘': '`', '’': "'", '“': '``', '”': "''", '…': '\\ldots{}', '\u00a0': '~', '\u2009': '\\,', '\u202f': '\\,',
@@ -77,13 +77,14 @@ module.exports = function ({ body, back, ABSTRACT, hiText, order, REFS, tok, num
     } else if (t.k === 'p') {
       tex += tx(t.t) + '\n\n';
     } else if (t.k === 'fig') {
+      const AW = (inner) => { const a = ((typeof ALT !== 'undefined' && ALT[t.file]) || '').replace(/[^\x20-\x7e]/g,' ').replace(/[\\{}%#&~^_$]/g,' ').replace(/\s+/g,' ').trim(); return a ? `\\BeginAccSupp{ActualText={${a}}}${inner}\\EndAccSupp{}` : inner; };
       figN++; const m = t.caption.match(/^Fig\.\s*(\d+)\.\s*(.*)$/s); if (+m[1] !== figN) throw new Error('figure order ' + t.caption);
       const cap = tx(m[2]);
       if (splitFig[t.file]) {
         const [a, b, kind] = splitFig[t.file];
-        if (kind === 'wide') tex += `\\begin{figure*}[!t]\n\\centering\n\\begin{subfigure}{0.49\\textwidth}\\centering\\includegraphics[width=\\linewidth]{${a}}\\caption{}\\end{subfigure}\\hfill\n\\begin{subfigure}{0.49\\textwidth}\\centering\\includegraphics[width=\\linewidth]{${b}}\\caption{}\\end{subfigure}\n\\caption{${cap}}\n\\label{fig:${figN}}\n\\end{figure*}\n\n`;
-        else tex += `\\begin{figure}[!tb]\n\\centering\n\\begin{subfigure}{\\columnwidth}\\centering\\includegraphics[width=0.95\\linewidth]{${a}}\\caption{}\\end{subfigure}\n\\begin{subfigure}{\\columnwidth}\\centering\\includegraphics[width=0.95\\linewidth]{${b}}\\caption{}\\end{subfigure}\n\\caption{${cap}}\n\\label{fig:${figN}}\n\\end{figure}\n\n`;
-      } else tex += `\\begin{figure}[!tb]\n\\centering\n\\includegraphics[width=${/Figure_[12]$/.test(figName[t.file]) ? '1' : '1'}\\columnwidth]{${figName[t.file]}}\n\\caption{${cap}}\n\\label{fig:${figN}}\n\\end{figure}\n\n`;
+        if (kind === 'wide') tex += `\\begin{figure*}[!t]\n\\centering\n\\begin{subfigure}{0.49\\textwidth}\\centering${AW('\\includegraphics[width=\\linewidth]{'+a+'}')}\\caption{}\\end{subfigure}\\hfill\n\\begin{subfigure}{0.49\\textwidth}\\centering${AW('\\includegraphics[width=\\linewidth]{'+b+'}')}\\caption{}\\end{subfigure}\n\\caption{${cap}}\n\\label{fig:${figN}}\n\\end{figure*}\n\n`;
+        else tex += `\\begin{figure}[!tb]\n\\centering\n\\begin{subfigure}{\\columnwidth}\\centering${AW('\\includegraphics[width=0.95\\linewidth]{'+a+'}')}\\caption{}\\end{subfigure}\n\\begin{subfigure}{\\columnwidth}\\centering${AW('\\includegraphics[width=0.95\\linewidth]{'+b+'}')}\\caption{}\\end{subfigure}\n\\caption{${cap}}\n\\label{fig:${figN}}\n\\end{figure}\n\n`;
+      } else tex += `\\begin{figure}[!tb]\n\\centering\n${AW('\\includegraphics[width=1\\columnwidth]{'+figName[t.file]+'}')}\n\\caption{${cap}}\n\\label{fig:${figN}}\n\\end{figure}\n\n`;
     } else if (t.k === 'table') {
       tabN++;
       const m = t.caption.match(/^TABLE @(\w+)\.\s*(.*)$/s); const key = m[1];
@@ -124,7 +125,8 @@ module.exports = function ({ body, back, ABSTRACT, hiText, order, REFS, tok, num
 \usepackage{subcaption}
 \usepackage{url}
 \usepackage{microtype}
-\usepackage[hidelinks]{hyperref}
+\usepackage[hidelinks,pdflang=en-GB,pdftitle={Blockchain-Assisted Zero-Trust Access Control and Tamper-Evident Audit for Industrial IoT}]{hyperref}
+\usepackage{accsupp}
 \urlstyle{same}
 \setlength{\emergencystretch}{2em}
 \journal{Future Generation Computer Systems}

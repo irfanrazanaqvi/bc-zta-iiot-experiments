@@ -8,7 +8,8 @@
 \usepackage{subcaption}
 \usepackage{url}
 \usepackage{microtype}
-\usepackage[hidelinks]{hyperref}
+\usepackage[hidelinks,pdflang=en-GB,pdftitle={Blockchain-Assisted Zero-Trust Access Control and Tamper-Evident Audit for Industrial IoT}]{hyperref}
+\usepackage{accsupp}
 \urlstyle{same}
 \setlength{\emergencystretch}{2em}
 \journal{Future Generation Computer Systems}
@@ -133,7 +134,7 @@ Fig. 1 shows the three tiers. Layer I holds the IIoT and edge devices. Layer II 
 
 \begin{figure}[!tb]
 \centering
-\includegraphics[width=1\columnwidth]{Figure_1}
+\BeginAccSupp{ActualText={Three-layer diagram. Bottom: IIoT devices (PLC, sensor, edge gateway, fog node, SDN switch). Middle: the edge zero-trust layer with PEP, PDP/ABAC, trust engine, Merkle-verified state cache and micro-segmentation. Top: the permissioned Besu blockchain with identity registry, trust reputation, access control, audit log and IBFT 2.0 validators.}}\includegraphics[width=1\columnwidth]{Figure_1}\EndAccSupp{}
 \caption{Proposed BC-ZTA architecture: devices, edge/ZT layer, blockchain layer and contract services.}
 \label{fig:1}
 \end{figure}
@@ -160,7 +161,7 @@ Fig. 2 gives the workflow. Verification does not stop at login. Each request is 
 
 \begin{figure}[!tb]
 \centering
-\includegraphics[width=1\columnwidth]{Figure_2}
+\BeginAccSupp{ActualText={Six-step flow of one request: the device sends a signed request, the PEP checks time window and nonce, the PDP reads the cached DID entry with a Merkle proof, applies trust score and ABAC policy, and then allows or denies. A side branch batches audit votes to the blockchain asynchronously, off the request path.}}\includegraphics[width=1\columnwidth]{Figure_2}\EndAccSupp{}
 \caption{Per-request verification workflow with cached state reads and asynchronous audit anchoring (step 7).}
 \label{fig:2}
 \end{figure}
@@ -275,7 +276,7 @@ BC-ZTA & \textbf{5.4 $\pm$ 0.1} & \textbf{6.2} & \textbf{4.6 $\pm$ 0.2} & \textb
 
 \begin{figure}[!tb]
 \centering
-\includegraphics[width=1\columnwidth]{Figure_3}
+\BeginAccSupp{ActualText={Line chart, log scale. BC-ZTA and ABAC stay near 5 ms from 10 to 200 devices, the central directory near 49 ms, and the synchronous blockchain rises from about 1 s to over 10 s.}}\includegraphics[width=1\columnwidth]{Figure_3}\EndAccSupp{}
 \caption{Mean end-to-end latency versus number of devices (log scale; error bars: standard deviation of 5 runs; Table~\ref{tab:lat} gives 95\% confidence intervals).}
 \label{fig:3}
 \end{figure}
@@ -321,8 +322,8 @@ Fig. 4 shows goodput and on-chain write load against device count. Central PKI-I
 
 \begin{figure}[!tb]
 \centering
-\begin{subfigure}{\columnwidth}\centering\includegraphics[width=0.95\linewidth]{Figure_4a}\caption{}\end{subfigure}
-\begin{subfigure}{\columnwidth}\centering\includegraphics[width=0.95\linewidth]{Figure_4b}\caption{}\end{subfigure}
+\begin{subfigure}{\columnwidth}\centering\BeginAccSupp{ActualText={Two panels. Panel (a): BC-ZTA, ABAC and the central directory serve the full offered load up to 200 devices; the synchronous blockchain peaks near 100 requests per second and falls at 200 devices. Panel (b): on-chain writes stay near zero for BC-ZTA and reach about 100 per second for the synchronous design.}}\includegraphics[width=0.95\linewidth]{Figure_4a}\EndAccSupp{}\caption{}\end{subfigure}
+\begin{subfigure}{\columnwidth}\centering\BeginAccSupp{ActualText={Two panels. Panel (a): BC-ZTA, ABAC and the central directory serve the full offered load up to 200 devices; the synchronous blockchain peaks near 100 requests per second and falls at 200 devices. Panel (b): on-chain writes stay near zero for BC-ZTA and reach about 100 per second for the synchronous design.}}\includegraphics[width=0.95\linewidth]{Figure_4b}\EndAccSupp{}\caption{}\end{subfigure}
 \caption{(a) Goodput and (b) on-chain writes per second versus number of devices. The dotted line is the offered load and lies under the BC-ZTA line. The legend in (a) applies to (b).}
 \label{fig:4}
 \end{figure}
@@ -355,7 +356,7 @@ Trust score below threshold & 250 & 0 \\
 
 \begin{figure}[!tb]
 \centering
-\includegraphics[width=1\columnwidth]{Figure_5}
+\BeginAccSupp{ActualText={Bar chart, log scale, of mean revocation delay. Central PKI-IAM about 0.06 s, ABAC about 0.02 s, blockchain-only synchronous about 1.4 s, BC-ZTA with events about 1.3 s, BC-ZTA with a 10 s TTL about 6.6 s; markers show worst cases.}}\includegraphics[width=1\columnwidth]{Figure_5}\EndAccSupp{}
 \caption{Revocation enforcement delay (mean, log scale; marks: worst case observed).}
 \label{fig:5}
 \end{figure}
@@ -389,8 +390,8 @@ BC-ZTA & \textbf{6.4 / 7} & \textbf{6.3 / 8} & 117.2 / 255 & \textbf{1.18} \\
 
 \begin{figure*}[!t]
 \centering
-\begin{subfigure}{0.49\textwidth}\centering\includegraphics[width=\linewidth]{Figure_6a}\caption{}\end{subfigure}\hfill
-\begin{subfigure}{0.49\textwidth}\centering\includegraphics[width=\linewidth]{Figure_6b}\caption{}\end{subfigure}
+\begin{subfigure}{0.49\textwidth}\centering\BeginAccSupp{ActualText={Grouped bars for 25, 100 and 200 devices. Uncached Keycloak and OpenLDAP take about 47 to 50 ms mean at 25 and 100 devices; their cached variants and BC-ZTA take 6 to 10 ms. At 200 devices Keycloak is near 120 ms, OpenLDAP near 77 ms and BC-ZTA near 117 ms; P95 follows the same pattern.}}\includegraphics[width=\linewidth]{Figure_6a}\EndAccSupp{}\caption{}\end{subfigure}\hfill
+\begin{subfigure}{0.49\textwidth}\centering\BeginAccSupp{ActualText={Grouped bars for 25, 100 and 200 devices. Uncached Keycloak and OpenLDAP take about 47 to 50 ms mean at 25 and 100 devices; their cached variants and BC-ZTA take 6 to 10 ms. At 200 devices Keycloak is near 120 ms, OpenLDAP near 77 ms and BC-ZTA near 117 ms; P95 follows the same pattern.}}\includegraphics[width=\linewidth]{Figure_6b}\EndAccSupp{}\caption{}\end{subfigure}
 \caption{(a) Mean and (b) P95 latency of Keycloak, OpenLDAP, their cached variants and BC-ZTA. The legend in (a) applies to (b).}
 \label{fig:6}
 \end{figure*}
@@ -420,7 +421,7 @@ BC-ZTA & \textbf{100} & \textbf{0} \\
 
 \begin{figure}[!tb]
 \centering
-\includegraphics[width=1\columnwidth]{Figure_7}
+\BeginAccSupp{ActualText={Timeline of requests granted. When the central IAM service stops at 20 s, Keycloak, OpenLDAP and their cached variants fall to 0 percent until the service restarts; BC-ZTA stays at 100 percent throughout.}}\includegraphics[width=1\columnwidth]{Figure_7}\EndAccSupp{}
 \caption{Fraction of requests granted over time while the central IAM service is stopped (shaded) and restarted.}
 \label{fig:7}
 \end{figure}
@@ -431,8 +432,8 @@ To test ledger flooding we swept the offered rate of audit-log transactions from
 
 \begin{figure*}[!t]
 \centering
-\begin{subfigure}{0.49\textwidth}\centering\includegraphics[width=\linewidth]{Figure_8a}\caption{}\end{subfigure}\hfill
-\begin{subfigure}{0.49\textwidth}\centering\includegraphics[width=\linewidth]{Figure_8b}\caption{}\end{subfigure}
+\begin{subfigure}{0.49\textwidth}\centering\BeginAccSupp{ActualText={Two panels versus offered flood rate up to 1,200 transactions per second. Panel (a): committed rate for both designs levels off near 200. Panel (b): access P95 latency stays under about 8 ms for BC-ZTA and rises from about 2 s to about 30 s for the synchronous ledger.}}\includegraphics[width=\linewidth]{Figure_8a}\EndAccSupp{}\caption{}\end{subfigure}\hfill
+\begin{subfigure}{0.49\textwidth}\centering\BeginAccSupp{ActualText={Two panels versus offered flood rate up to 1,200 transactions per second. Panel (a): committed rate for both designs levels off near 200. Panel (b): access P95 latency stays under about 8 ms for BC-ZTA and rises from about 2 s to about 30 s for the synchronous ledger.}}\includegraphics[width=\linewidth]{Figure_8b}\EndAccSupp{}\caption{}\end{subfigure}
 \caption{(a) Committed ledger rate and (b) access P95 latency versus offered flood rate.}
 \label{fig:8}
 \end{figure*}
@@ -480,7 +481,7 @@ B6 (directory) & 100 & 100 & 20 & 0 & 100 \\
 
 \begin{figure}[!tb]
 \centering
-\includegraphics[width=1\columnwidth]{Figure_9}
+\BeginAccSupp{ActualText={Timeline of requests granted when the state source is lost from 20 s to 70 s. BC-ZTA and the central directory with push revocation both keep granting until about 30 s, then deny all requests until the source returns.}}\includegraphics[width=1\columnwidth]{Figure_9}\EndAccSupp{}
 \caption{Requests granted while the state source is lost (shaded); dotted lines: TTL and 2$\cdot$TTL after the loss.}
 \label{fig:9}
 \end{figure}
@@ -508,8 +509,8 @@ Finally, per-PEP capacity is not a limit of the architecture if gateways are rep
 
 \begin{figure*}[!t]
 \centering
-\begin{subfigure}{0.49\textwidth}\centering\includegraphics[width=\linewidth]{Figure_10a}\caption{}\end{subfigure}\hfill
-\begin{subfigure}{0.49\textwidth}\centering\includegraphics[width=\linewidth]{Figure_10b}\caption{}\end{subfigure}
+\begin{subfigure}{0.49\textwidth}\centering\BeginAccSupp{ActualText={Two panels versus offered request rate for one, two and four PEP processes. Goodput follows the offered load up to about 800 requests per second, then drops; with one PEP it peaks near 450 and with four near 750. P95 latency rises sharply after saturation, later with more PEPs.}}\includegraphics[width=\linewidth]{Figure_10a}\EndAccSupp{}\caption{}\end{subfigure}\hfill
+\begin{subfigure}{0.49\textwidth}\centering\BeginAccSupp{ActualText={Two panels versus offered request rate for one, two and four PEP processes. Goodput follows the offered load up to about 800 requests per second, then drops; with one PEP it peaks near 450 and with four near 750. P95 latency rises sharply after saturation, later with more PEPs.}}\includegraphics[width=\linewidth]{Figure_10b}\EndAccSupp{}\caption{}\end{subfigure}
 \caption{(a) Goodput and (b) P95 latency versus offered request rate for 1, 2 and 4 PEP processes.}
 \label{fig:10}
 \end{figure*}
