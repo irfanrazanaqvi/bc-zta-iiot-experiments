@@ -133,7 +133,7 @@ module.exports = function ({ body, back, ABSTRACT, hiText, order, REFS, tok, num
 
 \begin{frontmatter}
 
-\title{Blockchain-Assisted Zero-Trust Access Control and Verifiable Audit for Industrial IoT}
+\title{Blockchain-Assisted Zero-Trust Access Control and Tamper-Evident Audit for Industrial IoT}
 
 \author[a]{Syed Irfan Raza Naqvi\corref{cor1}}
 \ead{l259000@lhr.nu.edu.pk}
