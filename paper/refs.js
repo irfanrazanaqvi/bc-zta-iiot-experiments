@@ -100,7 +100,7 @@ module.exports = {
   dahlmanns: { year: 2020, url: "https://doi.org/10.1145/3419394.3423666",
     text: "M. Dahlmanns, J. Lohmöller, I. B. Fink, J. Pennekamp, K. Wehrle, and M. Henze, “Easing the conscience with OPC UA: An Internet-wide study on insecure deployments,” in Proc. ACM Internet Meas. Conf. (IMC), Virtual Event, Oct. 2020, pp. 101–110, doi: 10.1145/3419394.3423666." },
   did: { year: 2022, url: "https://www.w3.org/TR/did-core/",
-    text: "M. Sporny, D. Longley, M. Sabadello, D. Reed, O. Steele, and C. Allen, “Decentralized identifiers (DIDs) v1.0,” W3C Recommendation, Jul. 2022. [Online]. Available: https://www.w3.org/TR/did-core/" },
+    text: "M. Sporny, D. Longley, M. Sabadello, D. Reed, O. Steele, and C. Allen, “Decentralized identifiers (DIDs) v1.0,” W3C Recommendation, Jul. 2022." },
   blanchet: { year: 2016, url: "https://doi.org/10.1561/3300000004",
     text: "B. Blanchet, “Modeling and verifying security protocols with the applied pi calculus and ProVerif,” Found. Trends Privacy Secur., vol. 1, no. 1–2, pp. 1–135, 2016, doi: 10.1561/3300000004." },
   rfc5280: { year: 2008, url: "https://www.rfc-editor.org/rfc/rfc5280",
