@@ -97,7 +97,7 @@ module.exports = function ({ body, back, ABSTRACT, hiText, order, REFS, tok, num
   }
   flush();
   // tables: all must be referenced by key in order; verify numbering against the Word build's table order
-  const TORDER = ['related', 'threat', 'lat', 'gas', 'sec', 'iam', 'outage', 'push', 'cut', 'scale', 'audit', 'tamper'];
+  const TORDER = ['related', 'threat', 'lat', 'gas', 'sec', 'iam', 'outage', 'push', 'cut', 'scale', 'audit', 'tamper', 'claims'];
   const keys = [...tex.matchAll(/\\label\{tab:(\w+)\}/g)].map(x => x[1]);
   keys.forEach((k, i) => { if (TORDER.indexOf(k) !== i) console.error('TABLE ORDER differs from text numbering:', k, 'is #' + (i + 1), 'text expects #' + (TORDER.indexOf(k) + 1)); });
   // bibliography in order of first citation
@@ -133,7 +133,7 @@ module.exports = function ({ body, back, ABSTRACT, hiText, order, REFS, tok, num
 
 \begin{frontmatter}
 
-\title{Blockchain-Assisted Zero-Trust Access Control and Tamper-Evident Audit for Industrial IoT}
+\title{Blockchain-Assisted Zero-Trust Access Control and Tamper-Evident Audit for Industrial IoT: An Overhead and Governance Analysis}
 
 \author[a]{Syed Irfan Raza Naqvi\corref{cor1}}
 \ead{l259000@lhr.nu.edu.pk}
