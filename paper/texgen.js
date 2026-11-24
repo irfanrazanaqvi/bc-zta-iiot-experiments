@@ -103,6 +103,11 @@ module.exports = function ({ body, back, ABSTRACT, hiText, order, REFS, tok, num
   keys.forEach((k, i) => { if (TORDER.indexOf(k) !== i) console.error('TABLE ORDER differs from text numbering:', k, 'is #' + (i + 1), 'text expects #' + (TORDER.indexOf(k) + 1)); });
   // bibliography in order of first citation
   const bib = order.map(k => {
+    if (process.env.FORMAT === 'elsevier') {
+      const b = require('./elsref.js').build(k);
+      const body = b.segs.map(s => s.i ? '\\textit{' + esc(s.t) + '}' : esc(s.t)).join('') + '\\href{' + b.url + '}{\\nolinkurl{' + b.url.replace(/([#%&_{}$])/g, '\\$1') + '}}.';
+      return `\\bibitem{${k}} ${body}`;
+    }
     const r = REFS[k], t = r.text, mDoi = t.match(/doi: (\S+?)\.?$/), mAx = t.match(/arXiv:\d+\.\d+/);
     let body;
     if (mDoi) { const i = t.lastIndexOf('doi: '); body = esc(t.slice(0, i)) + 'doi: \\href{' + r.url + '}{\\nolinkurl{' + mDoi[1].replace(/\.$/, '').replace(/([#%&_{}$])/g, '\\$1') + '}}.'; }

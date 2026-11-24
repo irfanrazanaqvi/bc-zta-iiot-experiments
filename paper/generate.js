@@ -525,6 +525,15 @@ listOrder.forEach((k, i) => {
     return;
   }
   const kids = [new TextRun({ ...base, text: `[${i + 1}]\t` })];
+  if (process.env.FORMAT === 'elsevier') {
+    const b = require('./elsref.js').build(k);
+    b.segs.forEach(s => kids.push(new TextRun({ ...base, text: s.t, italics: !!s.i })));
+    kids.push(new ExternalHyperlink({ link: b.url, children: [new TextRun({ ...base, text: b.url, color: '0563C1', underline: {} })] }));
+    kids.push(new TextRun({ ...base, text: '.' }));
+    refParas.push(new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 20, line: 200 },
+      indent: { left: 280, hanging: 280 }, tabStops: [{ type: docx.TabStopType.LEFT, position: 280 }], children: kids }));
+    return;
+  }
   const t = r.text;
   const mDoi = t.match(/doi: (\S+?)\.?$/);
   const mAx = t.match(/arXiv:\d+\.\d+/);
