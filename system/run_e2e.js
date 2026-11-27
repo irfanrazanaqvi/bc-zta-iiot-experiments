@@ -130,6 +130,11 @@ async function main() {
     if (mode !== "abac" && mode !== "central") await drain();
   }
 
+  if (process.env.ONLY_E2) {   // block-period sweep: revocation delay only, then stop
+    fs.writeFileSync(path.join(OUT, "e2e_results.json"), JSON.stringify(result, null, 2));
+    console.log("ONLY_E2 done");
+    process.exit(0);
+  }
   // ---------------- E3: security tests (proposed architecture) ----------------
   const pep = await startProc("pep", "pep.js", { MODE: "bczta", PORT: String(PORT), INVALIDATION: "events", TTL_S: "30", CENTRAL_URL: process.env.CENTRAL_URL || `http://127.0.0.1:${CPORT}` }, "pep ready");
   const NSEC = QUICK ? 10 : 50;
