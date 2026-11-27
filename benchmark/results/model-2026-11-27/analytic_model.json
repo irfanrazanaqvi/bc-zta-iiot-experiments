@@ -1,0 +1,107 @@
+{
+ "inputs": {
+  "block_period_s": 2.0,
+  "ttl_s": 10.0,
+  "k": 2,
+  "eps_s_calibrated": 0.25237890397524465
+ },
+ "revocation": {
+  "events_mean_s": {
+   "predicted": 1.2523789039752447,
+   "measured": 1.2523789039752447,
+   "rel_err": 0.0,
+   "calibrated": true
+  },
+  "events_max_s": {
+   "predicted": 2.2523789039752447,
+   "measured": 2.2298900780007243,
+   "rel_err": -0.009984477271932204,
+   "calibrated": false
+  },
+  "ttl_mean_s": {
+   "predicted": 6.252378903975245,
+   "measured": 6.590061657325085,
+   "rel_err": 0.05400868350047413,
+   "calibrated": false
+  },
+  "ttl_max_s": {
+   "predicted": 12.252378903975245,
+   "measured": 11.539745400998742,
+   "rel_err": -0.05816286849774877,
+   "calibrated": false
+  }
+ },
+ "failclosed": {
+  "bound_k_tau_s": 20.0,
+  "measured_granted_after_2ttl": [
+   0,
+   0,
+   0
+  ],
+  "measured_last_grant_within_bound": true,
+  "measured_first_denial_s_after_cut": [
+   9,
+   9,
+   9
+  ]
+ },
+ "proof": [
+  {
+   "leaves": 50,
+   "predicted_bytes": 192,
+   "measured_bytes": 192
+  },
+  {
+   "leaves": 100,
+   "predicted_bytes": 224,
+   "measured_bytes": 224
+  },
+  {
+   "leaves": 500,
+   "predicted_bytes": 288,
+   "measured_bytes": 288
+  },
+  {
+   "leaves": 1000,
+   "predicted_bytes": 320,
+   "measured_bytes": 320
+  },
+  {
+   "leaves": 5000,
+   "predicted_bytes": 416,
+   "measured_bytes": 416
+  },
+  {
+   "leaves": 1000,
+   "predicted_bytes": 320,
+   "measured_bytes": 320
+  },
+  {
+   "leaves": 10000,
+   "predicted_bytes": 448,
+   "measured_bytes": 448
+  },
+  {
+   "leaves": 100000,
+   "predicted_bytes": 544,
+   "measured_bytes": 544
+  },
+  {
+   "leaves": 1000000,
+   "predicted_bytes": 640,
+   "measured_bytes": 640
+  }
+ ],
+ "ledger_premium_over_push": {
+  "expected_s": 1.0,
+  "worst_case_s": 2.0,
+  "measured_events_minus_push_s": 1.1436468940586395,
+  "push_mean_s": 0.10873200991660512
+ },
+ "proof_exact_match": true,
+ "gas": {
+  "anchor_tx_gas": 134747.0,
+  "log_event_gas_per_record": 182008,
+  "break_even_batch": 0.7403355896444113
+ }
+}

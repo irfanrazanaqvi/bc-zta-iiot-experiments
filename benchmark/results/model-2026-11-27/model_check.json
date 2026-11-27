@@ -1,0 +1,50 @@
+{
+ "params": {
+  "delta_ticks": 2,
+  "horizon_ticks": 7,
+  "gateways": 2,
+  "fresh_requests": 2,
+  "attacker": "Dolev-Yao-style network control, perfect crypto; not ProVerif"
+ },
+ "variants": {
+  "nonce_local__gateway_bind_off": {
+   "states": 2081876,
+   "P1_replay_safe": false,
+   "P2_forgery_safe": true,
+   "P1_counterexample": [
+    "('device-send', (0, 0, None, True), 'g1')",
+    "('replay', (0, 0, None, True), 'g0')"
+   ]
+  },
+  "nonce_local__gateway_bind_on": {
+   "states": 925952,
+   "P1_replay_safe": true,
+   "P2_forgery_safe": true,
+   "P1_counterexample": null
+  },
+  "nonce_shared__gateway_bind_off": {
+   "states": 231996,
+   "P1_replay_safe": true,
+   "P2_forgery_safe": true,
+   "P1_counterexample": null
+  },
+  "nonce_shared__gateway_bind_on": {
+   "states": 925952,
+   "P1_replay_safe": true,
+   "P2_forgery_safe": true,
+   "P1_counterexample": null
+  }
+ },
+ "cache_automaton": {
+  "tau": 10,
+  "k": 2,
+  "eps": 3,
+  "max_delay_event_delivered": 3,
+  "max_delay_event_lost_poll_only": 12,
+  "poll_only_bound_tau_plus_eps": 13,
+  "poll_only_within_bound": true,
+  "failclosed_last_grant_after_cut_s": 20,
+  "failclosed_bound_k_tau": 20,
+  "failclosed_within_bound": true
+ }
+}
