@@ -6,7 +6,7 @@ const OVR = {
   pbft: { conf: 'in: Proc. 3rd USENIX Symp. Oper. Syst. Design Implement. (OSDI), New Orleans, LA, USA, 1999, pp. 173–186' },
   fabric: { conf: 'in: Proc. 13th EuroSys Conf., Porto, Portugal, 2018, Art. 30' },
   dahlmanns: { conf: 'in: Proc. ACM Internet Meas. Conf. (IMC), Virtual Event, 2020, pp. 101–110' },
-  novo: { journal: 'IEEE Internet Things J.', tail: '5 (2018)' },
+  novo: { journal: 'IEEE Internet Things J.', tail: '5 (2018) 1184–1195' },
   rfc7662: { report: 'RFC 7662, Internet Engineering Task Force, 2015' },
   rfc4511: { report: 'RFC 4511, Internet Engineering Task Force, 2006' },
   rfc5280: { report: 'RFC 5280, Internet Engineering Task Force, 2008' },

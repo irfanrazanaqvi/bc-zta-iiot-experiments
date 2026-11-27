@@ -88,7 +88,7 @@ module.exports = {
   rfc4511: { year: 2006, url: "https://www.rfc-editor.org/rfc/rfc4511",
     text: "J. Sermersheim, Ed., “Lightweight Directory Access Protocol (LDAP): The protocol,” Internet Eng. Task Force, RFC 4511, Jun. 2006." },
   novo: { year: 2018, url: "https://doi.org/10.1109/JIOT.2018.2812239",
-    text: "O. Novo, “Blockchain meets IoT: An architecture for scalable access management in IoT,” IEEE Internet Things J., vol. 5, no. 2, Apr. 2018, doi: 10.1109/JIOT.2018.2812239." },
+    text: "O. Novo, “Blockchain meets IoT: An architecture for scalable access management in IoT,” IEEE Internet Things J., vol. 5, no. 2, pp. 1184–1195, Apr. 2018, doi: 10.1109/JIOT.2018.2812239." },
   ouaddah: { year: 2016, url: "https://doi.org/10.1002/sec.1748",
     text: "A. Ouaddah, A. Abou Elkalam, and A. Ait Ouahman, “FairAccess: A new blockchain-based access control framework for the Internet of Things,” Secur. Commun. Netw., vol. 9, no. 18, pp. 5943–5964, 2016, doi: 10.1002/sec.1748." },
   moniz: { year: 2020, url: "https://arxiv.org/abs/2002.03613",
