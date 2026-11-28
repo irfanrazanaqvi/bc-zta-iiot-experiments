@@ -595,7 +595,7 @@ const front = [
     children: [new TextRun({ text: 'Syed Irfan Raza Naqvi, Muhammad Umar Aftab, Ahmad Mohsin, Rana Asif Rehman and Sayed Qaiser Ali Shah', font: FONT, size: 22 })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 140 },
     children: [new TextRun({ text: 'FAST-NUCES, Lahore and Chiniot-Faisalabad, Pakistan (Naqvi, Aftab); Edith Cowan University, Australia (Mohsin); Muscat University, Oman (Rehman); International Islamic University, Islamabad, Pakistan (Shah)', font: FONT, size: 18, italics: true })] }),
-  new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 100 }, indent: { left: 360, right: 360 }, children: [new TextRun({ text: 'Corresponding author: Ahmad Mohsin (e-mail: a.mohsin@ecu.edu.au). Co-author e-mails: l259000@lhr.nu.edu.pk; irfanrazanaqvi9@gmail.com (S. I. R. Naqvi); umar.aftab@nu.edu.pk; rasif@muscatuniversity.edu.om; qaiser.ali@iiu.edu.pk. This research received no specific grant from any funding agency.', font: FONT, size: 16 })] }),
+  new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 100 }, indent: { left: 360, right: 360 }, children: [new TextRun({ text: 'Corresponding author: Syed Irfan Raza Naqvi (e-mail: l259000@lhr.nu.edu.pk; irfanrazanaqvi9@gmail.com). Co-author e-mails: umar.aftab@nu.edu.pk; rasif@muscatuniversity.edu.om; qaiser.ali@iiu.edu.pk; a.mohsin@ecu.edu.au (A. Mohsin). This research received no specific grant from any funding agency.', font: FONT, size: 16 })] }),
   new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 60, line: 228 }, indent: { left: 360, right: 360 }, children: [
     new TextRun({ text: 'ABSTRACT ', font: FONT, size: 18, bold: true }),
     ...runs(ABSTRACT, { size: 18, bold: false }).map(x => x),
@@ -630,9 +630,9 @@ if (ELS) hiText.forEach(h => { if (h.length > 85) throw new Error('highlight too
 const elsFront = () => [
   new Paragraph({ alignment: AlignmentType.LEFT, spacing: { after: 200 }, children: [new TextRun({ text: COSE ? 'Blockchain-Assisted Zero-Trust Access Control and Tamper-Evident Audit for Industrial IoT' : 'Blockchain-Assisted Zero-Trust Access Control and Tamper-Evident Audit for Industrial IoT: An Overhead and Governance Analysis', font: FONT, size: 36, bold: true })] }),
   new Paragraph({ spacing: { after: 40 }, children: [
-    new TextRun({ text: 'Syed Irfan Raza Naqvi', font: FONT, size: 24 }), new TextRun({ text: 'a', font: FONT, size: 24, superScript: true }),
+    new TextRun({ text: 'Syed Irfan Raza Naqvi', font: FONT, size: 24 }), new TextRun({ text: 'a,*', font: FONT, size: 24, superScript: true }),
     new TextRun({ text: ', Muhammad Umar Aftab', font: FONT, size: 24 }), new TextRun({ text: 'b', font: FONT, size: 24, superScript: true }),
-    new TextRun({ text: ', Ahmad Mohsin', font: FONT, size: 24 }), new TextRun({ text: 'c,*', font: FONT, size: 24, superScript: true }),
+    new TextRun({ text: ', Ahmad Mohsin', font: FONT, size: 24 }), new TextRun({ text: 'c', font: FONT, size: 24, superScript: true }),
     new TextRun({ text: ', Rana Asif Rehman', font: FONT, size: 24 }), new TextRun({ text: 'd', font: FONT, size: 24, superScript: true }),
     new TextRun({ text: ', Sayed Qaiser Ali Shah', font: FONT, size: 24 }), new TextRun({ text: 'e', font: FONT, size: 24, superScript: true })] }),
   ...[['a', ' FAST School of Computing, Department of Computer Science, National University of Computer and Emerging Sciences (FAST-NUCES), 852-B Milaad Street, Block B, Faisal Town, Lahore 54770, Pakistan'],
@@ -641,7 +641,7 @@ const elsFront = () => [
       ['d', ' Faculty of Engineering and Technology, Muscat University, Building 2089, Al Ghubra North, P.O. Box 550, PC 130, Muscat, Oman'],
       ['e', ' Department of Computer Science, Faculty of Computing and Information Technology, International Islamic University, New Campus, Sector H-10, Islamabad 44000, Pakistan']].map(([k, t]) =>
     new Paragraph({ spacing: { after: 40 }, children: [new TextRun({ text: k, font: FONT, size: 20, superScript: true }), new TextRun({ text: t, font: FONT, size: 20, italics: true })] })),
-  new Paragraph({ spacing: { after: 240 }, children: [new TextRun({ text: '* Corresponding author. E-mail: a.mohsin@ecu.edu.au. Co-authors: l259000@lhr.nu.edu.pk; irfanrazanaqvi9@gmail.com; umar.aftab@nu.edu.pk; rasif@muscatuniversity.edu.om; qaiser.ali@iiu.edu.pk', font: FONT, size: 20 })] }),
+  new Paragraph({ spacing: { after: 240 }, children: [new TextRun({ text: '* Corresponding author. E-mail: l259000@lhr.nu.edu.pk; irfanrazanaqvi9@gmail.com. Co-authors: umar.aftab@nu.edu.pk; a.mohsin@ecu.edu.au; rasif@muscatuniversity.edu.om; qaiser.ali@iiu.edu.pk', font: FONT, size: 20 })] }),
   new Paragraph({ spacing: { before: 120, after: 80 }, border: { top: { style: BorderStyle.SINGLE, size: 6, color: '000000', space: 6 } }, children: [new TextRun({ text: 'Abstract', font: FONT, size: 24, bold: true })] }),
   new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 160, line: 288 }, children: runs(COSE && ABSTRACT_COSE ? ABSTRACT_COSE : ABSTRACT, { size: 22 }) }),
   new Paragraph({ spacing: { after: 240 }, border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: '000000', space: 6 } }, children: [new TextRun({ text: 'Keywords: ', font: FONT, size: 22, bold: true, color: '000000' }), new TextRun({ text: COSE ? 'Zero trust; Access control; Industrial IoT; Blockchain; Audit integrity; Revocation; Smart contracts' : 'Zero trust; Blockchain; Industrial Internet of Things; Access control; Hyperledger Besu; Smart contracts; Audit', font: FONT, size: 22 })] }),
