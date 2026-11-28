@@ -142,17 +142,17 @@ module.exports = function ({ body, back, ABSTRACT, hiText, order, REFS, tok, num
 
 \title{Blockchain-Assisted Zero-Trust Access Control and Tamper-Evident Audit for Industrial IoT: An Overhead and Governance Analysis}
 
-\author[a]{Syed Irfan Raza Naqvi\corref{cor1}}
+\author[a]{Syed Irfan Raza Naqvi}
 \ead{l259000@lhr.nu.edu.pk}
 \author[b]{Muhammad Umar Aftab}
 \ead{umar.aftab@nu.edu.pk}
-\author[c]{Ahmad Mohsin}
+\author[c]{Ahmad Mohsin\corref{cor1}}
 \ead{a.mohsin@ecu.edu.au}
 \author[d]{Rana Asif Rehman}
 \ead{rasif@muscatuniversity.edu.om}
 \author[e]{Sayed Qaiser Ali Shah}
 \ead{qaiser.ali@iiu.edu.pk}
-\cortext[cor1]{Corresponding author. Also: irfanrazanaqvi9@gmail.com}
+\cortext[cor1]{Corresponding author.}
 
 \address[a]{FAST School of Computing, Department of Computer Science, National University of Computer and Emerging Sciences (FAST-NUCES), 852-B Milaad Street, Block B, Faisal Town, Lahore 54770, Pakistan}
 \address[b]{Department of Computer Science, National University of Computer and Emerging Sciences (FAST-NUCES), Chiniot-Faisalabad Campus, FAST Square, Chiniot 38000, Pakistan}
