@@ -4,7 +4,7 @@ const REFS = require('./refs.js');
 const OVR = {
   naqvi: { conf: 'in: Proc. 17th Int. Conf. Open Source Syst. Technol. (ICOSST), 2023' },
   pbft: { conf: 'in: Proc. 3rd USENIX Symp. Oper. Syst. Design Implement. (OSDI), New Orleans, LA, USA, 1999, pp. 173–186' },
-  fabric: { conf: 'in: Proc. 13th EuroSys Conf., Porto, Portugal, 2018, Art. 30' },
+  fabric: { conf: 'in: Proc. 13th EuroSys Conf., Porto, Portugal, 2018' },
   dahlmanns: { conf: 'in: Proc. ACM Internet Meas. Conf. (IMC), Virtual Event, 2020, pp. 101–110' },
   novo: { journal: 'IEEE Internet Things J.', tail: '5 (2018) 1184–1195' },
   rfc7662: { report: 'RFC 7662, Internet Engineering Task Force, 2015' },
@@ -12,7 +12,7 @@ const OVR = {
   rfc5280: { report: 'RFC 5280, Internet Engineering Task Force, 2008' },
   rfc6960: { report: 'RFC 6960, Internet Engineering Task Force, 2013' },
   rfc6066: { report: 'RFC 6066, Internet Engineering Task Force, 2011' },
-  rfc6962: { report: 'RFC 6962, Internet Engineering Task Force, 2013' },
+  rfc6962: { report: 'RFC 9162, Internet Engineering Task Force, 2021' },
   did: { report: 'W3C Recommendation, World Wide Web Consortium, 2022' },
   nist: { report: 'NIST Special Publication 800-207, National Institute of Standards and Technology, Gaithersburg, MD, USA, 2020' },
 };
